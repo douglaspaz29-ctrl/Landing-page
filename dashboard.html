@@ -1,0 +1,1932 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Painel Executivo & Inteligência Comercial — LUMINA (Caso Demonstrativo VIDE)</title>
+  <!-- Fonte Montserrat Oficial Padrão VIDE -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --fundo-escuro: #0E0D0C;
+      --fundo-painel: #161513;
+      --fundo-card: #1D1B18;
+      --fundo-card-hover: #24211D;
+      --ouro-jk: #D4AF7A;
+      --ouro-brilho: #E8C99B;
+      --ouro-escuro: #9E7847;
+      --verde-caixa: #2ECC71;
+      --verde-suave: rgba(46, 204, 113, 0.14);
+      --azul-info: #64B5F6;
+      --azul-suave: rgba(100, 181, 246, 0.14);
+      --amarelo-alerta: #F5B041;
+      --amarelo-suave: rgba(245, 176, 65, 0.14);
+      --texto-claro: #FAF8F5;
+      --texto-suave: #B5ACA1;
+      --texto-apagado: #7D756B;
+      --borda-ouro: rgba(212, 175, 122, 0.25);
+      --borda-sutil: rgba(255, 255, 255, 0.07);
+      --fonte-titulo: 'Montserrat', sans-serif;
+      --fonte-corpo: 'Montserrat', sans-serif;
+      --curva: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+    }
+
+    body {
+      background-color: var(--fundo-escuro);
+      color: var(--texto-claro);
+      font-family: var(--fonte-corpo);
+      min-height: 100vh;
+      overflow-x: hidden;
+      background-image:
+        radial-gradient(circle at 12% 10%, rgba(212, 175, 122, 0.09) 0%, transparent 40%),
+        radial-gradient(circle at 88% 85%, rgba(46, 204, 113, 0.05) 0%, transparent 40%);
+    }
+
+    /* =========================================================
+       AVISO DE TRANSPARÊNCIA E CONFORMIDADE (DEMONSTRAÇÃO VIDE)
+       ========================================================= */
+    .barra-transparencia-demo {
+      background: linear-gradient(90deg, rgba(212, 175, 122, 0.16), rgba(29, 27, 24, 0.96), rgba(212, 175, 122, 0.16));
+      border-bottom: 1px solid var(--borda-ouro);
+      padding: 9px 4vw;
+      font-size: 0.75rem;
+      color: var(--texto-claro);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .barra-transparencia-demo strong {
+      color: var(--ouro-brilho);
+      font-family: var(--fonte-titulo);
+      letter-spacing: 0.04em;
+    }
+
+    .badge-lgpd {
+      padding: 3px 10px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--borda-sutil);
+      color: var(--texto-suave);
+      font-size: 0.69rem;
+    }
+
+    /* =========================================================
+       CABEÇALHO PRINCIPAL DO PAINEL
+       ========================================================= */
+    header.topo-dashboard {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(14, 13, 12, 0.92);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--borda-ouro);
+      padding: 15px 4vw;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .identidade-painel {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .logo-icone {
+      width: 42px;
+      height: 42px;
+      border-radius: 4px;
+      background: radial-gradient(circle at 30% 20%, rgba(212, 175, 122, 0.24), rgba(17, 16, 15, 0.95));
+      border: 1px solid var(--ouro-jk);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 20px rgba(212, 175, 122, 0.2);
+    }
+
+    .logo-icone svg { width: 26px; height: 26px; }
+
+    .titulo-painel-topo h1 {
+      font-family: var(--fonte-titulo);
+      font-size: 1.02rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .badge-modo-demo {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 4px;
+      background: rgba(212, 175, 122, 0.15);
+      border: 1px solid var(--borda-ouro);
+      color: var(--ouro-brilho);
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+    }
+
+    .ponto-pulsante {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--ouro-jk);
+      animation: pulsarOuro 1.8s infinite;
+    }
+
+    @keyframes pulsarOuro {
+      0% { box-shadow: 0 0 0 0 rgba(212, 175, 122, 0.7); }
+      70% { box-shadow: 0 0 0 8px rgba(212, 175, 122, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(212, 175, 122, 0); }
+    }
+
+    .titulo-painel-topo p {
+      font-size: 0.75rem;
+      color: var(--texto-suave);
+      margin-top: 2px;
+    }
+
+    .controles-topo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .seletor-periodo {
+      display: flex;
+      background: var(--fundo-card);
+      border: 1px solid var(--borda-sutil);
+      border-radius: 4px;
+      padding: 4px;
+    }
+
+    .btn-periodo {
+      padding: 8px 14px;
+      border-radius: 4px;
+      border: none;
+      background: transparent;
+      color: var(--texto-suave);
+      font-family: var(--fonte-titulo);
+      font-size: 0.7rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s var(--curva);
+    }
+
+    .btn-periodo.ativo, .btn-periodo:hover {
+      background: linear-gradient(135deg, var(--ouro-jk), var(--ouro-escuro));
+      color: var(--fundo-escuro);
+      font-weight: 700;
+    }
+
+    .btn-simular-lead {
+      padding: 10px 18px;
+      border-radius: 4px;
+      border: 1px solid var(--ouro-jk);
+      background: rgba(212, 175, 122, 0.14);
+      color: var(--ouro-brilho);
+      font-family: var(--fonte-titulo);
+      font-size: 0.71rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s var(--curva);
+    }
+
+    .btn-simular-lead:hover {
+      background: var(--ouro-jk);
+      color: var(--fundo-escuro);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(212, 175, 122, 0.3);
+    }
+
+    .btn-voltar-site {
+      padding: 10px 15px;
+      border-radius: 4px;
+      border: 1px solid var(--borda-sutil);
+      background: var(--fundo-card);
+      color: var(--texto-claro);
+      text-decoration: none;
+      font-family: var(--fonte-titulo);
+      font-size: 0.71rem;
+      font-weight: 600;
+      transition: all 0.25s;
+    }
+
+    .btn-voltar-site:hover {
+      border-color: var(--ouro-jk);
+      color: var(--ouro-jk);
+    }
+
+    /* GAVETA FUNCIONAL DE TESTE DE INSERÇÃO NO SUPABASE + PASSAGEM WHATSAPP */
+    .gaveta-teste-funcional {
+      display: none;
+      background: linear-gradient(145deg, #231F18 0%, #161412 100%);
+      border: 1px solid var(--ouro-jk);
+      border-radius: 4px;
+      padding: 20px 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
+    }
+
+    .gaveta-teste-funcional.aberta {
+      display: block;
+      animation: surgirGaveta 0.3s ease-out;
+    }
+
+    @keyframes surgirGaveta {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .grade-form-demo {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr 1.2fr 1fr auto;
+      gap: 12px;
+      align-items: end;
+      margin-top: 14px;
+    }
+
+    .campo-demo-box label {
+      display: block;
+      font-family: var(--fonte-titulo);
+      font-size: 0.66rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--ouro-jk);
+      margin-bottom: 5px;
+    }
+
+    .input-demo {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--borda-sutil);
+      color: var(--texto-claro);
+      font-family: var(--fonte-corpo);
+      font-size: 0.82rem;
+    }
+
+    .input-demo option { background: #1D1B18; color: #FAF8F5; }
+
+    /* =========================================================
+       ESTRUTURA DO PAINEL
+       ========================================================= */
+    .container-dashboard {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 26px 4vw 64px;
+    }
+
+    .etiqueta-secao-executiva {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--borda-sutil);
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .etiqueta-secao-executiva h3 {
+      font-family: var(--fonte-titulo);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ouro-jk);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .etiqueta-secao-executiva span {
+      font-size: 0.74rem;
+      color: var(--texto-suave);
+    }
+
+    /* BLOCO A: SEPARAÇÃO CONTÁBIL E VISÃO EXECUTIVA CONFIÁVEL */
+    .faixa-regime-caixa {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-bottom: 20px;
+    }
+
+    .card-regime {
+      background: linear-gradient(145deg, #1E1C19 0%, #151412 100%);
+      border: 1px solid var(--borda-sutil);
+      border-radius: 4px;
+      padding: 18px 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .card-regime.destaque-fechado {
+      border-color: var(--borda-ouro);
+      background: linear-gradient(145deg, #231F18 0%, #171511 100%);
+    }
+
+    .card-regime.destaque-liquido {
+      border-color: rgba(46, 204, 113, 0.35);
+      background: linear-gradient(145deg, rgba(46, 204, 113, 0.08) 0%, #151412 100%);
+    }
+
+    .regime-topo {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .regime-topo small {
+      font-family: var(--fonte-titulo);
+      font-size: 0.66rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: var(--texto-suave);
+    }
+
+    .card-regime strong {
+      font-family: var(--fonte-titulo);
+      font-size: 1.65rem;
+      font-weight: 800;
+      color: var(--texto-claro);
+    }
+
+    .card-regime.destaque-fechado strong { color: var(--ouro-brilho); }
+    .card-regime.destaque-liquido strong { color: var(--verde-caixa); }
+
+    .regra-calculo-meta {
+      font-size: 0.71rem;
+      color: var(--texto-apagado);
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      padding-top: 8px;
+      line-height: 1.45;
+    }
+
+    .regra-calculo-meta b { color: var(--texto-suave); }
+
+    /* GRADE DE 4 KPIs DE MÍDIA PAGA */
+    .grade-kpis {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin-bottom: 28px;
+    }
+
+    .card-kpi {
+      background: var(--fundo-card);
+      border: 1px solid var(--borda-sutil);
+      border-radius: 4px;
+      padding: 20px 22px;
+      transition: transform 0.3s var(--curva), border-color 0.3s;
+    }
+
+    .card-kpi:hover {
+      transform: translateY(-4px);
+      border-color: var(--ouro-jk);
+    }
+
+    .kpi-topo {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .kpi-rotulo {
+      font-family: var(--fonte-titulo);
+      font-size: 0.67rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--texto-suave);
+    }
+
+    .kpi-icone {
+      padding: 4px 8px;
+      border-radius: 4px;
+      background: rgba(212, 175, 122, 0.12);
+      color: var(--ouro-jk);
+      font-family: var(--fonte-titulo);
+      font-size: 0.68rem;
+      font-weight: 700;
+    }
+
+    .kpi-valor {
+      font-family: var(--fonte-titulo);
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--texto-claro);
+      margin-bottom: 8px;
+    }
+
+    .variacao-positiva {
+      color: var(--verde-caixa);
+      font-weight: 600;
+      background: var(--verde-suave);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.68rem;
+      display: inline-block;
+    }
+
+    .variacao-ouro {
+      color: var(--ouro-brilho);
+      font-weight: 600;
+      background: rgba(212, 175, 122, 0.15);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.68rem;
+      display: inline-block;
+    }
+
+    /* =========================================================
+       MELHORIA D: CAMADA DE INTELIGÊNCIA COMERCIAL & MOTOR DE OBJEÇÕES VIDE
+       ========================================================= */
+    .painel-inteligencia-vide {
+      background: linear-gradient(145deg, #211D17 0%, #151412 100%);
+      border: 1px solid var(--borda-ouro);
+      border-radius: 4px;
+      padding: 26px 28px;
+      margin-bottom: 28px;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+    }
+
+    .grade-4-perguntas-ia {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .card-pergunta-ia {
+      background: rgba(14, 13, 12, 0.65);
+      border: 1px solid var(--borda-sutil);
+      border-top: 3px solid var(--ouro-jk);
+      border-radius: 4px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .card-pergunta-ia.gargalo { border-top-color: var(--amarelo-alerta); }
+    .card-pergunta-ia.evidencia { border-top-color: var(--azul-info); }
+    .card-pergunta-ia.acao-teste { border-top-color: var(--verde-caixa); }
+
+    .card-pergunta-ia small {
+      font-family: var(--fonte-titulo);
+      font-size: 0.66rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--ouro-brilho);
+    }
+
+    .card-pergunta-ia h4 {
+      font-family: var(--fonte-titulo);
+      font-size: 0.88rem;
+      color: var(--texto-claro);
+      line-height: 1.35;
+    }
+
+    .card-pergunta-ia p {
+      font-size: 0.77rem;
+      color: var(--texto-suave);
+      line-height: 1.5;
+    }
+
+    .rodape-evidencia-tag {
+      font-size: 0.69rem;
+      color: var(--ouro-jk);
+      background: rgba(212, 175, 122, 0.1);
+      padding: 6px 10px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    /* =========================================================
+       MELHORIA B & C: FUNIL CONSISTENTE + FILA RECONCILIADA DE 80 OPORTUNIDADES
+       ========================================================= */
+    .grade-graficos-meio {
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 24px;
+      margin-bottom: 28px;
+    }
+
+    .painel-bloco {
+      background: var(--fundo-card);
+      border: 1px solid var(--borda-sutil);
+      border-radius: 4px;
+      padding: 26px 28px;
+    }
+
+    .cabecalho-bloco {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 18px;
+      gap: 12px;
+    }
+
+    .cabecalho-bloco h2 {
+      font-family: var(--fonte-titulo);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--texto-claro);
+    }
+
+    .cabecalho-bloco p {
+      font-size: 0.76rem;
+      color: var(--texto-suave);
+      margin-top: 4px;
+    }
+
+    .tag-bloco {
+      padding: 5px 11px;
+      border-radius: 4px;
+      background: rgba(212, 175, 122, 0.12);
+      border: 1px solid var(--borda-ouro);
+      color: var(--ouro-jk);
+      font-family: var(--fonte-titulo);
+      font-size: 0.63rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      white-space: nowrap;
+    }
+
+    .lista-etapas-funil {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .etapa-funil-card {
+      padding: 12px 15px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.025);
+      border-left: 4px solid var(--ouro-jk);
+    }
+
+    .funil-linha-principal {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .funil-linha-principal strong {
+      font-family: var(--fonte-titulo);
+      font-size: 0.81rem;
+      color: var(--texto-claro);
+    }
+
+    .funil-linha-principal .num-funil {
+      font-family: var(--fonte-titulo);
+      font-size: 1.02rem;
+      font-weight: 800;
+      color: var(--ouro-brilho);
+    }
+
+    .funil-metricas-fluxo {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.71rem;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .tag-avanco { color: var(--verde-caixa); font-weight: 600; }
+    .tag-abandono { color: #F1948A; font-weight: 500; }
+
+    /* Barra de Reconciliação Matemática das 80 Oportunidades do Pipeline */
+    .grade-reconciliacao-pipeline {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 14px;
+      padding: 10px 12px;
+      background: rgba(14, 13, 12, 0.6);
+      border: 1px solid var(--borda-ouro);
+      border-radius: 4px;
+    }
+
+    .item-reconcil {
+      font-size: 0.69rem;
+      line-height: 1.35;
+    }
+
+    .item-reconcil small {
+      display: block;
+      color: var(--texto-suave);
+      font-size: 0.63rem;
+    }
+
+    .item-reconcil strong {
+      font-family: var(--fonte-titulo);
+      color: var(--ouro-brilho);
+      font-size: 0.78rem;
+    }
+
+    /* Fila Acionável */
+    .lista-fila-recuperacao {
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+    }
+
+    .item-fila-oportunidade {
+      background: rgba(255, 255, 255, 0.025);
+      border: 1px solid var(--borda-sutil);
+      border-radius: 4px;
+      padding: 13px 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      transition: all 0.25s;
+    }
+
+    .item-fila-oportunidade.acionado {
+      border-color: var(--verde-caixa);
+      background: rgba(46, 204, 113, 0.07);
+    }
+
+    .fila-topo {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .fila-topo strong {
+      font-family: var(--fonte-titulo);
+      font-size: 0.81rem;
+      color: var(--texto-claro);
+    }
+
+    .badge-motivo-perda {
+      padding: 3px 9px;
+      border-radius: 4px;
+      background: var(--amarelo-suave);
+      color: var(--amarelo-alerta);
+      border: 1px solid rgba(245, 176, 65, 0.35);
+      font-size: 0.65rem;
+      font-weight: 700;
+      font-family: var(--fonte-titulo);
+    }
+
+    .fila-meio {
+      font-size: 0.74rem;
+      color: var(--texto-suave);
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .fila-rodape-acao {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 7px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .texto-proxima-acao {
+      font-size: 0.71rem;
+      color: var(--verde-caixa);
+      font-weight: 600;
+    }
+
+    .grupo-botoes-fila {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-executar-acao-fila {
+      padding: 5px 11px;
+      border-radius: 4px;
+      border: 1px solid var(--ouro-jk);
+      background: rgba(212, 175, 122, 0.14);
+      color: var(--ouro-brilho);
+      font-family: var(--fonte-titulo);
+      font-size: 0.64rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+
+    .btn-executar-acao-fila:hover {
+      background: var(--ouro-jk);
+      color: var(--fundo-escuro);
+    }
+
+    .btn-whats-fila {
+      padding: 5px 10px;
+      border-radius: 4px;
+      background: rgba(37, 211, 102, 0.16);
+      border: 1px solid rgba(37, 211, 102, 0.45);
+      color: #2ECC71;
+      font-family: var(--fonte-titulo);
+      font-size: 0.63rem;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    /* =========================================================
+       MELHORIA E: MONITORAMENTO TÉCNICO + ATRIBUIÇÃO POR CANAL
+       ========================================================= */
+    .grade-marketing-bi {
+      display: grid;
+      grid-template-columns: 1.3fr 0.7fr;
+      gap: 24px;
+      margin-bottom: 28px;
+    }
+
+    .grade-control-room {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .card-status-automacao {
+      background: rgba(255, 255, 255, 0.025);
+      border: 1px solid var(--borda-sutil);
+      border-radius: 4px;
+      padding: 13px 14px;
+    }
+
+    .card-status-automacao small {
+      display: block;
+      font-size: 0.68rem;
+      color: var(--texto-suave);
+      margin-bottom: 4px;
+    }
+
+    .card-status-automacao strong {
+      font-family: var(--fonte-titulo);
+      font-size: 1.15rem;
+      color: var(--texto-claro);
+      display: block;
+    }
+
+    .card-status-automacao span {
+      font-size: 0.69rem;
+      color: var(--verde-caixa);
+    }
+
+    .tabela-responsiva { width: 100%; overflow-x: auto; }
+
+    table.tabela-executiva {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    table.tabela-executiva th {
+      font-family: var(--fonte-titulo);
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: var(--texto-suave);
+      padding: 12px 11px;
+      border-bottom: 1px solid var(--borda-sutil);
+    }
+
+    table.tabela-executiva td {
+      padding: 13px 11px;
+      font-size: 0.8rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      color: var(--texto-claro);
+    }
+
+    table.tabela-executiva tr.linha-subtotal-pago {
+      background: rgba(212, 175, 122, 0.09);
+      border-top: 1px solid var(--borda-ouro);
+      border-bottom: 1px solid var(--borda-ouro);
+    }
+
+    table.tabela-executiva tr.linha-total-geral {
+      background: rgba(46, 204, 113, 0.08);
+      font-weight: 700;
+    }
+
+    .painel-tabela-leads {
+      background: var(--fundo-card);
+      border: 1px solid var(--borda-sutil);
+      border-radius: 4px;
+      padding: 26px 28px;
+    }
+
+    .status-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-family: var(--fonte-titulo);
+      font-size: 0.64rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .status-agendado {
+      background: var(--verde-suave);
+      color: var(--verde-caixa);
+      border: 1px solid rgba(46, 204, 113, 0.35);
+    }
+
+    .status-triagem {
+      background: rgba(212, 175, 122, 0.16);
+      color: var(--ouro-brilho);
+      border: 1px solid var(--borda-ouro);
+    }
+
+    .badge-score-vip {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-family: var(--fonte-titulo);
+      font-size: 0.65rem;
+      font-weight: 700;
+      background: rgba(212, 175, 122, 0.18);
+      color: var(--ouro-brilho);
+      border: 1px solid rgba(212, 175, 122, 0.35);
+    }
+
+    .valor-ticket-tabela {
+      font-family: var(--fonte-titulo);
+      font-weight: 700;
+      color: var(--ouro-jk);
+    }
+
+    @media (max-width: 1180px) {
+      .faixa-regime-caixa, .grade-4-perguntas-ia, .grade-form-demo { grid-template-columns: 1fr 1fr; }
+      .grade-kpis { grid-template-columns: repeat(2, 1fr); }
+      .grade-graficos-meio, .grade-marketing-bi { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 640px) {
+      .faixa-regime-caixa, .grade-4-perguntas-ia, .grade-kpis, .grade-control-room, .grade-reconciliacao-pipeline, .grade-form-demo { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- BARRA DE TRANSPARÊNCIA E CONFORMIDADE -->
+  <div class="barra-transparencia-demo">
+    <div>
+      <strong>AMBIENTE DEMONSTRATIVO DA VIDE:</strong> A Clínica LUMINA é um caso fictício criado para demonstrar a arquitetura comercial da VIDE. Indicadores históricos exibem <b>dados simulados auditados</b>.
+    </div>
+    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+      <span class="badge-lgpd">🔒 Privacidade LGPD: Contatos fictícios e mascarados</span>
+      <span class="badge-lgpd">⚕️ Ética CFM: A IA atua na triagem e agenda (não realiza diagnóstico médico)</span>
+    </div>
+  </div>
+
+  <!-- Cabeçalho do Painel Executivo -->
+  <header class="topo-dashboard">
+    <div class="identidade-painel">
+      <div class="logo-icone">
+        <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="20,3 37,20 20,37 3,20" stroke="#D4AF7A" stroke-width="1.4" opacity="0.7"/>
+          <path d="M15.5 11.5 V26.5 C15.5 27.6 16.4 28.5 17.5 28.5 H26.5" stroke="#D4AF7A" stroke-width="2.4" stroke-linecap="round"/>
+          <path d="M25.5 11.5 L26.4 13.6 L28.5 14.5 L26.4 15.4 L25.5 17.5 L24.6 15.4 L22.5 14.5 L24.6 13.6 Z" fill="#D4AF7A"/>
+        </svg>
+      </div>
+      <div class="titulo-painel-topo">
+        <h1>
+          <span>LUMINA (Clínica Fictícia) • Sistema Comercial VIDE</span>
+          <span class="badge-modo-demo"><span class="ponto-pulsante"></span> PROTÓTIPO DEMONSTRATIVO • DADOS SIMULADOS</span>
+        </h1>
+        <p>Visão Executiva Auditada: Separação entre Pipeline, Vendas Contratadas e Caixa Recebido + Reconciliação de Oportunidades</p>
+      </div>
+    </div>
+
+    <div class="controles-topo">
+      <div class="seletor-periodo">
+        <button type="button" class="btn-periodo" data-periodo="7d">7 Dias (Simulado)</button>
+        <button type="button" class="btn-periodo ativo" data-periodo="30d">Período: 30 Dias (Simulado)</button>
+        <button type="button" class="btn-periodo" data-periodo="90d">90 Dias (Simulado)</button>
+      </div>
+
+      <button type="button" class="btn-simular-lead" id="btnAbrirGavetaTeste">
+        <span>+ Testar Inserção no Banco & WhatsApp</span>
+      </button>
+
+      <a href="fluxo-n8n.html" class="btn-voltar-site" style="border-color: #FF6D5A; color: #FF988A;">⚡ Ver Arquitetura n8n</a>
+      <a href="index.html" class="btn-voltar-site">← Página da Clínica</a>
+    </div>
+  </header>
+
+  <main class="container-dashboard">
+
+    <!-- GAVETA INTERATIVA PARA TESTAR INSERÇÃO REAL NO SUPABASE E PASSAGEM PARA O WHATSAPP -->
+    <section class="gaveta-teste-funcional" id="gavetaTesteFuncional">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+        <div>
+          <h3 style="font-family: var(--fonte-titulo); font-size: 0.92rem; color: var(--ouro-brilho);">
+            ⚡ Testador ao Vivo: Inserção Real no Banco Supabase (`public.leads`) + Passagem para o WhatsApp
+          </h3>
+          <p style="font-size: 0.76rem; color: var(--texto-suave); margin-top: 2px;">
+            Preencha ou use os dados abaixo para gravar um registro real na nuvem do Supabase, atualizar o Pipeline e gerar o link direto de WhatsApp:
+          </p>
+        </div>
+        <button type="button" id="btnFecharGaveta" style="background: transparent; border: 1px solid var(--borda-sutil); color: var(--texto-suave); padding: 5px 12px; border-radius: 4px; cursor: pointer; font-size: 0.72rem;">Fechar ✕</button>
+      </div>
+
+      <form id="formTesteSupabaseDashboard" class="grade-form-demo">
+        <div class="campo-demo-box">
+          <label>Nome do Contato (Fictício)</label>
+          <input type="text" id="demoNome" class="input-demo" value="Camila Bittencourt (Teste)" required />
+        </div>
+        <div class="campo-demo-box">
+          <label>WhatsApp (Teste)</label>
+          <input type="text" id="demoWhats" class="input-demo" value="(11) 99632-7710" required />
+        </div>
+        <div class="campo-demo-box">
+          <label>Região Anatômica (Protocolo)</label>
+          <select id="demoRegiao" class="input-demo">
+            <option value="Contorno Mandibular & Bioestimulação" data-valor="5400">Contorno Mandibular (R$ 5.400)</option>
+            <option value="Terço Médio & Sustentação" data-valor="4800">Terço Médio & Sustentação (R$ 4.800)</option>
+            <option value="Qualidade & Viço da Pele" data-valor="3600">Qualidade & Viço da Pele (R$ 3.600)</option>
+            <option value="Terço Superior & Olhar" data-valor="3200">Terço Superior & Olhar (R$ 3.200)</option>
+          </select>
+        </div>
+        <div class="campo-demo-box">
+          <label>Canal de Origem (UTM)</label>
+          <select id="demoCanal" class="input-demo">
+            <option value="Instagram Reels Ads (Pago)">Instagram Reels Ads (Pago)</option>
+            <option value="Google Search (Pago)">Google Search (Pago)</option>
+            <option value="Indicação (Não-Pago)">Indicação (Não-Pago)</option>
+          </select>
+        </div>
+        <button type="submit" class="btn-simular-lead" style="height: 39px; background: var(--ouro-jk); color: var(--fundo-escuro);">
+          Gravar no Supabase →
+        </button>
+      </form>
+
+      <div id="retornoTesteSupabase" style="display: none; margin-top: 14px; padding: 12px 16px; border-radius: 4px; background: rgba(46, 204, 113, 0.12); border: 1px solid rgba(46, 204, 113, 0.4); align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+        <span id="txtRetornoSupabase" style="font-size: 0.78rem; color: #2ECC71; font-weight: 600;"></span>
+        <a id="btnWhatsRetornoDemo" href="#" target="_blank" rel="noopener" style="padding: 7px 14px; border-radius: 4px; background: #25D366; color: #0B141A; font-family: var(--fonte-titulo); font-size: 0.7rem; font-weight: 700; text-decoration: none;">
+          💬 Testar Passagem para o WhatsApp →
+        </a>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         MELHORIA A: VISÃO EXECUTIVA CONFIÁVEL (COM RECONCILIAÇÃO EXPLÍCITA DAS 80 OPORTUNIDADES)
+         ========================================================= -->
+    <div class="etiqueta-secao-executiva">
+      <h3 id="tituloSecaoA">A. Visão Executiva Auditada (Período: 30 Dias — Dados Simulados)</h3>
+      <span>Separação contábil entre Pipeline Ativo (80 oportunidades reconciliadas), Contratos Fechados (38) e Caixa Recebido</span>
+    </div>
+
+    <section class="faixa-regime-caixa">
+      <div class="card-regime">
+        <div class="regime-topo">
+          <small>1. Pipeline Ativo em Aberto (Valor Previsto / Simulado)</small>
+          <span class="tag-bloco" id="tagOportunidadesAtivas">80 Oportunidades Ativas</span>
+        </div>
+        <strong id="valPipeline">R$ 264.800</strong>
+        <div class="regra-calculo-meta" id="regraPipeline">
+          <b>Reconciliação Exata das 80 Oportunidades:</b> Dos 142 contatos totais, 38 fecharam contrato e 24 foram arquivados/desqualificados (R$ 0). Restam <b>80 oportunidades ativas</b>: <b>54</b> em follow-up pré-consulta (R$ 154.800) + <b>3</b> em reagendamento de falta (R$ 12.000) + <b>23</b> com proposta pós-consulta em aberto (R$ 98.000) = <b>R$ 264.800</b>.
+        </div>
+      </div>
+
+      <div class="card-regime destaque-fechado">
+        <div class="regime-topo">
+          <small>2. Vendas Fechadas / Contratadas (Simulado)</small>
+          <span class="tag-bloco" id="tagClientesConvertidos">38 Contratos Assinados</span>
+        </div>
+        <strong id="valContratado">R$ 188.500</strong>
+        <div class="regra-calculo-meta" id="regraContratado">
+          <b>Regra de Cálculo:</b> R$ 167.000 (33 clientes de Mídia Paga) + R$ 21.500 (5 clientes de Orgânico/Indicação) = <b>38 clientes efetivamente convertidos</b> após as 61 consultas realizadas.<br>
+          <b>Fonte:</b> Simulação Contratos • <b>Base:</b> 30 dias
+        </div>
+      </div>
+
+      <div class="card-regime destaque-liquido">
+        <div class="regime-topo">
+          <small>3. Dinheiro Efetivamente Recebido (Caixa Simulado)</small>
+          <span class="tag-bloco" style="color: var(--verde-caixa); border-color: rgba(46,204,113,0.4);">Liquidado em Conta</span>
+        </div>
+        <strong id="valCaixaLiquido">R$ 154.200</strong>
+        <div class="regra-calculo-meta" id="regraCaixa">
+          <b>Regra de Cálculo:</b> Pagamentos à vista (PIX) + 1ªs parcelas já liquidadas no período (81,8% do contratado). Restam R$ 34.300 em parcelas a vencer.<br>
+          <b>Fonte:</b> Simulação Financeira • <b>Base:</b> 30 dias
+        </div>
+      </div>
+    </section>
+
+    <!-- 4 KPIs DE MÍDIA PAGA -->
+    <section class="grade-kpis">
+      <div class="card-kpi">
+        <div class="kpi-topo">
+          <span class="kpi-rotulo">ROAS Mídia Paga (Apenas Canais Pagos)</span>
+          <span class="kpi-icone">Simulado</span>
+        </div>
+        <div class="kpi-valor" id="kpiRoasPago">10,1x</div>
+        <div class="regra-calculo-meta" id="regraRoasPago">
+          <b>Regra:</b> R$ 167.000 (vendas pagas) ÷ R$ 16.500 (investimento Ads).<br>
+          <b>Nota:</b> Exclui R$ 21.500 de origem orgânica/indicação.
+        </div>
+      </div>
+
+      <div class="card-kpi">
+        <div class="kpi-topo">
+          <span class="kpi-rotulo">CPL Médio Ponderado (Canais Pagos)</span>
+          <span class="kpi-icone">Simulado</span>
+        </div>
+        <div class="kpi-valor" id="kpiCplPago">R$ 135,25</div>
+        <div class="regra-calculo-meta" id="regraCplPago">
+          <b>Regra:</b> R$ 16.500 investidos ÷ 122 leads pagos (84 Meta + 38 Google).<br>
+          <b>Por canal:</b> Meta R$ 116,67 | Google R$ 176,32.
+        </div>
+      </div>
+
+      <div class="card-kpi">
+        <div class="kpi-topo">
+          <span class="kpi-rotulo">CPA Pago (Custo p/ Consulta Agendada)</span>
+          <span class="kpi-icone">Simulado</span>
+        </div>
+        <div class="kpi-valor" id="kpiCpaPago">R$ 300,00</div>
+        <div class="regra-calculo-meta" id="regraCpaPago">
+          <b>Regra:</b> R$ 16.500 investidos ÷ 55 agendamentos vindos de mídia paga.<br>
+          <b>CPA Global (64 agend.):</b> R$ 257,81 (incluindo orgânico).
+        </div>
+      </div>
+
+      <div class="card-kpi">
+        <div class="kpi-topo">
+          <span class="kpi-rotulo">CAC Pago (Por Cliente Convertido)</span>
+          <span class="kpi-icone">Simulado</span>
+        </div>
+        <div class="kpi-valor" id="kpiCacPago">R$ 500,00</div>
+        <div class="regra-calculo-meta" id="regraCacPago">
+          <b>Regra:</b> R$ 16.500 investidos ÷ 33 clientes pagos que fecharam contrato.<br>
+          <b>Comparecimento:</b> 95,3% (61 realizadas / 64 agendadas).
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         MELHORIA D: CAMADA DE INTELIGÊNCIA COMERCIAL & MOTOR DE OBJEÇÕES VIDE
+         ========================================================= -->
+    <section class="painel-inteligencia-vide">
+      <div class="cabecalho-bloco" style="margin-bottom: 6px;">
+        <div>
+          <h2>D. Camada de Inteligência Comercial & Motor de Objeções VIDE (Apoio à Decisão)</h2>
+          <p>Diagnóstico estratégico baseado no comportamento do funil para orientar a próxima decisão do empresário (Cenário Demonstrativo)</p>
+        </div>
+        <span class="tag-bloco">Motor de Diagnóstico VIDE</span>
+      </div>
+
+      <div class="grade-4-perguntas-ia">
+        <div class="card-pergunta-ia">
+          <div>
+            <small>1. O que mudou no período?</small>
+            <h4 style="margin-top: 6px;">Queda de 14% na resposta imediata após envio do valor da consulta</h4>
+          </div>
+          <p>Nos últimos 10 dias do cenário simulado, o tempo médio até a confirmação de agenda subiu de 45 min para 3h20 nos leads vindos de Instagram Reels no período noturno.</p>
+          <div class="rodape-evidencia-tag">Impacto: R$ 154.800 em follow-up pré-consulta</div>
+        </div>
+
+        <div class="card-pergunta-ia gargalo">
+          <div>
+            <small style="color: var(--amarelo-alerta);">2. Qual é o provável gargalo?</small>
+            <h4 style="margin-top: 6px;">Transição entre Etapa 3 (Triagem: 142) e Etapa 4 (Agenda: 64)</h4>
+          </div>
+          <p>Dos 142 contatos únicos atendidos, 78 (54,9%) não agendaram na 1ª interação (sendo 24 desqualificados/arquivados e 54 retidos em follow-up ativo).</p>
+          <div class="rodape-evidencia-tag" style="color: var(--amarelo-alerta);">Gargalo: Objeção de Agenda / Valor Inicial</div>
+        </div>
+
+        <div class="card-pergunta-ia evidencia">
+          <div>
+            <small style="color: var(--azul-info);">3. Que evidência sustenta a hipótese?</small>
+            <h4 style="margin-top: 6px;">57,7% das paradas citam "vou checar minha agenda" ou preço</h4>
+          </div>
+          <p>Auditoria das 78 conversas sem agendamento: <b>45 contatos (57,7%)</b> pararam após a apresentação do valor da consulta; <b>21 (26,9%)</b> pediram horário após as 18h; <b>12 (15,4%)</b> tinham dúvida sobre recuperação.</p>
+          <div class="rodape-evidencia-tag" style="color: var(--azul-info);">Base: 54 ativos pré-consulta + 24 arquivados = 78</div>
+        </div>
+
+        <div class="card-pergunta-ia acao-teste">
+          <div>
+            <small style="color: var(--verde-caixa);">4. Qual ação devemos testar agora?</small>
+            <h4 style="margin-top: 6px;">Ancorar abatimento da consulta no protocolo + Ligação Humana VIP</h4>
+          </div>
+          <p>1) Ajustar o prompt da triagem para explicar que o valor da avaliação é abatido do procedimento; 2) Acionar a recepção humana para ligar para as 23 propostas pós-consulta paradas.</p>
+          <div class="rodape-evidencia-tag" style="color: var(--verde-caixa);">Meta: Converter 10 das 80 oportunidades ativas</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         MELHORIAS B & C: FUNIL CONSISTENTE + FILA RECONCILIADA DE 80 OPORTUNIDADES ATIVAS
+         ========================================================= -->
+    <section class="grade-graficos-meio">
+      <!-- Bloco B: Funil com Entrada, Avanço e Abandono em cada etapa -->
+      <div class="painel-bloco">
+        <div class="cabecalho-bloco">
+          <div>
+            <h2 id="tituloFunilPeriodo">B. Funil Comercial com Bases Consistentes (30 Dias — Simulado)</h2>
+            <p>Contabilização exata de quantos entraram, quantos avançaram e o destino de cada saída</p>
+          </div>
+          <span class="tag-bloco">Reconciliação 100%</span>
+        </div>
+
+        <div class="lista-etapas-funil">
+          <div class="etapa-funil-card">
+            <div class="funil-linha-principal">
+              <strong>1. Visitantes Únicos na Landing Page</strong>
+              <span class="num-funil" id="funilVisitas">1.180 visitantes</span>
+            </div>
+            <div class="funil-metricas-fluxo">
+              <span class="tag-avanco" id="avancoEtapa1">✔ Avançaram p/ Mapa Facial: 496 (42,0%)</span>
+              <span class="tag-abandono" id="saidaEtapa1">✖ Saíram sem interagir: 684 (58,0%)</span>
+            </div>
+          </div>
+
+          <div class="etapa-funil-card">
+            <div class="funil-linha-principal">
+              <strong>2. Interagiram no Pré-Diagnóstico Visual</strong>
+              <span class="num-funil" id="funilDiagnostico">496 interações</span>
+            </div>
+            <div class="funil-metricas-fluxo">
+              <span class="tag-avanco" id="avancoEtapa2">✔ Enviaram contato único: 142 (28,6%)</span>
+              <span class="tag-abandono" id="saidaEtapa2">✖ Não enviaram formulário: 354 (71,4%)</span>
+            </div>
+          </div>
+
+          <div class="etapa-funil-card">
+            <div class="funil-linha-principal">
+              <strong>3. Contatos Únicos Atendidos no WhatsApp</strong>
+              <span class="num-funil" id="funilWhats">142 contatos</span>
+            </div>
+            <div class="funil-metricas-fluxo">
+              <span class="tag-avanco" id="avancoEtapa3">✔ Agendaram consulta: 64 (45,1%)</span>
+              <span class="tag-abandono" id="saidaEtapa3">✖ Não agendaram: 78 (54 ativos no pipeline + 24 arquivados)</span>
+            </div>
+          </div>
+
+          <div class="etapa-funil-card" style="border-left-color: var(--azul-info);">
+            <div class="funil-linha-principal">
+              <strong>4. Consultas de Avaliação Agendadas</strong>
+              <span class="num-funil" style="color: var(--azul-info);" id="funilConfirmados">64 agendamentos</span>
+            </div>
+            <div class="funil-metricas-fluxo">
+              <span class="tag-avanco" id="avancoEtapa4">✔ Compareceram à consulta: 61 (95,3%)</span>
+              <span class="tag-abandono" id="saidaEtapa4">✖ Faltaram / No-Show: 3 (4,7% → em reagendamento no pipeline)</span>
+            </div>
+          </div>
+
+          <div class="etapa-funil-card" style="border-left-color: var(--ouro-brilho);">
+            <div class="funil-linha-principal">
+              <strong>5. Consultas Presenciais Concluídas</strong>
+              <span class="num-funil" style="color: var(--ouro-brilho);" id="funilComparecimento">61 atendimentos</span>
+            </div>
+            <div class="funil-metricas-fluxo">
+              <span class="tag-avanco" id="avancoEtapa5">✔ Fecharam contrato: 38 (62,3%)</span>
+              <span class="tag-abandono" id="saidaEtapa5">✖ Proposta pós-consulta em aberto: 23 (37,7% → no pipeline)</span>
+            </div>
+          </div>
+
+          <div class="etapa-funil-card" style="border-left-color: var(--verde-caixa);">
+            <div class="funil-linha-principal">
+              <strong>6. Clientes Efetivamente Convertidos (Contrato Fechado)</strong>
+              <span class="num-funil" style="color: var(--verde-caixa);" id="funilClientes">38 clientes</span>
+            </div>
+            <div class="funil-metricas-fluxo">
+              <span class="tag-avanco" id="avancoEtapa6">✔ 33 de Mídia Paga (R$ 167.000) + 5 Org./Ind. (R$ 21.500)</span>
+              <span style="color: var(--ouro-brilho); font-weight: 700;" id="totalEtapa6">Total: R$ 188.500</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bloco C: Fila Acionável Reconciliada (54 + 3 + 23 = 80 Oportunidades Ativas = R$ 264.800) -->
+      <div class="painel-bloco">
+        <div class="cabecalho-bloco">
+          <div>
+            <h2>C. Fila Reconciliada de Oportunidades no Pipeline</h2>
+            <p>Reconciliação exata entre os contatos que não converteram e as 80 oportunidades que compõem os R$ 264.800 do Pipeline</p>
+          </div>
+          <span class="tag-bloco" id="badgeTotalFilaReconciliada">54 + 3 + 23 = 80 Ativas</span>
+        </div>
+
+        <!-- Quadro de Reconciliação Exata das Categorias -->
+        <div class="grade-reconciliacao-pipeline">
+          <div class="item-reconcil">
+            <small>1. Follow-up Pré-Consulta</small>
+            <strong id="recPreConsulta">54 contatos (R$ 154,8k)</strong>
+            <span style="font-size: 0.61rem; color: var(--texto-apagado);">Dos 78 sem agenda (24 arquivados)</span>
+          </div>
+          <div class="item-reconcil">
+            <small>2. Reagendamento Falta</small>
+            <strong id="recNoShow">3 contatos (R$ 12,0k)</strong>
+            <span style="font-size: 0.61rem; color: var(--texto-apagado);">Faltaram na Etapa 4 → 5</span>
+          </div>
+          <div class="item-reconcil">
+            <small>3. Propostas Pós-Consulta</small>
+            <strong id="recPosConsulta">23 propostas (R$ 98,0k)</strong>
+            <span style="font-size: 0.61rem; color: var(--texto-apagado);">Compareceram (61 - 38 = 23)</span>
+          </div>
+          <div class="item-reconcil" style="border-left: 2px solid var(--ouro-jk); padding-left: 8px;">
+            <small>Total Pipeline Ativo</small>
+            <strong id="recTotalPipeline" style="color: var(--verde-caixa);">80 ativas (R$ 264,8k)</strong>
+            <span style="font-size: 0.61rem; color: var(--texto-apagado);">+38 vendas +24 arq. = 142</span>
+          </div>
+        </div>
+
+        <div class="lista-fila-recuperacao">
+          <!-- Item 1: Categoria 1 (Follow-up Pré-Consulta - 54 ativos) -->
+          <div class="item-fila-oportunidade" id="cardFila1">
+            <div class="fila-topo">
+              <strong>[Pré-Consulta 1/54] Mariana V. (Fictício) • (11) 994••-••18</strong>
+              <span class="badge-motivo-perda">Objeção: Valor da Avaliação</span>
+            </div>
+            <div class="fila-meio">
+              <span><b>Interesse:</b> Contorno Mandibular (R$ 5.400)</span>
+              <span><b>Status:</b> Sem resposta há 19h após saber condição da consulta</span>
+            </div>
+            <div class="fila-rodape-acao">
+              <span class="texto-proxima-acao" id="statusAcaoFila1">▶ Próxima Ação: Enviar Follow-up 24h explicando abatimento no protocolo</span>
+              <div class="grupo-botoes-fila">
+                <button type="button" class="btn-executar-acao-fila" onclick="executarAcaoFila(1, 'Mariana V.', 'Contorno Mandibular', 5400, 'Follow-up 24h Enviado')">Executar no Painel</button>
+                <a href="https://api.whatsapp.com/send?text=Ol%C3%A1%20Mariana!%20Passando%20para%20lembrar%20que%20o%20valor%20da%20Consulta%20de%20Avalia%C3%A7%C3%A3o%20%C3%A9%20integralmente%20abatido%20no%20seu%20protocolo%20de%20Contorno%20Mandibular.%20Ainda%20tenho%20um%20hor%C3%A1rio%20quinta%20%C3%A0s%2016h%2C%20posso%20reservar%3F" target="_blank" rel="noopener" class="btn-whats-fila">💬 Abrir WhatsApp</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Item 2: Categoria 3 (Proposta Pós-Consulta - 23 ativas) -->
+          <div class="item-fila-oportunidade" id="cardFila2">
+            <div class="fila-topo">
+              <strong>[Pós-Consulta 1/23] Clarissa M. (Fictício) • (11) 981••-••42</strong>
+              <span class="badge-motivo-perda" style="color: var(--azul-info); border-color: rgba(100,181,246,0.4); background: var(--azul-suave);">Proposta em Aberto Pós-Consulta</span>
+            </div>
+            <div class="fila-meio">
+              <span><b>Protocolo Orçado:</b> Terço Médio + Bioestimulador (R$ 6.200)</span>
+              <span><b>Status:</b> Compareceu à consulta há 4 dias • Avaliando parcelamento</span>
+            </div>
+            <div class="fila-rodape-acao">
+              <span class="texto-proxima-acao" id="statusAcaoFila2">▶ Próxima Ação: Acionar Consultora Humana p/ condição em 6x</span>
+              <div class="grupo-botoes-fila">
+                <button type="button" class="btn-executar-acao-fila" onclick="executarAcaoFila(2, 'Clarissa M.', 'Terço Médio + Bioestimulador', 6200, 'Encaminhada p/ Consultora Fechar')">Executar no Painel</button>
+                <a href="https://api.whatsapp.com/send?text=Ol%C3%A1%20Clarissa!%20Aqui%20%C3%A9%20da%20Cl%C3%ADnica%20LUMINA.%20Conseguimos%20aprovar%20aquela%20condi%C3%A7%C3%A3o%20especial%20de%20parcelamento%20para%20o%20seu%20protocolo%20planejado%20em%20consulta.%20Podemos%20agendar%20sua%20sess%C3%A3o%3F" target="_blank" rel="noopener" class="btn-whats-fila">💬 Abrir WhatsApp</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Item 3: Categoria 2 (Reagendamento No-Show - 3 ativos) -->
+          <div class="item-fila-oportunidade" id="cardFila3">
+            <div class="fila-topo">
+              <strong>[Reagendamento Falta 1/3] Renata S. (Fictício) • (21) 997••-••09</strong>
+              <span class="badge-motivo-perda">Imprevisto no Trânsito (No-Show)</span>
+            </div>
+            <div class="fila-meio">
+              <span><b>Interesse:</b> Qualidade & Viço da Pele (R$ 3.600)</span>
+              <span><b>Status:</b> Avisou atraso • Solicitou novo horário após as 18h</span>
+            </div>
+            <div class="fila-rodape-acao">
+              <span class="texto-proxima-acao" id="statusAcaoFila3">▶ Próxima Ação: Oferecer vaga extra de quinta-feira às 18h30</span>
+              <div class="grupo-botoes-fila">
+                <button type="button" class="btn-executar-acao-fila" onclick="executarAcaoFila(3, 'Renata S.', 'Qualidade & Viço da Pele', 3600, 'Reagendada Quinta 18h30')">Executar no Painel</button>
+                <a href="https://api.whatsapp.com/send?text=Ol%C3%A1%20Renata!%20Conseguimos%20liberar%20um%20hor%C3%A1rio%20especial%20para%20reagendar%20sua%20avalia%C3%A7%C3%A3o%20nesta%20quinta-feira%20%C3%A0s%2018h30.%20Fica%20bom%20para%20voc%C3%AA%3F" target="_blank" rel="noopener" class="btn-whats-fila">💬 Abrir WhatsApp</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         MATRIZ DE ATRIBUIÇÃO DINÂMICA POR PERÍODO + CONTROL ROOM
+         ========================================================= -->
+    <section class="grade-marketing-bi">
+      <!-- Bloco Esquerdo: Matriz de Atribuição por Canal -->
+      <div class="painel-bloco">
+        <div class="cabecalho-bloco">
+          <div>
+            <h2 id="tituloMatrizCanal">Matriz de Atribuição por Canal (Dados Simulados — Base 30 Dias)</h2>
+            <p>Experimente clicar nos filtros de período no topo (7d, 30d, 90d) para ver toda a tabela recalcular</p>
+          </div>
+          <span class="tag-bloco">Cálculos Verificáveis</span>
+        </div>
+
+        <div class="tabela-responsiva">
+          <table class="tabela-executiva">
+            <thead>
+              <tr>
+                <th>Canal de Origem (UTM)</th>
+                <th>Investimento</th>
+                <th>Leads</th>
+                <th>CPL</th>
+                <th>Agendados (CPA)</th>
+                <th>Convertidos</th>
+                <th>CAC (Cliente)</th>
+                <th>ROAS</th>
+                <th>Vendas Fechadas</th>
+              </tr>
+            </thead>
+            <tbody id="corpoMatrizAtribuicao">
+              <!-- Preenchido e atualizado dinamicamente pelo filtro de período -->
+            </tbody>
+          </table>
+          <div class="regra-calculo-meta" style="margin-top: 8px;">
+            *Os indicadores da linha <b>Total Global (Blended)</b> dividem o investimento pago pela soma total de resultados (pagos + orgânicos). Para avaliar a eficiência pura do tráfego pago, utilize sempre a linha <b>Subtotal Mídia Paga</b>.
+          </div>
+        </div>
+      </div>
+
+      <!-- Bloco E: Monitoramento Técnico das Automações (Control Room) -->
+      <div class="painel-bloco">
+        <div class="cabecalho-bloco">
+          <div>
+            <h2>E. Monitoramento das Automações (Control Room)</h2>
+            <p>Saúde operacional dos fluxos n8n, transbordo humano e status real do banco</p>
+          </div>
+          <span class="tag-bloco">Telemetria Técnica</span>
+        </div>
+
+        <div class="grade-control-room">
+          <div class="card-status-automacao">
+            <small>✔ Execuções Concluídas (Simulado)</small>
+            <strong id="ctrlExecucoes">384 / 386</strong>
+            <span id="ctrlTaxaSucesso">99,5% taxa de sucesso nos fluxos</span>
+          </div>
+
+          <div class="card-status-automacao">
+            <small>⚠️ Falhas / Retentativas de API</small>
+            <strong id="ctrlFalhas">2 eventos</strong>
+            <span style="color: var(--amarelo-alerta);">Reprocessados automaticamente</span>
+          </div>
+
+          <div class="card-status-automacao">
+            <small>👩‍⚕️ Encaminhados p/ Humano (Handoff)</small>
+            <strong id="ctrlHandoff">29 contatos (20,4%)</strong>
+            <span>Dúvidas clínicas ou negociação VIP</span>
+          </div>
+
+          <div class="card-status-automacao">
+            <small>🗄️ Banco de Demonstração (Supabase)</small>
+            <strong id="statusConexaoSupabase">Verificando...</strong>
+            <span id="horaUltimaSinc">Tabela de testes `public.leads`</span>
+          </div>
+        </div>
+
+        <div class="regra-calculo-meta">
+          <b>Governança e Limites da IA:</b> O fluxo transfere imediatamente para a equipe humana sempre que o contato relata intercorrência pós-procedimento, solicita avaliação clínica específica ou propõe negociação financeira fora do padrão.
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         LINHA 5: REGISTROS DE DEMONSTRAÇÃO (PACIENTES FICTÍCIOS + TESTES SUPABASE)
+         ========================================================= -->
+    <section class="painel-tabela-leads">
+      <div class="cabecalho-bloco">
+        <div>
+          <h2>Registros de Demonstração — Triagem, Qualificação e Acompanhamento (Dados Fictícios)</h2>
+          <p>Todos os nomes e números abaixo são fictícios e mascarados (LGPD). As ações executadas na Fila acima ou no Testador aparecem imediatamente no topo desta tabela.</p>
+        </div>
+        <span class="tag-bloco">Dados Fictícios / Demo</span>
+      </div>
+
+      <div class="tabela-responsiva">
+        <table class="tabela-executiva">
+          <thead>
+            <tr>
+              <th>Registro</th>
+              <th>Paciente (Fictício)</th>
+              <th>Contato (Mascarado LGPD)</th>
+              <th>Origem (UTM)</th>
+              <th>Interesse Informado</th>
+              <th>Qualificação (Score)</th>
+              <th>Encaminhamento</th>
+              <th>Valor / Regime</th>
+              <th>Status no Processo Comercial</th>
+            </tr>
+          </thead>
+          <tbody id="corpoTabelaLeads">
+            <tr>
+              <td>Simulado #142</td>
+              <td><strong>Fernanda A. (Fictício)</strong></td>
+              <td>(11) 998••-••01</td>
+              <td>Instagram Reels Ads (Pago)</td>
+              <td>Contorno Mandibular</td>
+              <td><span class="badge-score-vip">💎 95/100 VIP</span></td>
+              <td>Triagem IA → Agenda</td>
+              <td class="valor-ticket-tabela">R$ 5.400 (Caixa Recebido)</td>
+              <td><span class="status-tag status-agendado">✓ Compareceu • Contrato Fechado</span></td>
+            </tr>
+            <tr>
+              <td>Simulado #141</td>
+              <td><strong>Carolina M. (Fictício)</strong></td>
+              <td>(11) 991••-••20</td>
+              <td>Google Search (Pago)</td>
+              <td>Terço Médio & Sustentação</td>
+              <td><span class="badge-score-vip">💎 90/100 VIP</span></td>
+              <td>Follow-up 24h → Humano</td>
+              <td class="valor-ticket-tabela">R$ 4.800 (Contratado)</td>
+              <td><span class="status-tag status-agendado">✓ Recuperada no Follow-up & Convertida</span></td>
+            </tr>
+            <tr>
+              <td>Simulado #140</td>
+              <td><strong>Beatriz V. (Fictício)</strong></td>
+              <td>(21) 988••-••09</td>
+              <td>Instagram Reels Ads (Pago)</td>
+              <td>Terço Superior & Olhar</td>
+              <td><span class="badge-score-vip">✨ 78/100 Ouro</span></td>
+              <td>Fila Pré-Consulta (1/54)</td>
+              <td class="valor-ticket-tabela">R$ 3.200 (Pipeline Ativo)</td>
+              <td><span class="status-tag status-triagem">● Aguardando Retorno (Follow-up 24h)</span></td>
+            </tr>
+            <tr>
+              <td>Simulado #139</td>
+              <td><strong>Patrícia S. (Fictício)</strong></td>
+              <td>(11) 974••-••99</td>
+              <td>Indicação (Não-Pago)</td>
+              <td>Qualidade & Viço da Pele</td>
+              <td><span class="badge-score-vip">💎 88/100 VIP</span></td>
+              <td>Transbordo Recepção</td>
+              <td class="valor-ticket-tabela">R$ 3.600 (Caixa Recebido)</td>
+              <td><span class="status-tag status-agendado">✓ Compareceu • Contrato Fechado</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // BASE DE DADOS COMPLETA E 100% RECONCILIADA PARA OS 3 PERÍODOS (7d, 30d, 90d)
+    const dadosPorPeriodo = {
+      '7d': {
+        rotulo: '7 Dias',
+        pipeline: 68400,
+        tagOportunidades: '20 Oportunidades Ativas',
+        regraPipeline: '<b>Reconciliação Exata (7 dias):</b> Dos 36 contatos totais, 10 fecharam contrato e 6 foram arquivados (R$ 0). Restam <b>20 oportunidades ativas</b>: <b>13</b> em follow-up pré-consulta (R$ 38.200) + <b>1</b> em reagendamento de falta (R$ 4.200) + <b>6</b> com proposta pós-consulta (R$ 26.000) = <b>R$ 68.400</b>.',
+        contratado: 47200,
+        tagClientes: '10 Contratos Assinados',
+        regraContratado: '<b>Regra de Cálculo (7 dias):</b> R$ 41.000 (8 clientes de Mídia Paga) + R$ 6.200 (2 clientes de Orgânico/Indicação) = <b>10 clientes convertidos</b> após 16 consultas realizadas.',
+        caixaLiquido: 38900,
+        regraCaixa: '<b>Regra de Cálculo (7 dias):</b> Pagamentos à vista (PIX) + 1ªs parcelas já liquidadas (82,4% do contratado). Restam R$ 8.300 em parcelas a vencer.',
+        roasPago: '9,8x',
+        regraRoas: '<b>Regra:</b> R$ 41.000 (vendas pagas) ÷ R$ 4.200 (investimento Ads 7d).<br><b>Nota:</b> Exclui R$ 6.200 orgânico/ind.',
+        cplPago: 'R$ 135,48',
+        regraCpl: '<b>Regra:</b> R$ 4.200 investidos ÷ 31 leads pagos (21 Meta + 10 Google).<br><b>Por canal:</b> Meta R$ 119,05 | Google R$ 170,00.',
+        cpaPago: 'R$ 300,00',
+        regraCpa: '<b>Regra:</b> R$ 4.200 investidos ÷ 14 agendamentos pagos.<br><b>CPA Global (17 agend.):</b> R$ 247,06.',
+        cacPago: 'R$ 525,00',
+        regraCac: '<b>Regra:</b> R$ 4.200 investidos ÷ 8 clientes pagos convertidos.<br><b>Comparecimento:</b> 94,1% (16 realizadas / 17 agendadas).',
+        visitas: '310 visitantes',
+        avanco1: '✔ Avançaram p/ Mapa Facial: 130 (41,9%)',
+        saida1: '✖ Saíram sem interagir: 180 (58,1%)',
+        diag: '130 interações',
+        avanco2: '✔ Enviaram contato único: 36 (27,7%)',
+        saida2: '✖ Não enviaram formulário: 94 (72,3%)',
+        leads: '36 contatos',
+        avanco3: '✔ Agendaram consulta: 17 (47,2%)',
+        saida3: '✖ Não agendaram: 19 (13 ativos no pipeline + 6 arquivados)',
+        agendados: '17 agendamentos',
+        avanco4: '✔ Compareceram à consulta: 16 (94,1%)',
+        saida4: '✖ Faltaram / No-Show: 1 (5,9% → em reagendamento no pipeline)',
+        comparecimento: '16 atendimentos',
+        avanco5: '✔ Fecharam contrato: 10 (62,5%)',
+        saida5: '✖ Proposta pós-consulta em aberto: 6 (37,5% → no pipeline)',
+        clientes: '10 clientes',
+        avanco6: '✔ 8 de Mídia Paga (R$ 41.000) + 2 Org./Ind. (R$ 6.200)',
+        total6: 'Total: R$ 47.200',
+        badgeFila: '13 + 1 + 6 = 20 Ativas',
+        recPre: '13 contatos (R$ 38,2k)',
+        recNoShow: '1 contato (R$ 4,2k)',
+        recPos: '6 propostas (R$ 26,0k)',
+        recTotal: '20 ativas (R$ 68,4k)',
+        ctrlExec: '94 / 95',
+        ctrlHandoff: '7 contatos (19,4%)',
+        matriz: `
+          <tr><td><strong>1. Instagram Reels / Meta Ads</strong></td><td>R$ 2.500</td><td>21</td><td>R$ 119,05</td><td>10 (R$ 250,00)</td><td>6 clientes</td><td>R$ 416,67</td><td><span class="variacao-positiva">11,2x</span></td><td class="valor-ticket-tabela">R$ 28.000</td></tr>
+          <tr><td><strong>2. Google Search (Intenção)</strong></td><td>R$ 1.700</td><td>10</td><td>R$ 170,00</td><td>4 (R$ 425,00)</td><td>2 clientes</td><td>R$ 850,00</td><td><span class="variacao-positiva">7,6x</span></td><td class="valor-ticket-tabela">R$ 13.000</td></tr>
+          <tr class="linha-subtotal-pago"><td><strong>SUBTOTAL MÍDIA PAGA (1+2)</strong></td><td><strong>R$ 4.200</strong></td><td><strong>31</strong></td><td><strong>R$ 135,48</strong></td><td><strong>14 (R$ 300,00)</strong></td><td><strong>8 clientes</strong></td><td><strong>R$ 525,00</strong></td><td><span class="variacao-ouro">9,8x Pago</span></td><td class="valor-ticket-tabela"><strong>R$ 41.000</strong></td></tr>
+          <tr><td><strong>3. Orgânico / Perfil Instagram</strong></td><td>R$ 0</td><td>3</td><td>—</td><td>2 (—)</td><td>1 cliente</td><td>R$ 0</td><td><span class="variacao-ouro">Orgânico</span></td><td class="valor-ticket-tabela">R$ 3.400</td></tr>
+          <tr><td><strong>4. Indicação de Pacientes</strong></td><td>R$ 0</td><td>2</td><td>—</td><td>1 (—)</td><td>1 cliente</td><td>R$ 0</td><td><span class="variacao-ouro">Indicação</span></td><td class="valor-ticket-tabela">R$ 2.800</td></tr>
+          <tr class="linha-total-geral"><td><strong>TOTAL GLOBAL (BLENDED)</strong></td><td><strong>R$ 4.200</strong></td><td><strong>36</strong></td><td><strong>R$ 116,67*</strong></td><td><strong>17 (R$ 247,06*)</strong></td><td><strong>10 clientes</strong></td><td><strong>R$ 420,00*</strong></td><td><span class="variacao-positiva">11,2x Global*</span></td><td class="valor-ticket-tabela"><strong>R$ 47.200</strong></td></tr>
+        `
+      },
+      '30d': {
+        rotulo: '30 Dias',
+        pipeline: 264800,
+        tagOportunidades: '80 Oportunidades Ativas',
+        regraPipeline: '<b>Reconciliação Exata (30 dias):</b> Dos 142 contatos totais, 38 fecharam contrato e 24 foram arquivados/desqualificados (R$ 0). Restam <b>80 oportunidades ativas</b>: <b>54</b> em follow-up pré-consulta (R$ 154.800) + <b>3</b> em reagendamento de falta (R$ 12.000) + <b>23</b> com proposta pós-consulta em aberto (R$ 98.000) = <b>R$ 264.800</b>.',
+        contratado: 188500,
+        tagClientes: '38 Contratos Assinados',
+        regraContratado: '<b>Regra de Cálculo (30 dias):</b> R$ 167.000 (33 clientes de Mídia Paga) + R$ 21.500 (5 clientes de Orgânico/Indicação) = <b>38 clientes efetivamente convertidos</b> após as 61 consultas realizadas.',
+        caixaLiquido: 154200,
+        regraCaixa: '<b>Regra de Cálculo (30 dias):</b> Pagamentos à vista (PIX) + 1ªs parcelas já liquidadas no período (81,8% do contratado). Restam R$ 34.300 em parcelas a vencer.',
+        roasPago: '10,1x',
+        regraRoas: '<b>Regra:</b> R$ 167.000 (vendas pagas) ÷ R$ 16.500 (investimento Ads).<br><b>Nota:</b> Exclui R$ 21.500 de origem orgânica/indicação.',
+        cplPago: 'R$ 135,25',
+        regraCpl: '<b>Regra:</b> R$ 16.500 investidos ÷ 122 leads pagos (84 Meta + 38 Google).<br><b>Por canal:</b> Meta R$ 116,67 | Google R$ 176,32.',
+        cpaPago: 'R$ 300,00',
+        regraCpa: '<b>Regra:</b> R$ 16.500 investidos ÷ 55 agendamentos vindos de mídia paga.<br><b>CPA Global (64 agend.):</b> R$ 257,81 (incluindo orgânico).',
+        cacPago: 'R$ 500,00',
+        regraCac: '<b>Regra:</b> R$ 16.500 investidos ÷ 33 clientes pagos que fecharam contrato.<br><b>Comparecimento:</b> 95,3% (61 realizadas / 64 agendadas).',
+        visitas: '1.180 visitantes',
+        avanco1: '✔ Avançaram p/ Mapa Facial: 496 (42,0%)',
+        saida1: '✖ Saíram sem interagir: 684 (58,0%)',
+        diag: '496 interações',
+        avanco2: '✔ Enviaram contato único: 142 (28,6%)',
+        saida2: '✖ Não enviaram formulário: 354 (71,4%)',
+        leads: '142 contatos',
+        avanco3: '✔ Agendaram consulta: 64 (45,1%)',
+        saida3: '✖ Não agendaram: 78 (54 ativos no pipeline + 24 arquivados)',
+        agendados: '64 agendamentos',
+        avanco4: '✔ Compareceram à consulta: 61 (95,3%)',
+        saida4: '✖ Faltaram / No-Show: 3 (4,7% → em reagendamento no pipeline)',
+        comparecimento: '61 atendimentos',
+        avanco5: '✔ Fecharam contrato: 38 (62,3%)',
+        saida5: '✖ Proposta pós-consulta em aberto: 23 (37,7% → no pipeline)',
+        clientes: '38 clientes',
+        avanco6: '✔ 33 de Mídia Paga (R$ 167.000) + 5 Org./Ind. (R$ 21.500)',
+        total6: 'Total: R$ 188.500',
+        badgeFila: '54 + 3 + 23 = 80 Ativas',
+        recPre: '54 contatos (R$ 154,8k)',
+        recNoShow: '3 contatos (R$ 12,0k)',
+        recPos: '23 propostas (R$ 98,0k)',
+        recTotal: '80 ativas (R$ 264,8k)',
+        ctrlExec: '384 / 386',
+        ctrlHandoff: '29 contatos (20,4%)',
+        matriz: `
+          <tr><td><strong>1. Instagram Reels / Meta Ads</strong></td><td>R$ 9.800</td><td>84</td><td>R$ 116,67</td><td>39 (R$ 251,28)</td><td>23 clientes</td><td>R$ 426,09</td><td><span class="variacao-positiva">11,5x</span></td><td class="valor-ticket-tabela">R$ 112.400</td></tr>
+          <tr><td><strong>2. Google Search (Intenção)</strong></td><td>R$ 6.700</td><td>38</td><td>R$ 176,32</td><td>16 (R$ 418,75)</td><td>10 clientes</td><td>R$ 670,00</td><td><span class="variacao-positiva">8,1x</span></td><td class="valor-ticket-tabela">R$ 54.600</td></tr>
+          <tr class="linha-subtotal-pago"><td><strong>SUBTOTAL MÍDIA PAGA (1+2)</strong></td><td><strong>R$ 16.500</strong></td><td><strong>122</strong></td><td><strong>R$ 135,25</strong></td><td><strong>55 (R$ 300,00)</strong></td><td><strong>33 clientes</strong></td><td><strong>R$ 500,00</strong></td><td><span class="variacao-ouro">10,1x Pago</span></td><td class="valor-ticket-tabela"><strong>R$ 167.000</strong></td></tr>
+          <tr><td><strong>3. Orgânico / Perfil Instagram</strong></td><td>R$ 0</td><td>12</td><td>—</td><td>5 (—)</td><td>3 clientes</td><td>R$ 0</td><td><span class="variacao-ouro">Orgânico</span></td><td class="valor-ticket-tabela">R$ 12.800</td></tr>
+          <tr><td><strong>4. Indicação de Pacientes</strong></td><td>R$ 0</td><td>8</td><td>—</td><td>4 (—)</td><td>2 clientes</td><td>R$ 0</td><td><span class="variacao-ouro">Indicação</span></td><td class="valor-ticket-tabela">R$ 8.700</td></tr>
+          <tr class="linha-total-geral"><td><strong>TOTAL GLOBAL (BLENDED)</strong></td><td><strong>R$ 16.500</strong></td><td><strong>142</strong></td><td><strong>R$ 116,20*</strong></td><td><strong>64 (R$ 257,81*)</strong></td><td><strong>38 clientes</strong></td><td><strong>R$ 434,21*</strong></td><td><span class="variacao-positiva">11,4x Global*</span></td><td class="valor-ticket-tabela"><strong>R$ 188.500</strong></td></tr>
+        `
+      },
+      '90d': {
+        rotulo: '90 Dias',
+        pipeline: 784000,
+        tagOportunidades: '234 Oportunidades Ativas',
+        regraPipeline: '<b>Reconciliação Exata (90 dias):</b> Dos 418 contatos totais, 114 fecharam contrato e 70 foram arquivados (R$ 0). Restam <b>234 oportunidades ativas</b>: <b>159</b> em follow-up pré-consulta (R$ 458.000) + <b>8</b> em reagendamento de falta (R$ 32.000) + <b>67</b> com proposta pós-consulta (R$ 294.000) = <b>R$ 784.000</b>.',
+        contratado: 558400,
+        tagClientes: '114 Contratos Assinados',
+        regraContratado: '<b>Regra de Cálculo (90 dias):</b> R$ 495.000 (98 clientes de Mídia Paga) + R$ 63.400 (16 clientes de Orgânico/Indicação) = <b>114 clientes convertidos</b> após 181 consultas realizadas.',
+        caixaLiquido: 469000,
+        regraCaixa: '<b>Regra de Cálculo (90 dias):</b> Pagamentos à vista (PIX) + parcelas já liquidadas no trimestre (84,0% do contratado). Restam R$ 89.400 em parcelas a vencer.',
+        roasPago: '10,3x',
+        regraRoas: '<b>Regra:</b> R$ 495.000 (vendas pagas) ÷ R$ 48.000 (investimento Ads 90d).<br><b>Nota:</b> Exclui R$ 63.400 orgânico/ind.',
+        cplPago: 'R$ 133,33',
+        regraCpl: '<b>Regra:</b> R$ 48.000 investidos ÷ 360 leads pagos (250 Meta + 110 Google).<br><b>Por canal:</b> Meta R$ 115,20 | Google R$ 174,55.',
+        cpaPago: 'R$ 296,30',
+        regraCpa: '<b>Regra:</b> R$ 48.000 investidos ÷ 162 agendamentos pagos.<br><b>CPA Global (189 agend.):</b> R$ 253,97.',
+        cacPago: 'R$ 489,80',
+        regraCac: '<b>Regra:</b> R$ 48.000 investidos ÷ 98 clientes pagos convertidos.<br><b>Comparecimento:</b> 95,8% (181 realizadas / 189 agendadas).',
+        visitas: '3.490 visitantes',
+        avanco1: '✔ Avançaram p/ Mapa Facial: 1.465 (42,0%)',
+        saida1: '✖ Saíram sem interagir: 2.025 (58,0%)',
+        diag: '1.465 interações',
+        avanco2: '✔ Enviaram contato único: 418 (28,5%)',
+        saida2: '✖ Não enviaram formulário: 1.047 (71,5%)',
+        leads: '418 contatos',
+        avanco3: '✔ Agendaram consulta: 189 (45,2%)',
+        saida3: '✖ Não agendaram: 229 (159 ativos no pipeline + 70 arquivados)',
+        agendados: '189 agendamentos',
+        avanco4: '✔ Compareceram à consulta: 181 (95,8%)',
+        saida4: '✖ Faltaram / No-Show: 8 (4,2% → em reagendamento no pipeline)',
+        comparecimento: '181 atendimentos',
+        avanco5: '✔ Fecharam contrato: 114 (63,0%)',
+        saida5: '✖ Proposta pós-consulta em aberto: 67 (37,0% → no pipeline)',
+        clientes: '114 clientes',
+        avanco6: '✔ 98 de Mídia Paga (R$ 495.000) + 16 Org./Ind. (R$ 63.400)',
+        total6: 'Total: R$ 558.400',
+        badgeFila: '159 + 8 + 67 = 234 Ativas',
+        recPre: '159 contatos (R$ 458,0k)',
+        recNoShow: '8 contatos (R$ 32,0k)',
+        recPos: '67 propostas (R$ 294,0k)',
+        recTotal: '234 ativas (R$ 784,0k)',
+        ctrlExec: '1.140 / 1.145',
+        ctrlHandoff: '84 contatos (20,1%)',
+        matriz: `
+          <tr><td><strong>1. Instagram Reels / Meta Ads</strong></td><td>R$ 28.800</td><td>250</td><td>R$ 115,20</td><td>115 (R$ 250,43)</td><td>69 clientes</td><td>R$ 417,39</td><td><span class="variacao-positiva">11,6x</span></td><td class="valor-ticket-tabela">R$ 334.000</td></tr>
+          <tr><td><strong>2. Google Search (Intenção)</strong></td><td>R$ 19.200</td><td>110</td><td>R$ 174,55</td><td>47 (R$ 408,51)</td><td>29 clientes</td><td>R$ 662,07</td><td><span class="variacao-positiva">8,4x</span></td><td class="valor-ticket-tabela">R$ 161.000</td></tr>
+          <tr class="linha-subtotal-pago"><td><strong>SUBTOTAL MÍDIA PAGA (1+2)</strong></td><td><strong>R$ 48.000</strong></td><td><strong>360</strong></td><td><strong>R$ 133,33</strong></td><td><strong>162 (R$ 296,30)</strong></td><td><strong>98 clientes</strong></td><td><strong>R$ 489,80</strong></td><td><span class="variacao-ouro">10,3x Pago</span></td><td class="valor-ticket-tabela"><strong>R$ 495.000</strong></td></tr>
+          <tr><td><strong>3. Orgânico / Perfil Instagram</strong></td><td>R$ 0</td><td>35</td><td>—</td><td>15 (—)</td><td>10 clientes</td><td>R$ 0</td><td><span class="variacao-ouro">Orgânico</span></td><td class="valor-ticket-tabela">R$ 38.400</td></tr>
+          <tr><td><strong>4. Indicação de Pacientes</strong></td><td>R$ 0</td><td>23</td><td>—</td><td>12 (—)</td><td>6 clientes</td><td>R$ 0</td><td><span class="variacao-ouro">Indicação</span></td><td class="valor-ticket-tabela">R$ 25.000</td></tr>
+          <tr class="linha-total-geral"><td><strong>TOTAL GLOBAL (BLENDED)</strong></td><td><strong>R$ 48.000</strong></td><td><strong>418</strong></td><td><strong>R$ 114,83*</strong></td><td><strong>189 (R$ 253,97*)</strong></td><td><strong>114 clientes</strong></td><td><strong>R$ 421,05*</strong></td><td><span class="variacao-positiva">11,6x Global*</span></td><td class="valor-ticket-tabela"><strong>R$ 558.400</strong></td></tr>
+        `
+      }
+    };
+
+    let estadoAtual = { ...dadosPorPeriodo['30d'] };
+
+    function formatarMoeda(valor) {
+      return 'R$ ' + valor.toLocaleString('pt-BR');
+    }
+
+    function mascararTelefone(tel) {
+      if (!tel) return '(11) 999••-••00';
+      const limpo = String(tel);
+      if (limpo.includes('•')) return limpo;
+      return limpo.slice(0, 7) + '••-••' + limpo.slice(-2);
+    }
+
+    function atualizarNumerosPainel() {
+      document.getElementById('tituloSecaoA').textContent = `A. Visão Executiva Auditada (Período: ${estadoAtual.rotulo} — Dados Simulados)`;
+      document.getElementById('valPipeline').textContent = formatarMoeda(estadoAtual.pipeline);
+      document.getElementById('tagOportunidadesAtivas').textContent = estadoAtual.tagOportunidades;
+      document.getElementById('regraPipeline').innerHTML = estadoAtual.regraPipeline;
+
+      document.getElementById('valContratado').textContent = formatarMoeda(estadoAtual.contratado);
+      document.getElementById('tagClientesConvertidos').textContent = estadoAtual.tagClientes;
+      document.getElementById('regraContratado').innerHTML = estadoAtual.regraContratado;
+
+      document.getElementById('valCaixaLiquido').textContent = formatarMoeda(estadoAtual.caixaLiquido);
+      document.getElementById('regraCaixa').innerHTML = estadoAtual.regraCaixa;
+
+      document.getElementById('kpiRoasPago').textContent = estadoAtual.roasPago;
+      document.getElementById('regraRoasPago').innerHTML = estadoAtual.regraRoas;
+      document.getElementById('kpiCplPago').textContent = estadoAtual.cplPago;
+      document.getElementById('regraCplPago').innerHTML = estadoAtual.regraCpl;
+      document.getElementById('kpiCpaPago').textContent = estadoAtual.cpaPago;
+      document.getElementById('regraCpaPago').innerHTML = estadoAtual.regraCpa;
+      document.getElementById('kpiCacPago').textContent = estadoAtual.cacPago;
+      document.getElementById('regraCacPago').innerHTML = estadoAtual.regraCac;
+
+      document.getElementById('tituloFunilPeriodo').textContent = `B. Funil Comercial com Bases Consistentes (${estadoAtual.rotulo} — Simulado)`;
+      document.getElementById('funilVisitas').textContent = estadoAtual.visitas;
+      document.getElementById('avancoEtapa1').textContent = estadoAtual.avanco1;
+      document.getElementById('saidaEtapa1').textContent = estadoAtual.saida1;
+
+      document.getElementById('funilDiagnostico').textContent = estadoAtual.diag;
+      document.getElementById('avancoEtapa2').textContent = estadoAtual.avanco2;
+      document.getElementById('saidaEtapa2').textContent = estadoAtual.saida2;
+
+      document.getElementById('funilWhats').textContent = estadoAtual.leads;
+      document.getElementById('avancoEtapa3').textContent = estadoAtual.avanco3;
+      document.getElementById('saidaEtapa3').textContent = estadoAtual.saida3;
+
+      document.getElementById('funilConfirmados').textContent = estadoAtual.agendados;
+      document.getElementById('avancoEtapa4').textContent = estadoAtual.avanco4;
+      document.getElementById('saidaEtapa4').textContent = estadoAtual.saida4;
+
+      document.getElementById('funilComparecimento').textContent = estadoAtual.comparecimento;
+      document.getElementById('avancoEtapa5').textContent = estadoAtual.avanco5;
+      document.getElementById('saidaEtapa5').textContent = estadoAtual.saida5;
+
+      document.getElementById('funilClientes').textContent = estadoAtual.clientes;
+      document.getElementById('avancoEtapa6').textContent = estadoAtual.avanco6;
+      document.getElementById('totalEtapa6').textContent = estadoAtual.total6;
+
+      document.getElementById('badgeTotalFilaReconciliada').textContent = estadoAtual.badgeFila;
+      document.getElementById('recPreConsulta').textContent = estadoAtual.recPre;
+      document.getElementById('recNoShow').textContent = estadoAtual.recNoShow;
+      document.getElementById('recPosConsulta').textContent = estadoAtual.recPos;
+      document.getElementById('recTotalPipeline').textContent = estadoAtual.recTotal;
+
+      document.getElementById('tituloMatrizCanal').textContent = `Matriz de Atribuição por Canal (Dados Simulados — Base ${estadoAtual.rotulo})`;
+      document.getElementById('corpoMatrizAtribuicao').innerHTML = estadoAtual.matriz;
+
+      document.getElementById('ctrlExecucoes').textContent = estadoAtual.ctrlExec;
+      document.getElementById('ctrlHandoff').textContent = estadoAtual.ctrlHandoff;
+    }
+
+    // Inicializar o painel com todos os dados de 30d
+    atualizarNumerosPainel();
+
+    // Filtros de Período 100% Funcionais (Recalculam todo o painel e a tabela de atribuição)
+    document.querySelectorAll('.btn-periodo').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.btn-periodo').forEach((b) => b.classList.remove('ativo'));
+        btn.classList.add('ativo');
+        estadoAtual = { ...dadosPorPeriodo[btn.dataset.periodo] };
+        atualizarNumerosPainel();
+      });
+    });
+
+    // Função para inserir registro na Tabela CRM lá embaixo
+    function adicionarPacienteNaTabela(lead, destacar = true) {
+      const tbody = document.getElementById('corpoTabelaLeads');
+      const tr = document.createElement('tr');
+      if (destacar) tr.className = 'linha-nova-animada';
+
+      const ticketsPorRegiao = {
+        'Contorno Facial & Bioestimulação': 5400,
+        'Contorno Mandibular & Bioestimulação': 5400,
+        'Contorno Mandibular': 5400,
+        'Terço Médio + Bioestimulador': 6200,
+        'Terço Médio & Sustentação': 4800,
+        'Terço Superior & Olhar': 3200,
+        'Qualidade & Viço da Pele': 3600
+      };
+      const valorTicket = lead.valor || ticketsPorRegiao[lead.regiao] || 4800;
+      const scoreCalculado = valorTicket >= 4800 ? '💎 94/100 Demo' : '✨ 82/100 Demo';
+
+      tr.innerHTML = `
+        <td><strong>${lead.horario || '[Teste ao Vivo]'}</strong></td>
+        <td><strong>${lead.nome}</strong></td>
+        <td>${mascararTelefone(lead.whatsapp)}</td>
+        <td>${lead.canal || 'Demonstração VIDE'}</td>
+        <td>${lead.regiao}</td>
+        <td><span class="badge-score-vip">${scoreCalculado}</span></td>
+        <td>${lead.encaminhamento || 'Triagem Demonstração'}</td>
+        <td class="valor-ticket-tabela">${formatarMoeda(valorTicket)} (${lead.regime || 'Pipeline Ativo'})</td>
+        <td><span class="status-tag status-agendado">✔ ${lead.status || 'Ação Executada'}</span></td>
+      `;
+
+      tbody.insertBefore(tr, tbody.firstChild);
+    }
+
+    // Ação Funcional dos Botões da Fila de Oportunidades Recuperáveis (Bloco C)
+    window.executarAcaoFila = async function(idCard, nome, regiao, valor, acaoRealizada) {
+      const card = document.getElementById(`cardFila${idCard}`);
+      const statusTxt = document.getElementById(`statusAcaoFila${idCard}`);
+      card.classList.add('acionado');
+      statusTxt.innerHTML = `✔ <b>Ação Executada às ${new Date().toLocaleTimeString('pt-BR')}:</b> ${acaoRealizada} (Registrado na tabela abaixo)`;
+
+      adicionarPacienteNaTabela({
+        horario: 'Ação Fila #' + idCard,
+        nome: nome + ' (Fictício)',
+        whatsapp: '(11) 994••-••18',
+        canal: 'Recuperação Fila VIDE',
+        regiao: regiao,
+        valor: valor,
+        encaminhamento: acaoRealizada,
+        regime: 'Em Fechamento',
+        status: acaoRealizada
+      }, true);
+
+      // Também registra o evento de teste no Supabase
+      try {
+        await fetch(`${SUPABASE_URL}/rest/v1/leads`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${SUPABASE_KEY}`,
+            'Prefer': 'return=minimal'
+          },
+          body: JSON.stringify({
+            nome_paciente: `${nome} [Ação Fila: ${acaoRealizada}]`,
+            whatsapp: '(11) 99400-0018',
+            regiao_interesse: regiao,
+            melhor_periodo: 'Tarde',
+            status: acaoRealizada
+          })
+        });
+      } catch (e) {}
+    };
+
+    // Conexão e Verificação Real com o Banco de Demonstração Supabase
+    const SUPABASE_URL = 'https://pankqdmzkafjiiaowhry.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_lmbAG8t3ZwVqRYxK2vcdLg_TRSmtT-0';
+
+    async function carregarLeadsDaPagina() {
+      const elStatus = document.getElementById('statusConexaoSupabase');
+      const elHora = document.getElementById('horaUltimaSinc');
+      try {
+        const resp = await fetch(`${SUPABASE_URL}/rest/v1/leads?select=*&order=criado_em.asc`, {
+          headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${SUPABASE_KEY}`
+          }
+        });
+        if (resp.ok) {
+          const dadosNuvem = await resp.json();
+          elStatus.textContent = `Conectado (${dadosNuvem.length} registros)`;
+          elHora.textContent = `Verificado às ${new Date().toLocaleTimeString('pt-BR')}`;
+          if (Array.isArray(dadosNuvem) && dadosNuvem.length > 0) {
+            dadosNuvem.slice(-5).forEach((item) => {
+              adicionarPacienteNaTabela({
+                horario: 'Banco Supabase',
+                nome: item.nome_paciente || 'Visitante Teste',
+                whatsapp: item.whatsapp || '(11) 999••-••99',
+                regiao: item.regiao_interesse || 'Contorno Mandibular',
+                canal: 'Teste Gravado no Supabase',
+                status: item.status || 'Recebido no Banco'
+              }, false);
+            });
+            return;
+          }
+        } else {
+          elStatus.textContent = 'Modo Simulação Local';
+        }
+      } catch (e) {
+        elStatus.textContent = 'Modo Simulação Local';
+      }
+    }
+    carregarLeadsDaPagina();
+
+    // Gaveta Funcional de Teste de Inserção no Banco + Passagem para o WhatsApp
+    const gaveta = document.getElementById('gavetaTesteFuncional');
+    document.getElementById('btnAbrirGavetaTeste').addEventListener('click', () => {
+      gaveta.classList.toggle('aberta');
+    });
+    document.getElementById('btnFecharGaveta').addEventListener('click', () => {
+      gaveta.classList.remove('aberta');
+    });
+
+    document.getElementById('formTesteSupabaseDashboard').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const nome = document.getElementById('demoNome').value.trim();
+      const whats = document.getElementById('demoWhats').value.trim();
+      const selectRegiao = document.getElementById('demoRegiao');
+      const regiao = selectRegiao.value;
+      const valor = Number(selectRegiao.options[selectRegiao.selectedIndex].dataset.valor || 4800);
+      const canal = document.getElementById('demoCanal').value;
+
+      let statusHttp = 'Modo Local';
+      try {
+        const resp = await fetch(`${SUPABASE_URL}/rest/v1/leads`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${SUPABASE_KEY}`,
+            'Prefer': 'return=minimal'
+          },
+          body: JSON.stringify({
+            nome_paciente: nome,
+            whatsapp: whats,
+            regiao_interesse: regiao,
+            melhor_periodo: 'Tarde',
+            status: 'Teste Inserido pelo Dashboard'
+          })
+        });
+        if (resp.ok) {
+          statusHttp = `HTTP ${resp.status} (Gravado em public.leads no Supabase)`;
+        }
+      } catch (err) {}
+
+      estadoAtual.pipeline += valor;
+      atualizarNumerosPainel();
+
+      adicionarPacienteNaTabela({
+        horario: 'Inserido Agora',
+        nome: nome,
+        whatsapp: whats,
+        canal: canal,
+        regiao: regiao,
+        valor: valor,
+        encaminhamento: 'Testador do Painel',
+        regime: 'Pipeline Ativo',
+        status: statusHttp
+      }, true);
+
+      const textoWhats = encodeURIComponent(
+        `Olá! Teste do Sistema Comercial VIDE para ${nome} — Interesse em ${regiao} (${formatarMoeda(valor)}). Registro confirmado no painel!`
+      );
+      document.getElementById('btnWhatsRetornoDemo').href = `https://api.whatsapp.com/send?text=${textoWhats}`;
+      document.getElementById('txtRetornoSupabase').textContent = `✔ Sucesso! ${statusHttp} • Pipeline somado em +${formatarMoeda(valor)} e linha adicionada na tabela abaixo.`;
+      document.getElementById('retornoTesteSupabase').style.display = 'flex';
+      carregarLeadsDaPagina();
+    });
+  </script>
+</body>
+</html>

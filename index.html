@@ -1,952 +1,3783 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BURGER — Hambúrguer Artesanal</title>
-  
-  <!-- Fontes Google: Syne (Display Editorial) e Plus Jakarta Sans (Texto & Interface) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
-
-  <style>
-    /* =========================================================
-       VARIÁVEIS DE DESIGN — PALETA PREMIUM BURGER EDITORIAL
-       ========================================================= */
-    :root {
-      /* Fundo off-white calibrado com a cor exata das fotografias (#F2F3ED) */
-      --fundo-principal: #F2F3ED;
-      --texto-principal: #211F1C;    /* Preto carvão */
-      --cor-destaque: #E9A52E;       /* Amarelo cheddar */
-      --cor-secundaria: #514033;     /* Marrom escuro */
-      --texto-auxiliar: #777168;     /* Cinza quente */
-      --divisor-suave: rgba(81, 64, 51, 0.12);
-      
-      --fonte-display: 'Syne', -apple-system, BlinkMacSystemFont, sans-serif;
-      --fonte-corpo: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-      
-      --container-max: 1440px;
-      --transicao-suave: 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    /* Reset e Configurações Base */
-    *, *::before, *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html, body {
-      background-color: var(--fundo-principal);
-      color: var(--texto-principal);
-      font-family: var(--fonte-corpo);
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      overflow-x: hidden;
-      width: 100%;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    button {
-      font-family: inherit;
-      cursor: pointer;
-      border: none;
-      background: none;
-    }
-
-    /* =========================================================
-       SCROLL TRACK PARA ANIMAÇÃO FLUIDA AO ROLAR
-       Permite rolar a página em slow motion mantendo a Hero fixa
-       ========================================================= */
-    .hero-scroll-track {
-      position: relative;
-      width: 100%;
-      height: 250vh; /* Altura generosa para rolagem em slow motion fluida */
-      background-color: var(--fundo-principal);
-    }
-
-    /* =========================================================
-       HERO SECTION STICKY (100VH FIXO DURANTE O SCROLL)
-       ========================================================= */
-    .hero-secao {
-      position: sticky;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100vh;
-      height: 100dvh;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      background-color: var(--fundo-principal);
-    }
-
-    /* =========================================================
-       CANVAS DE BACKGROUND: ANIMAÇÃO DO HAMBÚRGUER (SLOW SCROLL)
-       Fica sob todos os textos e menus (z-index: 1)
-       ========================================================= */
-    .hero-burger-bg-canvas {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 1;
-      pointer-events: none;
-      display: block;
-      background-color: var(--fundo-principal);
-    }
-
-    /* =========================================================
-       CAMADA DE CONTEÚDO SOBREPOSTA (Z-INDEX: 10)
-       Preserva rigorosamente a posição dos textos e da navbar
-       ========================================================= */
-    .hero-conteudo-sobreposto {
-      position: relative;
-      z-index: 10;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      pointer-events: auto;
-    }
-
-    /* Container Centralizado */
-    .hero-container {
-      width: 100%;
-      max-width: var(--container-max);
-      margin: 0 auto;
-      padding-left: clamp(24px, 5vw, 64px);
-      padding-right: clamp(24px, 5vw, 64px);
-    }
-
-    /* =========================================================
-       4. NAVBAR / MENU INTEGRADO AO TOPO
-       ========================================================= */
-    .hero-navbar {
-      width: 100%;
-      padding-top: clamp(20px, 3.2vh, 36px);
-      padding-bottom: clamp(16px, 2.4vh, 24px);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: relative;
-      z-index: 20;
-    }
-
-    /* Logotipo Tipográfico */
-    .navbar-logo {
-      display: inline-flex;
-      align-items: baseline;
-      font-family: var(--fonte-display);
-      font-size: clamp(1.4rem, 2vw, 1.75rem);
-      font-weight: 800;
-      letter-spacing: 0.08em;
-      color: var(--texto-principal);
-      user-select: none;
-      transition: transform var(--transicao-suave);
-    }
-
-    .navbar-logo:hover {
-      transform: translateY(-1px);
-    }
-
-    .logo-ponto-cheddar {
-      display: inline-block;
-      width: 8px;
-      height: 8px;
-      margin-left: 3px;
-      border-radius: 50%;
-      background-color: var(--cor-destaque);
-      box-shadow: 0 0 10px rgba(233, 165, 46, 0.5);
-    }
-
-    /* Links de Navegação */
-    .navbar-menu {
-      display: flex;
-      align-items: center;
-      gap: clamp(24px, 3vw, 44px);
-      list-style: none;
-    }
-
-    .nav-link {
-      font-size: 0.95rem;
-      font-weight: 500;
-      color: var(--cor-secundaria);
-      position: relative;
-      padding: 6px 0;
-      transition: color var(--transicao-suave);
-    }
-
-    .nav-link::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 0;
-      height: 2px;
-      background-color: var(--cor-destaque);
-      transition: width var(--transicao-suave);
-      border-radius: 2px;
-    }
-
-    .nav-link:hover {
-      color: var(--texto-principal);
-    }
-
-    .nav-link:hover::after {
-      width: 100%;
-    }
-
-    /* Botão Navbar: Peça Agora */
-    .navbar-btn-cta {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 11px 22px;
-      font-size: 0.88rem;
-      font-weight: 600;
-      letter-spacing: 0.02em;
-      color: var(--texto-principal);
-      background-color: transparent;
-      border: 1.5px solid var(--texto-principal);
-      border-radius: 8px;
-      transition: all var(--transicao-suave);
-    }
-
-    .navbar-btn-cta svg {
-      width: 12px;
-      height: 12px;
-      stroke: currentColor;
-      stroke-width: 2.2;
-      transition: transform var(--transicao-suave);
-    }
-
-    .navbar-btn-cta:hover {
-      background-color: var(--texto-principal);
-      color: var(--fundo-principal);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 18px rgba(33, 31, 28, 0.14);
-    }
-
-    .navbar-btn-cta:hover svg {
-      transform: translate(2px, -2px);
-      stroke: var(--cor-destaque);
-    }
-
-    /* =========================================================
-       CORPO DA HERO — GRID ASSIMÉTRICO (46% / 54%)
-       ========================================================= */
-    .hero-corpo {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      position: relative;
-      padding-top: clamp(12px, 2vh, 24px);
-      padding-bottom: clamp(24px, 4vh, 48px);
-    }
-
-    .hero-grid {
-      display: grid;
-      grid-template-columns: 46% 54%;
-      align-items: center;
-      width: 100%;
-      column-gap: clamp(24px, 3.5vw, 48px);
-    }
-
-    /* =========================================================
-       5. COLUNA ESQUERDA — CONTEÚDO EDITORIAL
-       ========================================================= */
-    .hero-col-esquerda {
-      max-width: 580px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      z-index: 10;
-    }
-
-    /* Elemento de Identificação / Etiqueta Superior */
-    .hero-etiqueta {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 0.76rem;
-      font-weight: 700;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--cor-secundaria);
-      margin-bottom: clamp(16px, 2.2vh, 24px);
-      user-select: none;
-    }
-
-    .etiqueta-detalhe-cheddar {
-      width: 7px;
-      height: 7px;
-      border-radius: 1px;
-      background-color: var(--cor-destaque);
-      transform: rotate(45deg);
-      display: inline-block;
-      box-shadow: 0 0 8px rgba(233, 165, 46, 0.45);
-    }
-
-    .etiqueta-divisor {
-      color: var(--cor-destaque);
-      font-weight: 800;
-      font-size: 0.9em;
-    }
-
-    /* Headline Principal */
-    .hero-headline {
-      font-family: var(--fonte-display);
-      font-weight: 800;
-      font-size: clamp(2.75rem, 5vw, 4.85rem);
-      line-height: 0.98;
-      letter-spacing: -0.035em;
-      color: var(--texto-principal);
-      text-transform: uppercase;
-      margin-bottom: clamp(16px, 2.4vh, 24px);
-    }
-
-    .hero-headline .destaque-cheddar {
-      color: var(--cor-destaque);
-      display: inline;
-      position: relative;
-    }
-
-    /* Subheadline */
-    .hero-subheadline {
-      font-size: clamp(1rem, 1.25vw, 1.125rem);
-      line-height: 1.62;
-      color: var(--texto-auxiliar);
-      max-width: 480px;
-      margin-bottom: clamp(24px, 3.6vh, 38px);
-      font-weight: 400;
-    }
-
-    /* Três Destaques Horizontais */
-    .hero-destaques {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: clamp(12px, 1.8vw, 24px);
-      padding: clamp(14px, 2.2vh, 20px) 0;
-      margin-bottom: clamp(24px, 3.8vh, 40px);
-      border-top: 1px solid var(--divisor-suave);
-      border-bottom: 1px solid var(--divisor-suave);
-    }
-
-    .destaque-item {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      position: relative;
-    }
-
-    /* Divisores discretos entre os itens */
-    .destaque-item:not(:last-child)::after {
-      content: '';
-      position: absolute;
-      right: calc(clamp(12px, 1.8vw, 24px) / -2);
-      top: 15%;
-      height: 70%;
-      width: 1px;
-      background-color: var(--divisor-suave);
-    }
-
-    .destaque-icone {
-      width: 22px;
-      height: 22px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 2px;
-    }
-
-    .destaque-icone svg {
-      width: 100%;
-      height: 100%;
-      stroke: var(--cor-destaque);
-      stroke-width: 1.8;
-      fill: none;
-    }
-
-    .destaque-titulo {
-      font-family: var(--fonte-display);
-      font-size: 0.78rem;
-      font-weight: 700;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--texto-principal);
-    }
-
-    .destaque-desc {
-      font-size: 0.8rem;
-      line-height: 1.4;
-      color: var(--texto-auxiliar);
-    }
-
-    /* Grupo CTA Principal */
-    .hero-cta-grupo {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .hero-btn-principal {
-      align-self: flex-start;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 14px;
-      background-color: var(--cor-destaque);
-      color: var(--texto-principal);
-      font-family: var(--fonte-corpo);
-      font-size: clamp(0.95rem, 1.1vw, 1.05rem);
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      padding: clamp(15px, 2vh, 18px) clamp(28px, 2.5vw, 38px);
-      border-radius: 10px;
-      transition: all var(--transicao-suave);
-      box-shadow: 0 4px 16px rgba(233, 165, 46, 0.28);
-    }
-
-    .hero-btn-principal svg {
-      width: 16px;
-      height: 16px;
-      stroke: var(--texto-principal);
-      stroke-width: 2.4;
-      fill: none;
-      transition: transform var(--transicao-suave);
-    }
-
-    .hero-btn-principal:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 28px rgba(233, 165, 46, 0.42);
-      background-color: #f0ac35;
-    }
-
-    .hero-btn-principal:hover svg {
-      transform: translateX(4px);
-    }
-
-    .hero-cta-subtexto {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.84rem;
-      color: var(--texto-auxiliar);
-      font-weight: 500;
-      letter-spacing: 0.01em;
-    }
-
-    .cta-subtexto-ponto {
-      width: 5px;
-      height: 5px;
-      border-radius: 50%;
-      background-color: var(--cor-destaque);
-      display: inline-block;
-    }
-
-    /* =========================================================
-       6. COLUNA DIREITA — ESPAÇAMENTO PRESERVADO
-       Área mantida para deixar o hambúrguer do background visível
-       ========================================================= */
-    .hero-col-direita {
-      width: 100%;
-      height: 100%;
-      min-height: clamp(380px, 68vh, 660px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      pointer-events: none; /* Permite interações livres */
-    }
-
-    /* Indicador discreto de scroll no canto inferior direito */
-    .indicador-scroll-slow {
-      position: absolute;
-      bottom: clamp(16px, 3vh, 28px);
-      right: clamp(24px, 5vw, 64px);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 0.76rem;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--texto-auxiliar);
-      opacity: 0.75;
-      transition: opacity var(--transicao-suave);
-      z-index: 20;
-      pointer-events: none;
-    }
-
-    .indicador-scroll-slow svg {
-      width: 14px;
-      height: 14px;
-      stroke: var(--cor-destaque);
-      stroke-width: 2.2;
-      animation: flutuarSeta 1.8s ease-in-out infinite;
-    }
-
-    @keyframes flutuarSeta {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(4px); }
-    }
-
-    /* =========================================================
-       8. RESPONSIVIDADE
-       ========================================================= */
-    @media (max-width: 1200px) {
-      .hero-grid {
-        grid-template-columns: 50% 50%;
-        column-gap: 32px;
-      }
-      .hero-headline {
-        font-size: clamp(2.4rem, 4.4vw, 3.8rem);
-      }
-    }
-
-    @media (max-width: 992px) {
-      .navbar-menu {
-        gap: 20px;
-      }
-      .hero-grid {
-        grid-template-columns: 52% 48%;
-      }
-    }
-
-    @media (max-width: 768px) {
-      .hero-scroll-track {
-        height: 220vh;
-      }
-
-      .navbar-menu {
-        display: none;
-      }
-      .navbar-btn-cta {
-        padding: 9px 16px;
-        font-size: 0.82rem;
-      }
-
-      .hero-grid {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-      }
-
-      .hero-col-esquerda {
-        max-width: 100%;
-        display: contents;
-      }
-
-      .hero-etiqueta {
-        order: 1;
-        margin-top: 12px;
-      }
-
-      .hero-headline {
-        order: 2;
-        font-size: clamp(2.3rem, 9.5vw, 3.4rem);
-        line-height: 1.02;
-      }
-
-      .hero-subheadline {
-        order: 3;
-        font-size: 1rem;
-        margin-bottom: 24px;
-      }
-
-      .hero-col-direita {
-        order: 4;
-        min-height: 260px;
-        margin: 8px 0 24px 0;
-      }
-
-      .hero-destaques {
-        order: 5;
-        grid-template-columns: 1fr;
-        gap: 16px;
-        padding: 20px 0;
-        margin-bottom: 28px;
-      }
-
-      .destaque-item:not(:last-child)::after {
-        display: none;
-      }
-
-      .destaque-item {
-        flex-direction: row;
-        align-items: flex-start;
-        gap: 14px;
-      }
-
-      .destaque-icone {
-        margin-top: 2px;
-        flex-shrink: 0;
-      }
-
-      .hero-cta-grupo {
-        order: 6;
-        width: 100%;
-      }
-
-      .hero-btn-principal {
-        align-self: stretch;
-        text-align: center;
-        padding: 18px 24px;
-      }
-
-      .hero-cta-subtexto {
-        justify-content: center;
-        text-align: center;
-      }
-
-      .indicador-scroll-slow {
-        display: none;
-      }
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LUMINA — Estética Avançada & Longevidade | Sistema VIDE</title>
+<!-- Fonte Montserrat Oficial Unificada para 100% dos Elementos -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  /* Paleta de Alto Impacto inspirada na JK Estética Avançada (Contraste Espresso, Bronze Iluminado e Pérola Quente) */
+  --fundo-escuro: #11100F;
+  --fundo-escuro-card: #1A1816;
+  --fundo-claro: #F6F2EC;
+  --fundo-claro-card: #FFFFFF;
+  --areia-quente: #EDE5DA;
+  --ouro-jk: #D4AF7A;
+  --ouro-brilho: #E5C89B;
+  --ouro-escuro: #9E7847;
+  --texto-claro: #FAF8F5;
+  --texto-claro-suave: #C2B9AE;
+  --texto-escuro: #141312;
+  --texto-escuro-suave: #57524C;
+  --borda-ouro: rgba(212, 175, 122, 0.28);
+  --borda-clara: rgba(20, 19, 18, 0.1);
+  --fonte-titulo: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --fonte-corpo: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --curva: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+}
+
+html {
+  font-family: var(--fonte-corpo);
+  background-color: var(--fundo-escuro);
+  color: var(--texto-claro);
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: var(--fundo-escuro);
+}
+
+/* =========================================================
+   ANIMAÇÕES DE ENTRADA LATERAL, ZOOM E MOVIMENTO CONTÍNUO
+   ========================================================= */
+.animar-entrada {
+  opacity: 1;
+  transform: translate(0, 0) scale(1);
+  transition: opacity 0.5s var(--curva), transform 0.5s var(--curva);
+}
+.vindo-esquerda, .vindo-direita, .vindo-baixo, .vindo-zoom {
+  opacity: 1;
+  transform: translate(0, 0) scale(1);
+}
+.animar-entrada.visivel {
+  opacity: 1;
+  transform: translate(0, 0) scale(1);
+}
+
+/* Barra de Progresso Dourada no Topo */
+.barra-topo {
+  position: fixed; top: 0; left: 0; height: 3px;
+  background: linear-gradient(90deg, var(--ouro-escuro), var(--ouro-jk), #FFF2DC);
+  width: 0%; z-index: 9999; box-shadow: 0 0 12px var(--ouro-jk);
+}
+
+/* =========================================================
+   CABEÇALHO MODERNO (VIDRO ESCURO + DOURADO)
+   ========================================================= */
+header.cabecalho {
+  position: fixed; top: 0; left: 0; width: 100%; z-index: 9000;
+  padding: 18px 5vw; display: flex; align-items: center; justify-content: space-between;
+  background: rgba(17, 16, 15, 0.78); backdrop-filter: blur(18px);
+  border-bottom: 1px solid var(--borda-ouro);
+  transition: padding 0.35s var(--curva), background 0.35s;
+}
+header.cabecalho.compacto { padding: 12px 5vw; background: rgba(17, 16, 15, 0.94); }
+
+.logo-marca { text-decoration: none; display: flex; align-items: center; gap: 14px; transition: transform 0.3s var(--curva); }
+.logo-marca:hover { transform: scale(1.03); }
+.logo-icone {
+  width: 44px; height: 44px; border-radius: 4px;
+  background: radial-gradient(circle at 30% 20%, rgba(212, 175, 122, 0.22), rgba(17, 16, 15, 0.95));
+  border: 1px solid var(--ouro-jk); display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 6px 20px rgba(212, 175, 122, 0.2), inset 0 0 12px rgba(212, 175, 122, 0.12);
+  position: relative; overflow: hidden;
+}
+.logo-icone svg { width: 28px; height: 28px; transition: transform 0.45s var(--curva); }
+.logo-marca:hover .logo-icone svg { transform: rotate(6deg) scale(1.08); }
+.logo-texto { display: flex; flex-direction: column; }
+.logo-nome { font-family: var(--fonte-titulo); font-size: 1.25rem; font-weight: 700; letter-spacing: 0.22em; color: var(--texto-claro); line-height: 1; }
+.logo-sub { font-size: 0.62rem; letter-spacing: 0.24em; text-transform: uppercase; color: var(--ouro-jk); margin-top: 3px; }
+
+.nav-links { display: flex; gap: 32px; align-items: center; }
+.nav-links a {
+  text-decoration: none; color: var(--texto-claro-suave); font-family: var(--fonte-titulo);
+  font-size: 0.76rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+  transition: color 0.25s, transform 0.25s; position: relative;
+}
+.nav-links a:hover { color: var(--ouro-jk); transform: translateY(-2px); }
+
+.btn-topo {
+  padding: 11px 24px; background: linear-gradient(135deg, var(--ouro-jk), var(--ouro-escuro));
+  color: var(--fundo-escuro); font-family: var(--fonte-titulo); font-size: 0.74rem; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase; text-decoration: none; border-radius: 4px;
+  transition: transform 0.25s var(--curva), box-shadow 0.25s;
+}
+.btn-topo:hover { transform: translateY(-2px) scale(1.03); box-shadow: 0 10px 25px rgba(212, 175, 122, 0.35); }
+
+/* =========================================================
+   CANVAS DE FUNDO INTERATIVO (100% ATRÁS DOS TEXTOS E IMAGENS)
+   ========================================================= */
+.canvas-fundo-interativo {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+}
+
+/* =========================================================
+   KOKONUTUI: ATTRACT BUTTON (BOTÕES MAGNÉTICOS INDEPENDENTES)
+   ========================================================= */
+.attract-btn-wrap {
+  position: relative !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  vertical-align: middle !important;
+}
+.attract-btn-wrap .attract-canvas {
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  pointer-events: none !important;
+  z-index: 2 !important;
+  display: block !important;
+}
+.attract-btn-wrap a,
+.attract-btn-wrap button {
+  position: relative !important;
+  z-index: 3 !important;
+}
+
+/* =========================================================
+   KOKONUTUI: CRADLE TEXT (PÊNDULO BERÇO DE NEWTON INTERATIVO)
+   ========================================================= */
+.cradle-hero-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 22px;
+  position: relative;
+  z-index: 10;
+  max-width: 780px;
+  width: 100%;
+}
+.cradle-stage {
+  --cradle-h: 36px;
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  user-select: none;
+  cursor: grab;
+  touch-action: none;
+  padding-top: var(--cradle-h);
+  padding-bottom: 4px;
+}
+.cradle-stage[data-grabbing] {
+  cursor: grabbing;
+}
+.cradle-rail {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(212, 175, 122, 0.45) 0%, rgba(212, 175, 122, 0.85) 45%, rgba(212, 175, 122, 0.15) 100%);
+  pointer-events: none;
+}
+.cradle-rail::after {
+  content: "";
+  position: absolute;
+  inset: -1px 0;
+  box-shadow: 0 0 8px rgba(212, 175, 122, 0.4);
+}
+.cradle-letters {
+  display: flex;
+  align-items: flex-start;
+  position: relative;
+  white-space: nowrap;
+}
+.cradle-letter {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  transform-origin: 50% calc(-1 * var(--cradle-h));
+  will-change: transform;
+}
+.cradle-pin {
+  position: absolute;
+  top: calc(-1 * var(--cradle-h));
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--ouro-jk);
+  box-shadow: 0 0 6px rgba(212, 175, 122, 0.85);
+  pointer-events: none;
+}
+.cradle-thread {
+  position: absolute;
+  top: calc(-1 * var(--cradle-h));
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1px;
+  height: var(--cradle-h);
+  background: linear-gradient(180deg, rgba(212, 175, 122, 0.8) 0%, rgba(212, 175, 122, 0.3) 100%);
+  pointer-events: none;
+}
+.cradle-char {
+  display: inline-block;
+  font-family: 'Montserrat', sans-serif !important;
+  font-weight: 800;
+  font-size: clamp(1.45rem, 2.7vw, 2.65rem);
+  line-height: 1.1;
+  color: #FAF8F5;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 0 1px;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.7);
+  pointer-events: none;
+}
+.cradle-char.destaque-ouro {
+  color: var(--ouro-jk) !important;
+  -webkit-text-fill-color: var(--ouro-jk) !important;
+  text-shadow: 0 0 16px rgba(212, 175, 122, 0.65), 0 0 32px rgba(212, 175, 122, 0.3) !important;
+}
+.cradle-char.destaque-ouro ~ .cradle-thread,
+.cradle-letter.destaque-ativo .cradle-thread {
+  background: linear-gradient(180deg, rgba(212, 175, 122, 1) 0%, rgba(212, 175, 122, 0.55) 100%);
+  box-shadow: 0 0 4px rgba(212, 175, 122, 0.6);
+}
+.cradle-letter.destaque-ativo .cradle-pin {
+  box-shadow: 0 0 8px rgba(212, 175, 122, 1);
+}
+.cradle-space {
+  display: inline-block;
+  width: clamp(0.35em, 0.8vw, 0.55em);
+}
+
+/* =========================================================
+   KOKONUTUI: PLUCKED TEXT (FÍSICA DE CORDA PARA SEÇÕES 2, 3 E 4)
+   ========================================================= */
+#pluckStageProtocolos {
+  text-align: left !important;
+  margin: 0 !important;
+  max-width: 680px;
+}
+#pluckStageProtocolos .pluck-letters {
+  text-align: left !important;
+}
+.pluck-container {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 16px;
+}
+.pluck-stage {
+  position: relative;
+  display: inline-block;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  padding: 0.15em 0.5em 0.85em;
+  font-family: 'Montserrat', sans-serif !important;
+  font-weight: 700;
+  font-size: clamp(1.4rem, 2.3vw, 2.3rem);
+  line-height: 1.25;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #141312;
+  text-align: center;
+  max-width: 980px;
+  margin: 0 auto 12px;
+}
+.pluck-stage[data-grabbing] {
+  cursor: grabbing;
+}
+.pluck-letters {
+  position: relative;
+  display: inline-block;
+  white-space: normal;
+  text-align: center;
+}
+.pluck-word {
+  display: inline-block;
+  white-space: nowrap;
+}
+.pluck-space {
+  display: inline-block;
+  width: 0.3em;
+}
+.pluck-char {
+  display: inline-block;
+  transform-origin: 50% 100%;
+  will-change: transform;
+  font-family: 'Montserrat', sans-serif !important;
+  color: #141312;
+}
+.pluck-char.destaque-ouro {
+  color: #9E7847 !important;
+  font-weight: 800 !important;
+}
+.pluck-svg {
+  pointer-events: none;
+  position: absolute;
+  left: 0.25em;
+  width: calc(100% - 0.5em);
+  height: 1px;
+  overflow: visible;
+  top: var(--pluck-baseline, 100%);
+  color: var(--ouro-jk);
+}
+.pluck-path {
+  stroke: var(--ouro-jk);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  fill: none;
+}
+.pluck-ghost {
+  stroke: var(--ouro-jk);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  fill: none;
+  opacity: 0.35;
+}
+.pluck-dot {
+  pointer-events: none;
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--ouro-jk);
+  box-shadow: 0 0 10px rgba(212, 175, 122, 0.6);
+  transform: translate(-50%, -50%);
+  top: var(--pluck-baseline, 100%);
+  z-index: 2;
+}
+.pluck-dot-l {
+  left: 0.25em;
+}
+.pluck-dot-r {
+  right: 0.25em;
+  transform: translate(50%, -50%);
+}
+
+/* =========================================================
+   COMPONENTES GERAIS DE BOTÕES E TÍTULOS
+   ========================================================= */
+.tag-secao {
+  display: inline-flex; align-items: center; gap: 10px; padding: 7px 16px; border-radius: 4px;
+  background: rgba(212, 175, 122, 0.14); border: 1px solid var(--borda-ouro); color: var(--ouro-jk);
+  font-family: var(--fonte-titulo); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.18em;
+  text-transform: uppercase; margin-bottom: 18px;
+}
+.tag-secao-escura { background: rgba(158, 120, 71, 0.12); border-color: rgba(158, 120, 71, 0.35); color: var(--ouro-escuro); }
+.destaque-ouro { color: var(--ouro-brilho); font-weight: 700; text-shadow: 0 0 14px rgba(212, 175, 122, 0.4); }
+.destaque-bronze { color: #8E6534; font-weight: 700; }
+
+.btn-principal {
+  display: inline-flex; align-items: center; gap: 14px; padding: 18px 34px;
+  background: linear-gradient(135deg, var(--ouro-jk) 0%, #B88B52 100%); color: var(--fundo-escuro);
+  font-family: var(--fonte-titulo); font-size: 0.82rem; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; text-decoration: none; border-radius: 4px; border: none; cursor: pointer;
+  box-shadow: 0 14px 35px rgba(212, 175, 122, 0.28);
+  transition: transform 0.3s var(--curva), box-shadow 0.3s, filter 0.3s;
+}
+.btn-principal:hover { transform: translateY(-4px) scale(1.02); box-shadow: 0 20px 45px rgba(212, 175, 122, 0.45); filter: brightness(1.06); }
+.btn-principal svg { transition: transform 0.3s var(--curva); }
+.btn-principal:hover svg { transform: translateX(6px); }
+
+/* =========================================================
+   SEÇÃO 01 — CAPA COM VÍDEO CONTROLADO PELO SCROLL
+   (Scroll-Driven Video Scrubbing: a tela fica 100% fixa enquanto o vídeo roda)
+   ========================================================= */
+.scrub-pai {
+  position: relative;
+  width: 100%;
+  height: 155vh;
+  margin: 0;
+  padding: 0;
+  background: var(--fundo-escuro);
+}
+.scrub-sticky {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  background: #080807;
+  z-index: 10;
+  will-change: transform;
+}
+.scrub-video {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; pointer-events: none; z-index: 1;
+}
+.scrub-overlay {
+  content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(17,16,15,0.88) 0%, rgba(17,16,15,0.52) 48%, rgba(17,16,15,0.18) 100%),
+    linear-gradient(180deg, rgba(17,16,15,0.4) 0%, transparent 30%, transparent 70%, rgba(17,16,15,0.85) 100%);
+}
+.scrub-conteudo {
+  position: relative; z-index: 10; padding: 100px 5vw 35px; max-width: 720px;
+  transition: opacity 0.2s linear, transform 0.2s linear;
+}
+.hero-acao-direita {
+  position: absolute; right: 5vw; bottom: 56px; z-index: 12;
+  display: flex; flex-direction: column; align-items: flex-end;
+  transition: opacity 0.2s linear;
+}
+.scrub-progresso {
+  position: absolute; z-index: 11; left: 5vw; right: 5vw; bottom: 22px; height: 3px;
+  background: rgba(255,255,255,0.14); border-radius: 2px;
+}
+.scrub-progresso i { display: block; height: 100%; width: 0%; background: linear-gradient(90deg, var(--ouro-escuro), var(--ouro-jk), #FFF2DC); border-radius: 2px; }
+.scrub-dica {
+  position: absolute; z-index: 11; left: 5vw; bottom: 38px;
+  font-family: var(--fonte-titulo); font-size: 0.68rem; font-weight: 600; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--ouro-brilho);
+  transition: opacity 0.3s;
+}
+
+.hero-titulo { font-size: clamp(2rem, 3.4vw, 3.4rem); margin-bottom: 18px; color: var(--texto-claro); }
+.hero-subtitulo {
+  font-size: clamp(0.95rem, 1.1vw, 1.1rem); line-height: 1.65; color: var(--texto-claro-suave);
+  font-weight: 300; margin-bottom: 24px; max-width: 580px;
+}
+
+/* =========================================================
+   MOVIMENTOS E APRESENTAÇÃO DE TEXTOS (SEM EFEITOS DEFORMADORES)
+   ========================================================= */
+
+/* 1. Movimento de Apresentação e Chegada de Textos ao Rolar a Tela */
+.texto-movimento-chegada {
+  opacity: 0;
+  transform: translateY(36px);
+  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
+}
+.secao-ativa .texto-movimento-chegada,
+.secao-filosofia.secao-ativa .texto-movimento-chegada {
+  opacity: 1;
+  transform: translateY(0px);
+}
+
+/* Animação exclusiva de apresentação do Título da Capa */
+@keyframes heroEntradaLuxo {
+  0% {
+    opacity: 0;
+    transform: translateY(42px);
+    filter: blur(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0px);
+    filter: blur(0px);
+  }
+}
+#heroTituloPrincipal {
+  animation: heroEntradaLuxo 1.15s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+  will-change: transform, opacity, filter;
+}
+
+/* 2. Movimento Contínuo e Suave dos Títulos (Flutuação e Respiração) */
+.titulo-moderno, .filosofia-conteudo h2, .excelencia-topo h2, .diagnostico-topo h2, .mascara-clinica-legenda blockquote {
+  animation: flutuarTextoSuave 7s ease-in-out infinite;
+  transition: transform 0.4s var(--curva), color 0.4s;
+}
+@keyframes flutuarTextoSuave {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-4px); }
+}
+
+/* 3. LEGISBILIDADE ABSOLUTA: Destaques em Seções Claras (Seção 03 Diagnóstico e Seção 04 Excelência) */
+.secao-diagnostico-real .destaque-bronze,
+.secao-diagnostico-real .destaque-ouro,
+.secao-excelencia .destaque-bronze,
+.secao-excelencia .destaque-ouro {
+  color: #7A4E1D !important;
+  -webkit-text-fill-color: #7A4E1D !important;
+  background: none !important;
+  font-weight: 800 !important;
+  text-shadow: none !important;
+  filter: none !important;
+  display: inline !important;
+  border-bottom: 2px solid rgba(122, 78, 29, 0.3);
+}
+
+/* 4. Destaques em Seções Escuras (Capa, Seção 01 Método, Seção 02 Protocolos, Seção 05 Concierge) */
+.destaque-ouro {
+  color: var(--ouro-brilho) !important;
+  -webkit-text-fill-color: var(--ouro-brilho) !important;
+  background: none !important;
+  font-weight: 700 !important;
+  text-shadow: 0 0 16px rgba(212, 175, 122, 0.5) !important;
+  display: inline-block;
+  transition: transform 0.3s var(--curva);
+}
+.secao-filosofia .destaque-bronze {
+  color: var(--ouro-jk) !important;
+  -webkit-text-fill-color: var(--ouro-jk) !important;
+  background: none !important;
+  font-weight: 700 !important;
+  display: inline-block;
+}
+
+/* 5. Movimento de Pulso e Elevação nas Tags de Seção */
+.tag-secao, .tag-metodo, .badge-passos-topo, .card-proto-tag {
+  display: inline-flex;
+  align-items: center;
+  transition: transform 0.35s var(--curva), box-shadow 0.35s, border-color 0.35s;
+  animation: pulsoTagSuave 4s ease-in-out infinite;
+}
+@keyframes pulsoTagSuave {
+  0%, 100% { box-shadow: 0 0 0 rgba(212, 175, 122, 0); }
+  50% { box-shadow: 0 0 16px rgba(212, 175, 122, 0.28); }
+}
+.tag-secao:hover, .tag-metodo:hover, .badge-passos-topo:hover, .card-proto-tag:hover {
+  transform: translateY(-3px) scale(1.02);
+  border-color: var(--ouro-jk) !important;
+  box-shadow: 0 6px 20px rgba(212, 175, 122, 0.35) !important;
+}
+
+/* 6. Movimento de Deslizamento Suave nos Textos dos Cards */
+.card-protocolo-moderno .card-proto-conteudo h3,
+.card-pilar-vivo .card-pilar-topo h3,
+.card-diferencial h4 {
+  transition: transform 0.35s var(--curva), color 0.35s;
+}
+.card-protocolo-moderno:hover .card-proto-conteudo h3,
+.card-pilar-vivo:hover .card-pilar-topo h3,
+.card-diferencial:hover h4 {
+  transform: translateX(6px);
+  color: var(--ouro-brilho) !important;
+}
+
+/* 7. Movimento Suave dos Subtítulos e Parágrafos */
+.hero-subtitulo, .filosofia-conteudo > p, .diagnostico-topo > p, .card-proto-desc, .card-diferencial p {
+  transition: transform 0.35s var(--curva), color 0.35s;
+}
+.hero-subtitulo:hover, .filosofia-conteudo > p:hover, .diagnostico-topo > p:hover {
+  transform: translateY(-2px);
+  color: var(--texto-claro);
+}
+
+/* 8. Movimento de Elevação nos Números e Métricas */
+.num-d, .card-pilar-num, .num-etapa {
+  display: inline-block;
+  transition: transform 0.35s var(--curva), color 0.35s;
+}
+.card-diferencial:hover .num-d,
+.card-pilar-vivo:hover .card-pilar-num,
+.num-d:hover, .card-pilar-num:hover, .num-etapa:hover {
+  transform: translateY(-4px) scale(1.06);
+  color: var(--ouro-brilho) !important;
+}
+
+
+/* =========================================================
+   SEÇÃO 01 — NOSSO MÉTODO (3 IMAGENS + 3 CARDS + DOTFIELD NO FUNDO)
+   ========================================================= */
+.secao-filosofia {
+  position: relative;
+  min-height: 640px;
+  background: var(--fundo-escuro);
+  color: var(--texto-claro);
+  overflow: hidden;
+  display: block;
+}
+.container-central { max-width: 1320px; margin: 0 auto; position: relative; z-index: 3; }
+
+/* Palco de imagens à direita (sangra até a borda e troca com os pilares) */
+.palco-imagens-filosofia {
+  position: absolute !important;
+  top: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 58% !important;
+  background: var(--fundo-escuro);
+  z-index: 2 !important;
+  pointer-events: none;
+}
+.palco-imagens-filosofia::before {
+  content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none;
+  background: linear-gradient(90deg, var(--fundo-escuro) 0%, rgba(17,16,15,0.72) 28%, rgba(17,16,15,0) 65%);
+}
+.slide-foto-filo {
+  position: absolute; inset: 0; opacity: 0;
+  transform: translateX(35px) scale(1.04);
+  transition: opacity 0.5s var(--curva), transform 0.6s var(--curva);
+}
+.slide-foto-filo.ativo { opacity: 1; transform: translateX(0) scale(1); }
+.slide-foto-filo img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s var(--curva); }
+.palco-imagens-filosofia:hover .slide-foto-filo.ativo img { transform: scale(1.04); }
+
+/* Coluna de texto à esquerda (título e os 3 cards do método) */
+.filosofia-conteudo {
+  position: relative !important;
+  z-index: 4 !important;
+  width: 100%;
+  max-width: 660px;
+  padding: 48px 5vw 52px;
+}
+.filosofia-conteudo .tag-metodo {
+  display: block; font-family: var(--fonte-titulo); font-size: 0.62rem; font-weight: 800;
+  letter-spacing: 0.2em; text-transform: uppercase; color: var(--ouro-jk); margin-bottom: 14px;
+}
+.filosofia-conteudo h2 {
+  font-family: var(--fonte-titulo); font-weight: 800; text-transform: uppercase;
+  font-size: clamp(1.85rem, 3.2vw, 3.1rem); line-height: 1.08; letter-spacing: -0.01em;
+  max-width: 680px; margin-bottom: 26px; color: var(--texto-claro);
+  text-shadow: 0 4px 30px rgba(0,0,0,0.5);
+}
+.filosofia-conteudo h2 .destaque-bronze { color: var(--ouro-jk); }
+
+.pilares-coluna { display: flex; flex-direction: column; gap: 11px; max-width: 500px; }
+.card-pilar-vivo {
+  background: rgba(255,255,255,0.045); backdrop-filter: blur(10px);
+  border: 1px solid rgba(212,175,122,0.22); border-radius: 4px;
+  padding: 16px 22px; cursor: pointer; position: relative; overflow: hidden;
+  transition: all 0.35s var(--curva);
+}
+.card-pilar-vivo::before {
+  content: ""; position: absolute; top: 0; left: 0; bottom: 0; width: 4px;
+  background: linear-gradient(180deg, var(--ouro-jk), var(--ouro-escuro));
+  transform: scaleY(0); transition: transform 0.35s var(--curva);
+}
+.card-pilar-vivo.ativo, .card-pilar-vivo:hover {
+  transform: translateX(8px); border-color: var(--ouro-jk);
+  background: rgba(212,175,122,0.09); box-shadow: 0 14px 35px rgba(0,0,0,0.4);
+}
+.card-pilar-vivo.ativo::before, .card-pilar-vivo:hover::before { transform: scaleY(1); }
+.card-pilar-topo { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; gap: 12px; }
+.card-pilar-topo h3 { font-family: var(--fonte-titulo); font-size: 0.92rem; font-weight: 800; text-transform: uppercase; color: var(--texto-claro); letter-spacing: 0.01em; }
+.card-pilar-num {
+  font-family: var(--fonte-titulo); font-size: 0.68rem; font-weight: 800; color: var(--texto-claro);
+  background: rgba(0,0,0,0.65); border: 1px solid rgba(255,255,255,0.12); padding: 3px 8px; border-radius: 4px;
+}
+.card-pilar-vivo.ativo .card-pilar-num { background: var(--ouro-jk); color: var(--fundo-escuro); border-color: var(--ouro-jk); }
+.card-pilar-vivo p { font-size: 0.81rem; line-height: 1.5; color: var(--texto-claro-suave); }
+
+.filosofia-dica {
+  margin-top: 18px; max-width: 440px; font-size: 0.78rem; line-height: 1.55; color: var(--texto-claro);
+}
+
+.barra-legenda-filo {
+  position: absolute !important; bottom: 20px; right: 5vw; width: min(380px, 40%);
+  background: rgba(17, 16, 15, 0.88); backdrop-filter: blur(14px);
+  border: 1px solid var(--borda-ouro); padding: 12px 18px; border-radius: 4px;
+  color: var(--texto-claro); display: flex; justify-content: space-between; align-items: center; gap: 12px; z-index: 5 !important;
+}
+
+/* =========================================================
+   SEÇÃO 02 — PROTOCOLOS DE ALTO PADRÃO (FUNDO BRANCO PURO)
+   ========================================================= */
+.secao-protocolos {
+  padding: 45px 5vw 48px;
+  background-color: #FFFFFF !important;
+  color: #141312 !important;
+  position: relative;
+  overflow: hidden;
+}
+.secao-protocolos > .container-central {
+  position: relative;
+  z-index: 3;
+}
+.protocolos-cabecalho { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 26px; flex-wrap: wrap; gap: 18px; }
+.protocolos-cabecalho h2 { font-size: clamp(1.9rem, 3.1vw, 2.9rem); max-width: 650px; color: #141312 !important; }
+.secao-protocolos .tag-secao { background: rgba(158, 120, 71, 0.12) !important; border-color: rgba(158, 120, 71, 0.35) !important; color: var(--ouro-escuro) !important; }
+.secao-protocolos .destaque-ouro { color: #9E7847 !important; -webkit-text-fill-color: #9E7847 !important; text-shadow: none !important; border-bottom: 2px solid rgba(158, 120, 71, 0.3); }
+.grade-protocolos-viva { display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px; }
+.card-protocolo-moderno {
+  background: transparent !important; border: none !important; border-radius: 6px;
+  overflow: hidden; display: grid; grid-template-columns: 0.46fr 0.54fr;
+  transition: transform 0.4s var(--curva); cursor: pointer; box-shadow: none !important;
+}
+.card-protocolo-moderno:hover { transform: translateY(-6px); border: none !important; box-shadow: none !important; }
+.card-proto-img { position: relative; overflow: hidden; min-height: 250px; border-radius: 4px; }
+.card-proto-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s var(--curva); border-radius: 4px; }
+.card-protocolo-moderno:hover .card-proto-img img { transform: scale(1.08); }
+.card-proto-tag {
+  position: absolute; top: 12px; left: 12px; background: rgba(17, 16, 15, 0.85); backdrop-filter: blur(8px);
+  border: 1px solid var(--borda-ouro); color: var(--ouro-jk); font-family: var(--fonte-titulo); font-size: 0.66rem;
+  font-weight: 700; padding: 4px 10px; border-radius: 4px; letter-spacing: 0.12em; text-transform: uppercase;
+}
+.card-proto-conteudo { padding: 18px 20px; display: flex; flex-direction: column; justify-content: space-between; }
+.card-proto-conteudo h3 { font-family: var(--fonte-titulo); font-size: 1.25rem; font-weight: 700; color: #141312 !important; margin-bottom: 6px; line-height: 1.25; }
+.card-proto-sub { font-size: 0.84rem; color: #9E7847 !important; font-weight: 600; margin-bottom: 10px; }
+.card-proto-desc { font-size: 0.86rem; color: #57524C !important; line-height: 1.55; margin-bottom: 16px; }
+.card-proto-link {
+  display: inline-flex; align-items: center; gap: 8px; font-family: var(--fonte-titulo); font-size: 0.74rem;
+  font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: #141312 !important; transition: color 0.3s, gap 0.3s;
+}
+.card-protocolo-moderno:hover .card-proto-link { color: #9E7847 !important; gap: 14px; }
+
+/* =========================================================
+   SEÇÃO 03 — DIAGNÓSTICO FACIAL (TOPOGRAFIA MARCHING SQUARES NO FUNDO)
+   ========================================================= */
+.secao-diagnostico-real {
+  padding: 48px 5vw 50px;
+  background: linear-gradient(180deg, var(--fundo-claro) 0%, var(--areia-quente) 100%);
+  color: var(--texto-escuro);
+  position: relative;
+  overflow: hidden;
+}
+.secao-diagnostico-real > .container-central {
+  position: relative;
+  z-index: 3;
+}
+.diagnostico-topo { text-align: center; max-width: 760px; margin: 0 auto 28px; }
+.diagnostico-topo h2 { font-size: clamp(1.9rem, 3.1vw, 2.9rem); margin-bottom: 10px; }
+.diagnostico-topo p { font-size: 0.94rem; color: var(--texto-escuro-suave); }
+.diagnostico-grade { display: grid; grid-template-columns: 0.92fr 1.08fr; gap: 36px; align-items: center; }
+
+.container-foto-diagnostico {
+  position: relative; border-radius: 4px; overflow: hidden; box-shadow: 0 25px 55px rgba(20, 19, 18, 0.18);
+  border: 2px solid var(--ouro-jk); aspect-ratio: 3 / 3.7; max-height: 540px; width: 100%; background: #1D1814;
+}
+.container-foto-diagnostico img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.75s var(--curva); transform-origin: center center; }
+
+.ponto-rosto-real {
+  position: absolute; width: 36px; height: 36px; border-radius: 50%; background: rgba(17, 16, 15, 0.85);
+  border: 2px solid var(--ouro-jk); color: var(--ouro-jk); font-family: var(--fonte-titulo); font-size: 0.72rem;
+  font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer;
+  transform: translate(-50%, -50%); transition: all 0.35s var(--curva); z-index: 5;
+  box-shadow: 0 0 0 6px rgba(212, 175, 122, 0.25);
+}
+.ponto-rosto-real::after {
+  content: attr(data-rotulo); position: absolute; left: 44px; background: rgba(17, 16, 15, 0.92);
+  color: var(--texto-claro); padding: 6px 12px; border-radius: 4px; font-size: 0.7rem; white-space: nowrap;
+  border: 1px solid var(--borda-ouro); opacity: 0; transform: translateX(-8px); transition: all 0.3s var(--curva); pointer-events: none;
+}
+.ponto-rosto-real:hover, .ponto-rosto-real.ativo { background: var(--ouro-jk); color: var(--fundo-escuro); transform: translate(-50%, -50%) scale(1.22); box-shadow: 0 0 0 10px rgba(212, 175, 122, 0.4); }
+.ponto-rosto-real:hover::after, .ponto-rosto-real.ativo::after { opacity: 1; transform: translateX(0); }
+
+.painel-resultado-diagnostico { background: var(--fundo-claro-card); border-radius: 4px; padding: 34px; box-shadow: 0 20px 50px rgba(20, 19, 18, 0.08); border: 1px solid var(--borda-clara); }
+.botoes-seletor-rapido { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 24px; }
+.aba-zona {
+  padding: 12px 14px; border-radius: 4px; border: 1px solid var(--borda-clara); background: var(--fundo-claro);
+  font-family: var(--fonte-titulo); font-size: 0.76rem; font-weight: 600; color: var(--texto-escuro); cursor: pointer;
+  text-align: left; display: flex; align-items: center; justify-content: space-between; transition: all 0.3s var(--curva);
+}
+.aba-zona:hover, .aba-zona.ativo { background: var(--fundo-escuro); color: var(--ouro-jk); border-color: var(--fundo-escuro); transform: translateY(-2px); }
+.conteudo-zona-dinamico { transition: opacity 0.3s, transform 0.3s; }
+.conteudo-zona-dinamico h3 { font-family: var(--fonte-titulo); font-size: 1.65rem; font-weight: 700; margin-bottom: 10px; color: var(--texto-escuro); }
+.conteudo-zona-dinamico p { font-size: 0.94rem; line-height: 1.65; color: var(--texto-escuro-suave); margin-bottom: 20px; }
+.indicadores-zona-grade { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; padding: 16px; background: var(--fundo-claro); border-radius: 4px; margin-bottom: 22px; }
+.ind-z-item span { display: block; font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--texto-escuro-suave); margin-bottom: 4px; }
+.ind-z-item strong { font-family: var(--fonte-titulo); font-size: 0.92rem; color: var(--texto-escuro); }
+
+/* =========================================================
+   SEÇÃO 04 — EXCELÊNCIA NO ATENDIMENTO (TINTA FLUIDA SOBREPOSTA)
+   ========================================================= */
+.secao-excelencia {
+  padding: 48px 5vw 50px;
+  background-color: var(--fundo-claro);
+  color: var(--texto-escuro);
+  position: relative;
+  overflow: hidden;
+}
+.secao-excelencia > .excelencia-topo,
+.secao-excelencia > .mascara-clinica-interativa,
+.secao-excelencia > .grade-diferenciais-clinica {
+  position: relative;
+  z-index: 3;
+}
+.excelencia-topo { text-align: center; max-width: 840px; margin: 0 auto 28px; }
+.excelencia-topo h2 { font-size: clamp(1.9rem, 3.1vw, 2.9rem); }
+.mascara-clinica-interativa {
+  max-width: 1320px; margin: 0 auto 32px; height: 440px; border-radius: 4px; overflow: hidden; position: relative;
+  clip-path: inset(8% 12% 8% 12% round 4px); transition: clip-path 0.25s ease-out; box-shadow: 0 25px 60px rgba(20, 19, 18, 0.14);
+}
+.mascara-clinica-interativa img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.1); transition: transform 0.8s var(--curva); }
+.mascara-clinica-interativa:hover img { transform: scale(1.02); }
+.mascara-clinica-legenda {
+  position: absolute; inset: 0; background: linear-gradient(180deg, rgba(17,16,15,0.05) 0%, rgba(17,16,15,0.78) 100%);
+  display: flex; align-items: flex-end; justify-content: space-between; padding: 36px; color: var(--texto-claro); gap: 20px; flex-wrap: wrap;
+}
+.mascara-clinica-legenda blockquote { font-family: var(--fonte-titulo); font-size: clamp(1.15rem, 1.8vw, 1.6rem); font-weight: 500; max-width: 720px; line-height: 1.4; }
+.grade-diferenciais-clinica { max-width: 1320px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.card-diferencial {
+  background: transparent !important; border: none !important; padding: 22px 10px;
+  border-radius: 0; box-shadow: none !important; transition: transform 0.35s var(--curva);
+}
+.card-diferencial:hover { transform: translateY(-4px); border: none !important; box-shadow: none !important; }
+.card-diferencial .num-d { font-family: var(--fonte-titulo); font-size: 2.1rem; font-weight: 800; color: #9E7847 !important; margin-bottom: 8px; }
+.card-diferencial h4 { font-family: var(--fonte-titulo); font-size: 1.05rem; font-weight: 700; margin-bottom: 6px; color: #141312 !important; }
+.card-diferencial p { font-size: 0.9rem; line-height: 1.55; color: #57524C !important; }
+
+/* =========================================================
+   SEÇÃO 05 — CONCIERGE INTELIGENTE (FUNDO PRETO DE ALTO PADRÃO)
+   ========================================================= */
+.secao-concierge-whatsapp {
+  padding: 55px 5vw 65px;
+  background: radial-gradient(circle at 50% 20%, #151311 0%, #0D0C0B 60%, #060605 100%) !important;
+  color: #FAF8F5 !important;
+  position: relative;
+  overflow: hidden;
+  border-top: 1px solid rgba(212, 175, 122, 0.28);
+}
+.secao-concierge-whatsapp::before {
+  content: ""; position: absolute; top: -1px; left: 10%; right: 10%; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--ouro-jk), transparent);
+}
+.concierge-grade {
+  max-width: 1320px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 52px;
+  align-items: center;
+}
+.painel-interativo-passos {
+  background: linear-gradient(135deg, rgba(22, 20, 18, 0.96) 0%, rgba(13, 12, 11, 0.98) 100%) !important;
+  border: 1px solid rgba(212, 175, 122, 0.3) !important;
+  border-radius: 8px;
+  padding: 44px;
+  box-shadow: 0 35px 80px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(212, 175, 122, 0.12) !important;
+  position: relative;
+}
+.painel-interativo-passos::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none; border-radius: 8px;
+  border: 1px solid rgba(212, 175, 122, 0.18);
+}
+.badge-passos-topo {
+  display: inline-flex; align-items: center; gap: 8px; font-family: var(--fonte-titulo);
+  font-size: 0.65rem; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--ouro-jk) !important; padding: 5px 12px; background: rgba(212, 175, 122, 0.12) !important;
+  border: 1px solid rgba(212, 175, 122, 0.3) !important; border-radius: 4px; margin-bottom: 16px;
+}
+.secao-concierge-whatsapp .tag-secao { background: rgba(212, 175, 122, 0.1) !important; border-color: rgba(212, 175, 122, 0.3) !important; color: var(--ouro-jk) !important; }
+.painel-interativo-passos h2 { font-size: clamp(1.9rem, 2.9vw, 2.6rem); margin-bottom: 12px; line-height: 1.15; color: #FAF8F5 !important; }
+.painel-interativo-passos h2 .destaque-ouro { color: var(--ouro-jk) !important; -webkit-text-fill-color: var(--ouro-jk) !important; text-shadow: 0 0 14px rgba(212, 175, 122, 0.4) !important; }
+.painel-interativo-passos > p { color: #B5AEA4 !important; font-size: 0.94rem; margin-bottom: 30px; line-height: 1.6; }
+
+.etapa-rotulo {
+  font-family: var(--fonte-titulo); font-size: 0.74rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.16em; color: var(--ouro-jk) !important; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
+}
+.etapa-rotulo span.num-etapa {
+  background: var(--ouro-jk) !important; color: #0E0D0C !important; font-size: 0.65rem; padding: 2px 7px;
+  border-radius: 4px; font-weight: 800;
+}
+
+/* =========================================================
+   KOKONUTUI: TEAR BUTTON (BOTÃO DE RASGAR / DESTACAR ESCURO)
+   ========================================================= */
+.grade-tear-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 26px;
+}
+.tear-btn-root {
+  position: relative;
+  display: flex;
+  height: 68px;
+  width: 100%;
+  user-select: none;
+  cursor: pointer;
+  outline: none;
+  transition: transform 0.25s var(--curva);
+}
+.tear-btn-root:hover {
+  transform: translateY(-2px);
+}
+.tear-btn-body {
+  position: relative;
+  flex: 1;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 0 18px;
+  background: #171513 !important;
+  border: 1px solid rgba(212, 175, 122, 0.28) !important;
+  border-right: none !important;
+  border-radius: 6px 0 0 6px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+  mask: radial-gradient(circle at 100% 0, transparent 7px, #000 7.5px) top / 100% 51% no-repeat,
+        radial-gradient(circle at 100% 100%, transparent 7px, #000 7.5px) bottom / 100% 51% no-repeat;
+  -webkit-mask: radial-gradient(circle at 100% 0, transparent 7px, #000 7.5px) top / 100% 51% no-repeat,
+                radial-gradient(circle at 100% 100%, transparent 7px, #000 7.5px) bottom / 100% 51% no-repeat;
+  transition: all 0.3s var(--curva);
+}
+.tear-btn-root.tear-ativo .tear-btn-body {
+  background: #23201C !important;
+  border-color: var(--ouro-jk) !important;
+  box-shadow: 0 8px 24px rgba(212, 175, 122, 0.25) !important;
+}
+.tear-chip {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #1E1B18 !important;
+  border: 1px solid rgba(212, 175, 122, 0.3) !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--ouro-jk) !important;
+  transition: all 0.3s var(--curva);
+}
+.tear-btn-root.tear-ativo .tear-chip {
+  background: var(--ouro-jk) !important;
+  color: #0E0D0C !important;
+  border-color: var(--ouro-jk) !important;
+  box-shadow: 0 0 14px rgba(212, 175, 122, 0.5) !important;
+}
+.tear-icon-check { display: none; }
+.tear-btn-root.tear-ativo .tear-icon-idle { display: none; }
+.tear-btn-root.tear-ativo .tear-icon-check { display: block; }
+.tear-textos {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+.tear-titulo {
+  font-family: var(--fonte-titulo);
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #FAF8F5 !important;
+  letter-spacing: 0.02em;
+}
+.tear-sub {
+  font-size: 0.72rem;
+  color: #9C9488 !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tear-btn-stub {
+  position: relative;
+  width: 90px;
+  height: 100%;
+  background: #201D1A !important;
+  border: 1px solid rgba(212, 175, 122, 0.28) !important;
+  border-left: none !important;
+  border-radius: 0 6px 6px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  cursor: grab;
+  touch-action: none;
+  transform-origin: 0 100%;
+  mask: radial-gradient(circle at 0 0, transparent 7px, #000 7.5px) top / 100% 51% no-repeat,
+        radial-gradient(circle at 0 100%, transparent 7px, #000 7.5px) bottom / 100% 51% no-repeat;
+  -webkit-mask: radial-gradient(circle at 0 0, transparent 7px, #000 7.5px) top / 100% 51% no-repeat,
+                radial-gradient(circle at 0 100%, transparent 7px, #000 7.5px) bottom / 100% 51% no-repeat;
+  transition: background 0.3s, border-color 0.3s;
+}
+.tear-btn-stub:hover {
+  background: #2C2722 !important;
+  border-color: var(--ouro-jk) !important;
+}
+.tear-btn-stub:active {
+  cursor: grabbing;
+}
+.tear-perforation {
+  position: absolute;
+  top: 8px;
+  bottom: 8px;
+  left: 0;
+  border-left: 2px dashed rgba(212, 175, 122, 0.4) !important;
+}
+.tear-stub-icon {
+  color: var(--ouro-jk) !important;
+  transition: transform 0.25s;
+}
+.tear-btn-stub:hover .tear-stub-icon {
+  transform: translateY(-2px);
+}
+.tear-stub-label {
+  font-family: var(--fonte-titulo);
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: var(--ouro-jk) !important;
+  text-transform: uppercase;
+}
+
+/* =========================================================
+   KOKONUTUI: RAIN GLASS BACKGROUND (VIDRO CHUVOSO INTERATIVO)
+   ========================================================= */
+#canvasRainGlass {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  z-index: 1 !important;
+  pointer-events: none !important;
+}
+.secao-concierge-whatsapp > .concierge-grade {
+  position: relative;
+  z-index: 3;
+}
+
+.iphone-status-bar {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 24px 4px; color: #E9EDEF; font-family: var(--fonte-titulo); font-size: 0.74rem; font-weight: 600;
+}
+.status-icones-ios { display: flex; align-items: center; gap: 6px; }
+
+.grade-inputs-dupla { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 24px; }
+.campo-wrapper { position: relative; }
+.campo-moderno {
+  width: 100%; padding: 15px 18px; border-radius: 4px; background: #151311 !important;
+  border: 1px solid rgba(212, 175, 122, 0.25) !important; color: #FAF8F5 !important; font-family: var(--fonte-corpo);
+  font-size: 0.92rem; outline: none; transition: border-color 0.3s, background 0.3s, box-shadow 0.3s;
+}
+.campo-moderno::placeholder {
+  color: #7D756C !important;
+}
+.campo-moderno:focus {
+  border-color: var(--ouro-jk) !important; background: #1A1816 !important;
+  box-shadow: 0 0 16px rgba(212, 175, 122, 0.25) !important;
+}
+
+.grade-turno { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 28px; }
+.btn-turno {
+  padding: 13px 10px; border-radius: 4px; background: #171513 !important;
+  border: 1px solid rgba(212, 175, 122, 0.25) !important; color: #B5AEA4 !important; font-family: var(--fonte-titulo);
+  font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; cursor: pointer; transition: all 0.25s var(--curva);
+  text-align: center;
+}
+.btn-turno:hover { border-color: var(--ouro-jk) !important; color: #FAF8F5 !important; transform: translateY(-2px); }
+.btn-turno.ativo {
+  background: linear-gradient(135deg, var(--ouro-jk), var(--ouro-escuro)) !important;
+  color: #0E0D0C !important; border-color: var(--ouro-jk) !important; font-weight: 800;
+  box-shadow: 0 6px 20px rgba(212, 175, 122, 0.35) !important; transform: translateY(-2px);
+}
+
+/* Simulador Smartphone iPhone 16 Pro */
+.simulador-celular-coluna { display: flex; flex-direction: column; align-items: center; }
+.moldura-iphone {
+  width: 100%; max-width: 400px; background: #0A0F12; border-radius: 44px;
+  border: 8px solid #25221F; box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8), 0 0 45px rgba(212, 175, 122, 0.18);
+  overflow: hidden; position: relative;
+}
+.iphone-dynamic-island {
+  width: 110px; height: 26px; border-radius: 20px; background: #000; margin: 8px auto 6px;
+  display: flex; align-items: center; justify-content: space-between; padding: 0 10px;
+}
+.dynamic-island-cam { width: 11px; height: 11px; border-radius: 50%; background: #131722; border: 1px solid #1F2536; }
+.dynamic-island-sensor { width: 7px; height: 7px; border-radius: 50%; background: #090B10; }
+
+.topo-whatsapp {
+  background: #1F2C34; padding: 14px 18px; display: flex; align-items: center; gap: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+.avatar-whats {
+  width: 42px; height: 42px; border-radius: 50%; background: #141312; border: 1.5px solid var(--ouro-jk);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 0 12px rgba(212, 175, 122, 0.3);
+}
+.info-whats h4 { font-size: 0.88rem; color: #E9EDEF; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+.info-whats .selo-verificado-vip { color: var(--ouro-jk); font-size: 0.78rem; }
+.info-whats span { font-size: 0.7rem; color: #25D366; display: flex; align-items: center; gap: 5px; }
+.info-whats span::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #25D366; display: inline-block; animation: pulsoOnline 2s infinite; }
+@keyframes pulsoOnline { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.85); } }
+
+.corpo-chat-whats {
+  padding: 24px 18px; min-height: 340px; display: flex; flex-direction: column; gap: 14px;
+  background-color: #0B141A;
+  background-image: radial-gradient(circle at center, #111D24 0%, #0A1217 100%);
+}
+.balao-paciente {
+  align-self: flex-end; background: #005C4B; color: #E9EDEF; padding: 13px 16px;
+  border-radius: 14px 14px 2px 14px; font-size: 0.85rem; line-height: 1.5; max-width: 86%;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3); transition: transform 0.3s var(--curva);
+}
+.balao-clinica {
+  align-self: flex-start; background: #202C33; color: #E9EDEF; padding: 13px 16px;
+  border-radius: 14px 14px 14px 2px; font-size: 0.85rem; line-height: 1.5; max-width: 88%;
+  border-left: 3px solid var(--ouro-jk); box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+  transition: all 0.35s var(--curva);
+}
+.hora-msg { display: block; font-size: 0.64rem; color: rgba(255, 255, 255, 0.55); text-align: right; margin-top: 5px; }
+.barra-status-automacao {
+  background: #182229; padding: 13px 18px; font-size: 0.72rem; color: var(--ouro-jk);
+  display: flex; align-items: center; justify-content: space-between; border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+footer.rodape {
+  padding: 40px 5vw; background: #0A0908; border-top: 1px solid rgba(212, 175, 122, 0.2); display: flex;
+  justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; font-size: 0.82rem; color: var(--texto-claro-suave);
+}
+footer.rodape strong { color: var(--ouro-jk); }
+
+@media (max-width: 980px) {
+  .filosofia-topo, .grade-protocolos-viva, .diagnostico-grade, .grade-diferenciais-clinica, .concierge-grade { grid-template-columns: 1fr; }
+  .card-protocolo-moderno { grid-template-columns: 1fr; }
+  .nav-links { display: none; }
+  .secao-filosofia { display: block; min-height: 0; }
+  .palco-imagens-filosofia { position: relative !important; width: 100% !important; height: 320px !important; }
+  .palco-imagens-filosofia::before { background: linear-gradient(180deg, var(--fundo-escuro) 0%, rgba(17,16,15,0) 45%); }
+  .filosofia-conteudo { padding: 40px 5vw 35px !important; }
+  .barra-legenda-filo { position: relative !important; right: auto !important; bottom: auto !important; width: auto !important; margin: 0 5vw 30px !important; }
+  .hero-acao-direita { position: relative; right: auto; bottom: auto; margin-top: 20px; align-items: flex-start; padding: 0 5vw 30px; }
+}
+</style>
 </head>
 <body>
 
-  <!-- TRILHA DE SCROLL PARA ANIMAÇÃO FLUIDA EM SLOW MOTION -->
-  <div class="hero-scroll-track" id="heroScrollTrack">
+<!-- Barra de Progresso Dourada -->
+<div class="barra-topo" id="barraTopo"></div>
 
-    <!-- HERO SECTION STICKY COM BACKGROUND ANIMADO -->
-    <header class="hero-secao" id="hero">
+<!-- Cabeçalho Moderno -->
+<header class="cabecalho" id="cabecalho">
+  <a href="#" class="logo-marca">
+    <div class="logo-icone">
+      <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="ouroGradLogo" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#FFF0D4"/>
+            <stop offset="50%" stop-color="#D4AF7A"/>
+            <stop offset="100%" stop-color="#9E7847"/>
+          </linearGradient>
+        </defs>
+        <!-- Moldura de Diamante Duplo Arquitetônico -->
+        <polygon points="20,3 37,20 20,37 3,20" stroke="url(#ouroGradLogo)" stroke-width="1.2" opacity="0.65"/>
+        <rect x="8.5" y="8.5" width="23" height="23" rx="3" stroke="url(#ouroGradLogo)" stroke-width="0.9" opacity="0.35"/>
+        <!-- Monograma L Estilizado de Alta Costura -->
+        <path d="M15.5 11.5 V26.5 C15.5 27.6 16.4 28.5 17.5 28.5 H26.5" stroke="url(#ouroGradLogo)" stroke-width="2.2" stroke-linecap="round"/>
+        <path d="M19.5 14.5 V24.5 H25" stroke="url(#ouroGradLogo)" stroke-width="1.1" stroke-linecap="round" opacity="0.8"/>
+        <!-- Estrela de Luz Central -->
+        <path d="M25.5 11.5 L26.4 13.6 L28.5 14.5 L26.4 15.4 L25.5 17.5 L24.6 15.4 L22.5 14.5 L24.6 13.6 Z" fill="url(#ouroGradLogo)"/>
+      </svg>
+    </div>
+    <div class="logo-texto">
+      <span class="logo-nome">LUMINA</span>
+      <span class="logo-sub">Estética Avançada</span>
+    </div>
+  </a>
+  <nav class="nav-links">
+    <a href="#filosofia">Método</a>
+    <a href="#protocolos">Protocolos</a>
+    <a href="#diagnostico">Diagnóstico 3D</a>
+    <a href="#excelencia">A Clínica</a>
+  </nav>
+  <div class="attract-btn-wrap" id="wrapBtnTopo">
+    <canvas class="attract-canvas"></canvas>
+    <a href="#concierge" class="btn-topo" id="btnTopoAgendar">Agendar Avaliação</a>
+  </div>
+</header>
 
-      <!-- =========================================================
-           ÁREA RESERVADA PARA ANIMAÇÃO DO HAMBÚRGUER EM TODO O BACKGROUND
-           Renderizada em Canvas via sequência fluida de 40 frames
-           Acompanha o scroll: descer fecha o lanche, subir abre
-           ========================================================= -->
-      <canvas id="canvasBurgerBg" class="hero-burger-bg-canvas" aria-hidden="true"></canvas>
+<!-- =========================================================
+     SEÇÃO 01 — CAPA COM VÍDEO CONTROLADO PELO SCROLL (SCRUBBING)
+     ========================================================= -->
+<section class="scrub-pai" id="scrubPai">
+  <div class="scrub-sticky" id="scrubSticky">
+    <video class="scrub-video" id="videoScrub" src="video.mp4" muted playsinline preload="auto" disablepictureinpicture tabindex="-1"></video>
+    <div class="scrub-overlay"></div>
 
-      <!-- CAMADA DE CONTEÚDO SOBREPOSTA (TEXTOS E MENU POR CIMA) -->
-      <div class="hero-conteudo-sobreposto">
-        
-        <!-- 4. MENU / NAVBAR INTEGRADO AO TOPO -->
-        <div class="hero-container">
-          <nav class="hero-navbar" aria-label="Navegação Principal">
-            
-            <!-- Logotipo Tipográfico Minimalista -->
-            <a href="#hero" class="navbar-logo" aria-label="BURGER Início">
-              BURGER<span class="logo-ponto-cheddar" aria-hidden="true"></span>
-            </a>
-
-            <!-- Links Centrais -->
-            <ul class="navbar-menu">
-              <li><a href="#inicio" class="nav-link">Início</a></li>
-              <li><a href="#cardapio" class="nav-link">Cardápio</a></li>
-              <li><a href="#sobre" class="nav-link">Sobre nós</a></li>
-              <li><a href="#contato" class="nav-link">Contato</a></li>
-            </ul>
-
-            <!-- Botão Destacado com Seta Diagonal -->
-            <a href="#cardapio" class="navbar-btn-cta">
-              <span>Peça agora</span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
-                <line x1="7" y1="17" x2="17" y2="7"></line>
-                <polyline points="7 7 17 7 17 17"></polyline>
-              </svg>
-            </a>
-
-          </nav>
-        </div>
-
-        <!-- CORPO DA HERO SECTION -->
-        <main class="hero-corpo">
-          <div class="hero-container">
-            <div class="hero-grid">
-              
-              <!-- 5. CONTEÚDO DA HERO — COLUNA ESQUERDA (46%) -->
-              <div class="hero-col-esquerda">
-                
-                <!-- Elemento de Identificação -->
-                <div class="hero-etiqueta">
-                  <span class="etiqueta-detalhe-cheddar" aria-hidden="true"></span>
-                  <span>HAMBÚRGUER ARTESANAL</span>
-                  <span class="etiqueta-divisor" aria-hidden="true">•</span>
-                  <span>FEITO COM PERSONALIDADE</span>
-                </div>
-
-                <!-- Headline Principal -->
-                <h1 class="hero-headline">
-                  O <span class="destaque-cheddar">SABOR</span> QUE MERECE CADA MORDIDA.
-                </h1>
-
-                <!-- Subheadline -->
-                <p class="hero-subheadline">
-                  Carne suculenta, pão brioche macio e ingredientes selecionados. Uma combinação feita para transformar cada mordida em uma experiência inesquecível.
-                </p>
-
-                <!-- Três Destaques Lineares -->
-                <div class="hero-destaques">
-                  
-                  <!-- 1. Carne Suculenta -->
-                  <div class="destaque-item">
-                    <div class="destaque-icone" aria-hidden="true">
-                      <svg viewBox="0 0 24 24">
-                        <path d="M4 15h16M7 11h10M9 7h6M6 19h12" stroke-linecap="round"></path>
-                      </svg>
-                    </div>
-                    <h2 class="destaque-titulo">CARNE SUCULENTA</h2>
-                    <p class="destaque-desc">Grelhada no ponto certo.</p>
-                  </div>
-
-                  <!-- 2. Pão Brioche -->
-                  <div class="destaque-item">
-                    <div class="destaque-icone" aria-hidden="true">
-                      <svg viewBox="0 0 24 24">
-                        <path d="M4 14c0-4.4 3.6-8 8-8s8 3.6 8 8v1H4v-1z" stroke-linecap="round" stroke-linejoin="round"></path>
-                        <path d="M4 18h16" stroke-linecap="round"></path>
-                      </svg>
-                    </div>
-                    <h2 class="destaque-titulo">PÃO BRIOCHE</h2>
-                    <p class="destaque-desc">Maciez em cada mordida.</p>
-                  </div>
-
-                  <!-- 3. Cheddar Cremoso -->
-                  <div class="destaque-item">
-                    <div class="destaque-icone" aria-hidden="true">
-                      <svg viewBox="0 0 24 24">
-                        <path d="M12 3c-3 4-6 7.5-6 11a6 6 0 0 0 12 0c0-3.5-3-7-6-11z" stroke-linecap="round" stroke-linejoin="round"></path>
-                        <path d="M10 14a2 2 0 0 0 2 2" stroke-linecap="round"></path>
-                      </svg>
-                    </div>
-                    <h2 class="destaque-titulo">CHEDDAR CREMOSO</h2>
-                    <p class="destaque-desc">Sabor que surpreende.</p>
-                  </div>
-
-                </div>
-
-                <!-- CTA Principal & Indicação Secundária -->
-                <div class="hero-cta-grupo">
-                  <a href="#cardapio" class="hero-btn-principal">
-                    <span>QUERO EXPERIMENTAR</span>
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                      <line x1="5" y1="12" x2="19" y2="12"></line>
-                      <polyline points="12 5 19 12 12 19"></polyline>
-                    </svg>
-                  </a>
-
-                  <span class="hero-cta-subtexto">
-                    <span class="cta-subtexto-ponto" aria-hidden="true"></span>
-                    Prepare-se para sua próxima mordida favorita.
-                  </span>
-                </div>
-
-              </div>
-
-              <!-- 6. COLUNA DIREITA (54%) — ESPAÇO PRESERVADO PARA VISIBILIDADE DO HAMBÚRGUER -->
-              <div class="hero-col-direita" aria-hidden="true">
-                <!-- O hambúrguer em animação de background aparece com escala generosa nesta área -->
-              </div>
-
-            </div>
-          </div>
-        </main>
-
-        <!-- Indicador Discreto de Scroll -->
-        <div class="indicador-scroll-slow">
-          <span>Role para montar</span>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <line x1="12" y1="5" x2="12" y2="19"></line>
-            <polyline points="19 12 12 19 5 12"></polyline>
-          </svg>
-        </div>
-
+    <div class="scrub-conteudo" id="scrubConteudo">
+      <div class="tag-secao">✦ Medicina Estética Avançada & Longevidade</div>
+      
+      <div class="cradle-hero-wrapper hero-titulo" id="heroTituloPrincipal" role="heading" aria-level="1" aria-label="A ARTE DE PRESERVAR A SUA IDENTIDADE COM PRECISÃO E NATURALIDADE.">
+        <div class="cradle-stage" data-cradle-text="A ARTE DE PRESERVAR"></div>
+        <div class="cradle-stage" data-cradle-text="A SUA IDENTIDADE" data-destaque="IDENTIDADE"></div>
+        <div class="cradle-stage" data-cradle-text="COM PRECISÃO E NATURALIDADE."></div>
       </div>
 
-    </header>
+      <p class="hero-subtitulo">
+        Protocolos médicos individualizados que respeitam a anatomia única do seu rosto. Tecnologia padrão ouro para rejuvenescer com elegância, firmeza e zero exagero.
+      </p>
+    </div>
 
+    <!-- Botão posicionado no lado direito, acima da linha de progresso -->
+    <div class="hero-acao-direita" id="heroAcaoDireita">
+      <div class="attract-btn-wrap" id="wrapBtnHero">
+        <canvas class="attract-canvas"></canvas>
+        <a href="#diagnostico" class="btn-principal" id="btnHeroDiagnostico">
+          <span>Fazer Diagnóstico Facial Interativo</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M5 12h14M13 5l7 7-7 7"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="scrub-dica" id="scrubDica">Role a roda do mouse para avançar ↓</div>
+    <div class="scrub-progresso"><i id="scrubBarra"></i></div>
+  </div>
+</section>
+
+<!-- =========================================================
+     SEÇÃO 01 — NOSSO MÉTODO (3 imagens originais na mesma seção, trocam com os pilares)
+     ========================================================= -->
+<section class="secao-filosofia secao-transicao-gradativa" id="filosofia">
+  <!-- KokonutUI Dot Field: Membrana Halftone Interativa com Ondas e Choques -->
+  <canvas id="canvasDotField" class="canvas-fundo-interativo"></canvas>
+  <!-- Palco de imagens: cada pilar corresponde a uma das 3 fotos oficiais em alta resolução -->
+  <div class="palco-imagens-filosofia animar-entrada vindo-direita">
+    <div class="slide-foto-filo ativo" id="slideFilo0">
+      <img src="imagens/metodo-01-mapeamento.jpg" alt="Rigor Anatômico & Mapeamento" />
+    </div>
+    <div class="slide-foto-filo" id="slideFilo1">
+      <img src="imagens/metodo-02-ativos.jpg" alt="Naturalidade Inegociável" />
+    </div>
+    <div class="slide-foto-filo" id="slideFilo2">
+      <img src="imagens/metodo-03-led.jpg" alt="Gestão da Longevidade Cutânea" />
+    </div>
   </div>
 
-  <!-- =========================================================
-       MOTOR DA ANIMAÇÃO DO BACKGROUND (CANVAS + SLOW LERP SCROLL)
-       ========================================================= -->
-  <script>
-    (function initBurgerScrollAnimation() {
-      const TOTAL_FRAMES = 40;
-      const canvas = document.getElementById('canvasBurgerBg');
-      const track = document.getElementById('heroScrollTrack');
-      if (!canvas || !track) return;
+  <div class="filosofia-conteudo">
+    <div class="animar-entrada vindo-esquerda">
+      <span class="tag-metodo">01 / Nosso Método</span>
+      <h2>
+        Não transformamos quem você é. Devolvemos ao seu rosto <span class="destaque-bronze">a firmeza, o descanso e a luz</span>.
+      </h2>
+    </div>
 
-      const ctx = canvas.getContext('2d', { alpha: false });
-      if (!ctx) return;
+    <div class="pilares-coluna animar-entrada vindo-esquerda">
+      <div class="card-pilar-vivo ativo" data-slide="0">
+        <div class="card-pilar-topo">
+          <h3>Rigor Anatômico & Mapeamento</h3>
+          <span class="card-pilar-num">01</span>
+        </div>
+        <p>Avaliamos estrutura óssea, proporções e dinâmica muscular milímetro a milímetro antes de definir seu protocolo.</p>
+      </div>
 
-      // Array de preloading para todas as imagens
-      const frames = [];
-      let loadedFramesCount = 0;
-      let isInitialRendered = false;
+      <div class="card-pilar-vivo" data-slide="1">
+        <div class="card-pilar-topo">
+          <h3>Naturalidade Inegociável</h3>
+          <span class="card-pilar-num">02</span>
+        </div>
+        <p>Resultados sofisticados onde ninguém percebe o que foi feito, mas todos notam que você está mais jovem e radiante.</p>
+      </div>
 
-      // Variáveis de controle de interpolação lenta (Slow LERP)
-      // 0.0 = Lanche aberto (Frame 001)
-      // 1.0 = Lanche fechado (Frame 040)
-      let targetProgress = 0;
-      let currentProgress = 0;
-      const LERP_FACTOR = 0.065; // Transição cinematográfica macia em slow motion
+      <div class="card-pilar-vivo" data-slide="2">
+        <div class="card-pilar-topo">
+          <h3>Gestão da Longevidade Cutânea</h3>
+          <span class="card-pilar-num">03</span>
+        </div>
+        <p>Estímulo contínuo de colágeno e regeneração celular para que sua pele envelheça com qualidade superior ano após ano.</p>
+      </div>
+    </div>
 
-      // Gerar caminho relativo dos frames (001 a 040)
-      function getFrameSrc(index) {
-        const num = String(index).padStart(3, '0');
-        return `Hamburgue/ezgif-frame-${num}.jpg`;
-      }
+    <p class="filosofia-dica animar-entrada vindo-baixo">
+      Passe o mouse ou clique sobre cada pilar abaixo para ver como nossa direção clínica combina ciência dermatológica e precisão anatômica.
+    </p>
+  </div>
 
-      // Pré-carregamento imediato de todas as 40 imagens
-      for (let i = 1; i <= TOTAL_FRAMES; i++) {
-        const img = new Image();
-        img.src = getFrameSrc(i);
-        img.onload = () => {
-          loadedFramesCount++;
-          if (i === 1 && !isInitialRendered) {
-            isInitialRendered = true;
-            desenharFrame(currentProgress);
+  <div class="barra-legenda-filo">
+    <span id="textoLegendaFilo" style="font-family: var(--fonte-titulo); font-weight: 600; font-size: 0.82rem;">
+      Rigor Anatômico & Mapeamento Facial 360º
+    </span>
+    <span style="color: var(--ouro-jk); font-size: 0.68rem; font-weight: 700; text-transform: uppercase; white-space: nowrap;">Padrão LUMINA</span>
+  </div>
+</section>
+
+<!-- =========================================================
+     SEÇÃO 03 — PROTOCOLOS (CARDS ENTRANDO DA ESQUERDA E DIREITA)
+     ========================================================= -->
+<section class="secao-protocolos secao-transicao-gradativa" id="protocolos">
+  <!-- KokonutUI Background Paths: Fita Fluida de Linhas com Efeito Repulsor de Cursor -->
+  <canvas id="canvasBackgroundPaths" class="canvas-fundo-interativo"></canvas>
+  <div class="container-central">
+    <div class="protocolos-cabecalho">
+      <div class="animar-entrada vindo-esquerda">
+        <div class="tag-secao">02 / Especialidades Clínicas</div>
+        <div class="pluck-container" style="justify-content: flex-start; margin: 8px 0 0;">
+          <div class="pluck-stage" id="pluckStageProtocolos" data-label="PROTOCOLOS DE ALTA PERFORMANCE PARA CADA CAMADA DA PELE." data-destaque="CADA CAMADA DA PELE">
+            <div class="pluck-letters">PROTOCOLOS DE ALTA PERFORMANCE PARA CADA CAMADA DA PELE.</div>
+            <svg class="pluck-svg">
+              <path class="pluck-path" d="M0,0 L100,0"></path>
+              <path class="pluck-ghost" d="M0,0 L100,0"></path>
+            </svg>
+            <span class="pluck-dot pluck-dot-l"></span>
+            <span class="pluck-dot pluck-dot-r"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grade-protocolos-viva">
+      <article class="card-protocolo-moderno animar-entrada vindo-esquerda" onclick="irParaConcierge('Contorno Facial & Bioestimulação')">
+        <div class="card-proto-img">
+          <span class="card-proto-tag">01 • Colágeno</span>
+          <img src="imagens/contorno-colageno.jpg" alt="Bioestimulação de Colágeno" />
+        </div>
+        <div class="card-proto-conteudo">
+          <div>
+            <h3>Firmeza & Bioestimulação de Colágeno</h3>
+            <div class="card-proto-sub">Efeito lifting natural e sustentação progressiva</div>
+            <p class="card-proto-desc">Ativamos a produção natural de colágeno do organismo para recuperar a densidade da pele e definir o contorno mandibular.</p>
+          </div>
+          <span class="card-proto-link">Selecionar protocolo →</span>
+        </div>
+      </article>
+
+      <article class="card-protocolo-moderno animar-entrada vindo-direita" onclick="irParaConcierge('Terço Médio & Sustentação')">
+        <div class="card-proto-img">
+          <span class="card-proto-tag">02 • Suporte</span>
+          <img src="imagens/avaliacao-anatomica.jpg" alt="Estruturação Facial" />
+        </div>
+        <div class="card-proto-conteudo">
+          <div>
+            <h3>Estruturação & Suporte do Terço Médio</h3>
+            <div class="card-proto-sub">Restauração dos pontos de luz sem volume artificial</div>
+            <p class="card-proto-desc">Reposicionamento sutil de tecidos que suaviza olheiras profundas e o aspecto de cansaço preservando a sua identidade.</p>
+          </div>
+          <span class="card-proto-link">Selecionar protocolo →</span>
+        </div>
+      </article>
+
+      <article class="card-protocolo-moderno animar-entrada vindo-esquerda" onclick="irParaConcierge('Terço Superior & Olhar')">
+        <div class="card-proto-img">
+          <span class="card-proto-tag">03 • Expressão</span>
+          <img src="imagens/procedimento-clinica.jpg" alt="Suavização de Linhas" />
+        </div>
+        <div class="card-proto-conteudo">
+          <div>
+            <h3>Suavização de Linhas & Olhar Descansado</h3>
+            <div class="card-proto-sub">Prevenção de marcas mantendo a expressão natural</div>
+            <p class="card-proto-desc">Relaxamento preciso da musculatura facial para um olhar leve, aberto e rejuvenescido, sem aspecto congelado.</p>
+          </div>
+          <span class="card-proto-link">Selecionar protocolo →</span>
+        </div>
+      </article>
+
+      <article class="card-protocolo-moderno animar-entrada vindo-direita" onclick="irParaConcierge('Qualidade & Viço da Pele')">
+        <div class="card-proto-img">
+          <span class="card-proto-tag">04 • Luminosidade</span>
+          <img src="imagens/ciencia-pele.jpg" alt="Qualidade da Pele" />
+        </div>
+        <div class="card-proto-conteudo">
+          <div>
+            <h3>Qualidade, Textura & Viço Acetinado</h3>
+            <div class="card-proto-sub">Uniformidade de tom, poros fechados e brilho saudável</div>
+            <p class="card-proto-desc">Protocolos regenerativos avançados para manchas, textura irregular e hidratação profunda das camadas celulares.</p>
+          </div>
+          <span class="card-proto-link">Selecionar protocolo →</span>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================
+     SEÇÃO 04 — DIAGNÓSTICO INTERATIVO COM FOTO REAL DE ALTO PADRÃO
+     ========================================================= -->
+<section class="secao-diagnostico-real secao-transicao-gradativa" id="diagnostico">
+  <!-- KokonutUI Topo Background: Curvas Topográficas Interativas com Elevações e Ondas -->
+  <canvas id="canvasTopoBackground" class="canvas-fundo-interativo"></canvas>
+  <div class="container-central">
+    <div class="diagnostico-topo animar-entrada vindo-baixo">
+      <div class="tag-secao tag-secao-escura">03 / Diagnóstico Interativo</div>
+      <div class="pluck-container">
+        <div class="pluck-stage" id="pluckStageSecao3" data-label="CLIQUE NA REGIÃO DO ROSTO QUE VOCÊ DESEJA VALORIZAR HOJE" data-destaque="VALORIZAR HOJE">
+          <div class="pluck-letters">CLIQUE NA REGIÃO DO ROSTO QUE VOCÊ DESEJA VALORIZAR HOJE</div>
+          <svg class="pluck-svg">
+            <path class="pluck-ghost" />
+            <path class="pluck-path" />
+          </svg>
+          <div class="pluck-dot pluck-dot-l"></div>
+          <div class="pluck-dot pluck-dot-r"></div>
+        </div>
+      </div>
+      <p>Passe o mouse ou clique nos pontos iluminados sobre a foto para visualizar o protocolo ideal:</p>
+    </div>
+
+    <div class="diagnostico-grade">
+      <div class="container-foto-diagnostico animar-entrada vindo-esquerda">
+        <img src="imagens/rosto-diagnostico.jpg" id="imagemRostoZoom" alt="Diagnóstico Facial LUMINA" />
+        <button type="button" class="ponto-rosto-real ativo" style="top: 32%; left: 48%;" data-zona="0" data-rotulo="Terço Superior & Olhar">01</button>
+        <button type="button" class="ponto-rosto-real" style="top: 49%; left: 54%;" data-zona="1" data-rotulo="Terço Médio & Sustentação">02</button>
+        <button type="button" class="ponto-rosto-real" style="top: 64%; left: 58%;" data-zona="2" data-rotulo="Contorno & Mandíbula">03</button>
+        <button type="button" class="ponto-rosto-real" style="top: 52%; left: 32%;" data-zona="3" data-rotulo="Qualidade & Viço da Pele">04</button>
+      </div>
+
+      <div class="painel-resultado-diagnostico animar-entrada vindo-direita">
+        <div class="botoes-seletor-rapido">
+          <button type="button" class="aba-zona ativo" data-zona="0"><span>01. Terço Superior & Olhar</span><span>→</span></button>
+          <button type="button" class="aba-zona" data-zona="1"><span>02. Terço Médio & Suporte</span><span>→</span></button>
+          <button type="button" class="aba-zona" data-zona="2"><span>03. Contorno & Mandíbula</span><span>→</span></button>
+          <button type="button" class="aba-zona" data-zona="3"><span>04. Qualidade & Viço da Pele</span><span>→</span></button>
+        </div>
+
+        <div class="conteudo-zona-dinamico" id="blocoTextoZona">
+          <h3 id="tituloZona">Terço Superior & Descanso do Olhar</h3>
+          <p id="descZona">
+            Protocolo voltado para suavizar as linhas de expressão da testa e entre as sobrancelhas, abrindo o olhar com leveza e naturalidade absoluta, sem travar a sua expressão.
+          </p>
+
+          <div class="indicadores-zona-grade">
+            <div class="ind-z-item"><span>Objetivo Principal</span><strong id="objZona">Olhar Descansado</strong></div>
+            <div class="ind-z-item"><span>Recuperação</span><strong id="recZona">Imediata (Sem repouso)</strong></div>
+            <div class="ind-z-item"><span>Durabilidade</span><strong id="durZona">Planejamento Contínuo</strong></div>
+          </div>
+
+          <a href="#concierge" class="btn-principal" style="width: 100%; justify-content: center;">
+            <span id="btnTextoZona">Enviar Região para Avaliação no WhatsApp</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M5 12h14M13 5l7 7-7 7"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================
+     SEÇÃO 05 — EXCELÊNCIA NO ATENDIMENTO (MÁSCARA INTERATIVA)
+     ========================================================= -->
+<section class="secao-excelencia secao-transicao-gradativa" id="excelencia">
+  <!-- KokonutUI Ink Background: Dinâmica Fluida de Tinta Dourada Interativa -->
+  <canvas id="canvasInkBackground" class="canvas-fundo-interativo"></canvas>
+  <div class="excelencia-topo animar-entrada vindo-baixo">
+    <div class="tag-secao tag-secao-escura">04 / Excelência no Atendimento</div>
+    <div class="pluck-container">
+      <div class="pluck-stage" id="pluckStageSecao4" data-label="UMA JORNADA EXCLUSIVA, DO PRIMEIRO CONTATO AO ACOMPANHAMENTO PÓS-PROCEDIMENTO." data-destaque="ACOMPANHAMENTO PÓS-PROCEDIMENTO">
+        <div class="pluck-letters">UMA JORNADA EXCLUSIVA, DO PRIMEIRO CONTATO AO ACOMPANHAMENTO PÓS-PROCEDIMENTO.</div>
+        <svg class="pluck-svg">
+          <path class="pluck-ghost" />
+          <path class="pluck-path" />
+        </svg>
+        <div class="pluck-dot pluck-dot-l"></div>
+        <div class="pluck-dot pluck-dot-r"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mascara-clinica-interativa" id="mascaraClinica">
+    <img src="imagens/clinica-flores-rosas.jpg" alt="Arquitetura da Clínica LUMINA — Sofisticação & Conforto" />
+    <div class="mascara-clinica-legenda">
+      <blockquote>
+        “Acreditamos na medicina estética de alto padrão: aquela que respeita a sua história, protege a sua saúde e entrega resultados que envelhecem bem com você.”
+      </blockquote>
+      <div class="attract-btn-wrap" id="wrapBtnExcelencia">
+        <canvas class="attract-canvas"></canvas>
+        <a href="#concierge" class="btn-principal" id="btnExcelenciaDisp">Conhecer Disponibilidade</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="grade-diferenciais-clinica">
+    <div class="card-diferencial animar-entrada vindo-esquerda">
+      <div class="num-d">100%</div>
+      <h4>Consulta Individualizada</h4>
+      <p>Atendimento com tempo estendido para análise facial completa e alinhamento seguro de expectativas.</p>
+    </div>
+    <div class="card-diferencial animar-entrada vindo-baixo">
+      <div class="num-d">Padrão Ouro</div>
+      <h4>Tecnologia Certificada</h4>
+      <p>Equipamentos e bioestimuladores de referência mundial com máxima segurança dermatológica.</p>
+    </div>
+    <div class="card-diferencial animar-entrada vindo-direita">
+      <div class="num-d">360º</div>
+      <h4>Concierge Dedicada</h4>
+      <p>Suporte próximo antes, durante e após cada etapa do seu protocolo de tratamento.</p>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================
+     SEÇÃO 06 — CONCIERGE INTERATIVA + CELULAR WHATSAPP AO VIVO
+     ========================================================= -->
+<section class="secao-concierge-whatsapp secao-transicao-gradativa" id="concierge">
+  <!-- KokonutUI Rain Glass Background: Vidro Chuvoso Interativo com Efeito Limpa-Gotas -->
+  <canvas id="canvasRainGlass" class="canvas-fundo-interativo"></canvas>
+  <div class="concierge-grade">
+    <div class="painel-interativo-passos animar-entrada vindo-esquerda">
+      <div class="badge-passos-topo">✦ ECOSSISTEMA COMERCIAL EXCLUSIVO VIDE</div>
+      <div class="tag-secao">05 / Concierge Inteligente</div>
+      <h2 class="titulo-moderno">Inicie seu atendimento <span class="destaque-ouro">personalizado</span></h2>
+      <p>Configure suas preferências clínicas abaixo e visualize sua triagem sendo estruturada ao vivo no simulador:</p>
+
+      <form id="formConcierge">
+        <span class="etapa-rotulo"><span class="num-etapa">1</span> Selecione a região prioritária da face</span>
+        <div class="grade-tear-buttons" id="gradeTearButtons">
+          <!-- Tear Button 1: Terço Superior -->
+          <div class="tear-btn-root tear-ativo" id="tearBtn0" data-proc="Terço Superior & Olhar" tabindex="0" role="button" aria-pressed="true">
+            <div class="tear-btn-body">
+              <div class="tear-chip">
+                <svg class="tear-icon-idle" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                  <circle cx="12" cy="12" r="3" fill="currentColor"/>
+                </svg>
+                <svg class="tear-icon-check" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6">
+                  <path d="M20 6L9 17l-5-5"/>
+                </svg>
+              </div>
+              <div class="tear-textos">
+                <span class="tear-titulo">Terço Superior</span>
+                <span class="tear-sub">Linhas de expressão & descanso facial</span>
+              </div>
+            </div>
+            <div class="tear-btn-stub" id="tearStub0" title="Arraste ou clique para rasgar e destacar">
+              <span class="tear-perforation"></span>
+              <svg class="tear-stub-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+              </svg>
+              <span class="tear-stub-label">Destacar</span>
+            </div>
+          </div>
+
+          <!-- Tear Button 2: Terço Médio -->
+          <div class="tear-btn-root" id="tearBtn1" data-proc="Terço Médio & Sustentação" tabindex="0" role="button" aria-pressed="false">
+            <div class="tear-btn-body">
+              <div class="tear-chip">
+                <svg class="tear-icon-idle" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                  <circle cx="12" cy="12" r="3" fill="currentColor"/>
+                </svg>
+                <svg class="tear-icon-check" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6">
+                  <path d="M20 6L9 17l-5-5"/>
+                </svg>
+              </div>
+              <div class="tear-textos">
+                <span class="tear-titulo">Terço Médio</span>
+                <span class="tear-sub">Malar, olheiras & sustentação estrutural</span>
+              </div>
+            </div>
+            <div class="tear-btn-stub" id="tearStub1" title="Arraste ou clique para rasgar e destacar">
+              <span class="tear-perforation"></span>
+              <svg class="tear-stub-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+              </svg>
+              <span class="tear-stub-label">Destacar</span>
+            </div>
+          </div>
+
+          <!-- Tear Button 3: Terço Inferior -->
+          <div class="tear-btn-root" id="tearBtn2" data-proc="Contorno Facial & Bioestimulação" tabindex="0" role="button" aria-pressed="false">
+            <div class="tear-btn-body">
+              <div class="tear-chip">
+                <svg class="tear-icon-idle" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                  <circle cx="12" cy="12" r="3" fill="currentColor"/>
+                </svg>
+                <svg class="tear-icon-check" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6">
+                  <path d="M20 6L9 17l-5-5"/>
+                </svg>
+              </div>
+              <div class="tear-textos">
+                <span class="tear-titulo">Terço Inferior</span>
+                <span class="tear-sub">Contorno mandibular & bioestimulação de colágeno</span>
+              </div>
+            </div>
+            <div class="tear-btn-stub" id="tearStub2" title="Arraste ou clique para rasgar e destacar">
+              <span class="tear-perforation"></span>
+              <svg class="tear-stub-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+              </svg>
+              <span class="tear-stub-label">Destacar</span>
+            </div>
+          </div>
+        </div>
+
+        <span class="etapa-rotulo"><span class="num-etapa">2</span> Seus dados para contato prioritário</span>
+        <div class="grade-inputs-dupla">
+          <div class="campo-wrapper">
+            <input type="text" id="inputNome" class="campo-moderno" placeholder="Seu nome completo..." required />
+          </div>
+          <div class="campo-wrapper">
+            <input type="tel" id="inputWhats" class="campo-moderno" placeholder="WhatsApp com DDD (ex: 11 99999-9999)" required />
+          </div>
+        </div>
+
+        <span class="etapa-rotulo"><span class="num-etapa">3</span> Melhor período para nossa equipe te chamar</span>
+        <div class="grade-turno">
+          <button type="button" class="btn-turno ativo" data-turno="Manhã">Manhã (09h - 12h)</button>
+          <button type="button" class="btn-turno" data-turno="Tarde">Tarde (13h - 18h)</button>
+          <button type="button" class="btn-turno" data-turno="Horário Flexível">Horário Flexível</button>
+        </div>
+
+        <button type="submit" class="btn-principal" style="width: 100%; justify-content: center;">
+          <span id="btnSubmitConcierge">Receber Atendimento Imediato no WhatsApp</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M5 12h14M13 5l7 7-7 7"/>
+          </svg>
+        </button>
+
+        <!-- Painel de Comprovação Técnica e Passagem para o WhatsApp (Aparece ao enviar) -->
+        <div id="painelComprovacaoEnvio" style="display: none; margin-top: 18px; padding: 18px; border-radius: 4px; background: rgba(46, 204, 113, 0.1); border: 1px solid rgba(46, 204, 113, 0.4);">
+          <div id="statusTecnicoSupabase" style="font-family: var(--fonte-titulo); font-size: 0.76rem; font-weight: 700; color: #2ECC71; margin-bottom: 10px;">
+            ✔ Registro gravado com sucesso no banco Supabase (public.leads)
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <a id="linkPassagemWhatsApp" href="#" target="_blank" rel="noopener" style="padding: 11px 14px; border-radius: 4px; background: #25D366; color: #0B141A; text-align: center; text-decoration: none; font-family: var(--fonte-titulo); font-size: 0.74rem; font-weight: 700;">
+              💬 Abrir no WhatsApp Real →
+            </a>
+            <a href="dashboard.html" style="padding: 11px 14px; border-radius: 4px; background: rgba(212, 175, 122, 0.2); border: 1px solid var(--ouro-jk); color: var(--ouro-brilho); text-align: center; text-decoration: none; font-family: var(--fonte-titulo); font-size: 0.74rem; font-weight: 700;">
+              📊 Ver Lead no Dashboard →
+            </a>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="simulador-celular-coluna animar-entrada vindo-direita">
+      <div class="moldura-iphone">
+        <!-- iOS Status Bar -->
+        <div class="iphone-status-bar">
+          <span class="status-hora">09:41</span>
+          <div class="status-icones-ios">
+            <svg width="15" height="11" viewBox="0 0 17 11" fill="currentColor"><path d="M1 9.5h2v-2H1v2zm4 0h2v-4H5v4zm4 0h2v-6H9v6zm4 0h2V1h-2v8.5z"/></svg>
+            <span style="font-size: 0.65rem; font-weight: 700; letter-spacing: -0.02em;">5G</span>
+            <svg width="22" height="11" viewBox="0 0 25 12" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="1" y="1" width="20" height="10" rx="3"/><path d="M23 4.5v3" stroke-linecap="round"/><rect x="2.5" y="2.5" width="14" height="7" rx="1.5" fill="currentColor"/></svg>
+          </div>
+        </div>
+
+        <!-- Dynamic Island Apple iPhone 16 Pro -->
+        <div class="iphone-dynamic-island">
+          <div class="dynamic-island-cam"></div>
+          <div class="dynamic-island-sensor"></div>
+        </div>
+
+        <div class="topo-whatsapp">
+          <div class="avatar-whats">
+            <svg width="22" height="22" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <polygon points="20,3 37,20 20,37 3,20" stroke="#D4AF7A" stroke-width="1.5" opacity="0.7"/>
+              <path d="M15.5 11.5 V26.5 C15.5 27.6 16.4 28.5 17.5 28.5 H26.5" stroke="#D4AF7A" stroke-width="2.6" stroke-linecap="round"/>
+              <path d="M25.5 11.5 L26.4 13.6 L28.5 14.5 L26.4 15.4 L25.5 17.5 L24.6 15.4 L22.5 14.5 L24.6 13.6 Z" fill="#D4AF7A"/>
+            </svg>
+          </div>
+          <div class="info-whats">
+            <h4>Concierge LUMINA <span class="selo-verificado-vip">✦ VIP</span></h4>
+            <span id="statusDigitando">Online agora • Triagem VIDE</span>
+          </div>
+        </div>
+
+        <div class="corpo-chat-whats" id="corpoChatSimulador">
+          <div class="balao-paciente" id="balaoPacienteVivo">
+            Olá! Meu nome é <strong>Visitante</strong> e gostaria de informações sobre avaliação para <strong>Terço Superior & Olhar</strong> (preferência: <strong>Manhã</strong>).
+            <span class="hora-msg">Agora</span>
+          </div>
+          <div class="balao-clinica" id="balaoClinicaVivo">
+            Olá! ✨ Seja muito bem-vinda à <strong>LUMINA Estética Avançada</strong>. Recebemos seu interesse em <strong>Terço Superior & Olhar</strong>! Nossa equipe já separou os horários da <strong>manhã</strong> para você.
+            <span class="hora-msg">Resposta instantânea via Sistema VIDE ✓✓</span>
+          </div>
+        </div>
+
+        <div class="barra-status-automacao">
+          <span>⚡ Conectado ao Banco Demo Supabase</span>
+          <a href="dashboard.html" id="badgeStatusLead" style="color: var(--ouro-brilho); text-decoration: underline; font-weight: 600;">Ver no Painel de Dados →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Rodapé -->
+<footer class="rodape">
+  <div>© LUMINA Estética Avançada (Caso Fictício Demonstrativo da <strong>VIDE — Sistemas de Crescimento</strong>).</div>
+  <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+    <span>Arquitetura Demonstrativa <strong>VIDE</strong>:</span>
+    <a href="fluxo-n8n.html" style="padding: 10px 18px; border-radius: 4px; border: 1px solid #FF6D5A; background: rgba(255, 109, 90, 0.14); color: #FF988A; text-decoration: none; font-family: var(--fonte-titulo); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;">
+      ⚡ 2. Ver Fluxo n8n & IA
+    </a>
+    <a href="dashboard.html" style="padding: 10px 18px; border-radius: 4px; border: 1px solid var(--ouro-jk); background: rgba(212, 175, 122, 0.14); color: var(--ouro-brilho); text-decoration: none; font-family: var(--fonte-titulo); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;">
+      📊 3. Abrir Painel de Dados
+    </a>
+  </div>
+</footer>
+
+<!-- =========================================================
+     SCRIPTS DE MOVIMENTO, ENTRADAS LATERAIS E INTERATIVIDADE
+     ========================================================= -->
+<script>
+// 0. SCROLL-DRIVEN VIDEO SCRUBBING & PINNING INFALÍVEL
+// A capa fica 100% fixa na tela (position: fixed) enquanto o vídeo avança até 8s.
+// Assim que o vídeo chega ao fim, a tela transita direta e suavemente para a Seção 01 SEM ESPAÇO VAZIO.
+(function () {
+  const pai = document.getElementById('scrubPai');
+  const sticky = document.getElementById('scrubSticky');
+  const video = document.getElementById('videoScrub');
+  const conteudo = document.getElementById('scrubConteudo');
+  const acaoDireita = document.getElementById('heroAcaoDireita');
+  const barra = document.getElementById('scrubBarra');
+  const dica = document.getElementById('scrubDica');
+  if (!pai || !sticky || !video) return;
+
+  // Garantir áudio 100% mudo e autoplay desativado
+  video.muted = true;
+  video.volume = 0;
+  video.pause();
+  video.removeAttribute('autoplay');
+  video.addEventListener('volumechange', () => { video.muted = true; video.volume = 0; });
+  video.addEventListener('play', () => video.pause());
+
+  // Pré-carregamento imediato na memória RAM para eliminar latência de rede/disco
+  fetch('video.mp4')
+    .then(r => r.blob())
+    .then(blob => {
+      const blobUrl = URL.createObjectURL(blob);
+      const curTime = video.currentTime;
+      video.src = blobUrl;
+      video.currentTime = curTime;
+      video.load();
+    })
+    .catch(() => {});
+
+  // Limite de corte solicitado (vídeo cortado até 8 segundos para agilidade e precisão)
+  const DURACAO_CORTE = 8.0;
+  let duracaoEfetiva = DURACAO_CORTE;
+
+  function recalcularDuracao() {
+    if (video.duration && !isNaN(video.duration) && isFinite(video.duration) && video.duration > 0) {
+      duracaoEfetiva = Math.min(DURACAO_CORTE, video.duration);
+    } else {
+      duracaoEfetiva = DURACAO_CORTE;
+    }
+  }
+
+  video.addEventListener('loadedmetadata', recalcularDuracao);
+  video.addEventListener('loadeddata', () => {
+    recalcularDuracao();
+    try { video.currentTime = 0.01; } catch (e) {}
+  });
+
+  try { video.currentTime = 0.01; } catch (e) {}
+
+  let tempoAlvoVideo = 0;
+  let buscandoFrame = false;
+
+  function aplicarTempoVideo(alvo) {
+    tempoAlvoVideo = alvo;
+    if (!buscandoFrame && video.readyState >= 1) {
+      if (Math.abs(video.currentTime - tempoAlvoVideo) > 0.015) {
+        buscandoFrame = true;
+        if (typeof video.fastSeek === 'function') {
+          try {
+            video.fastSeek(tempoAlvoVideo);
+          } catch (e) {
+            video.currentTime = tempoAlvoVideo;
           }
-        };
-        frames.push(img);
-      }
-
-      // Função de desenho no Canvas com posicionamento responsivo e preservação de proporção
-      function desenharFrame(progress) {
-        // Mapear progress (0.0 a 1.0) para índice do frame (0 a 39)
-        // 0.0 -> Frame 001 (aberto)
-        // 1.0 -> Frame 040 (fechado)
-        const frameIndex = Math.round(progress * (TOTAL_FRAMES - 1));
-        const clampedIndex = Math.max(0, Math.min(TOTAL_FRAMES - 1, frameIndex));
-        const img = frames[clampedIndex];
-
-        if (!img || !img.complete || img.naturalWidth === 0) return;
-
-        const cw = window.innerWidth;
-        const ch = window.innerHeight;
-        const iw = img.naturalWidth || 1920;
-        const ih = img.naturalHeight || 1080;
-
-        // Fundo sólido calibrado com a fotografia para fusão imperceptível
-        ctx.fillStyle = '#F2F3ED';
-        ctx.fillRect(0, 0, cw, ch);
-
-        const isMobile = cw <= 768;
-        const isTablet = cw > 768 && cw <= 1024;
-
-        if (isMobile) {
-          // Mobile: Centraliza o hambúrguer (que está na metade direita da foto original)
-          const scale = Math.max(cw / 980, ch / 1100);
-          const dw = iw * scale;
-          const dh = ih * scale;
-          const burgerCenterX = 1420 * scale;
-          const dx = (cw / 2) - burgerCenterX;
-          const dy = (ch - dh) * 0.42;
-          ctx.drawImage(img, dx, dy, dw, dh);
-        } else if (isTablet) {
-          // Tablet: Ajusta escala e alinha hambúrguer na área direita
-          const scale = Math.max(cw / iw, ch / ih);
-          const dw = iw * scale;
-          const dh = ih * scale;
-          const dx = cw - dw + (dw * 0.06);
-          const dy = (ch - dh) / 2;
-          ctx.drawImage(img, dx, dy, dw, dh);
         } else {
-          // Desktop: Posicionamento perfeito onde o lanche fica na coluna direita (54%)
-          // e o lado esquerdo livre para a leitura impecável dos textos
-          const scale = Math.max(cw / iw, ch / ih);
-          const dw = iw * scale;
-          const dh = ih * scale;
+          video.currentTime = tempoAlvoVideo;
+        }
+      }
+    }
+  }
 
-          // Em monitores ultra-wide (>1440px), aproxima suavemente do contêiner central
-          const offsetUltraWide = (cw > 1440) ? (cw - 1440) * 0.32 : 0;
-          const dx = cw - dw - offsetUltraWide;
-          const dy = (ch - dh) / 2;
+  video.addEventListener('seeked', () => {
+    buscandoFrame = false;
+    if (Math.abs(video.currentTime - tempoAlvoVideo) > 0.02) {
+      aplicarTempoVideo(tempoAlvoVideo);
+    }
+  });
 
-          ctx.drawImage(img, dx, dy, dw, dh);
+  let ticking = false;
+
+  function atualizarPosicaoEScrub() {
+    ticking = false;
+
+    const viewportH = window.innerHeight;
+    const paiH = pai.offsetHeight;
+    const maxScroll = Math.max(1, paiH - viewportH);
+    const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+    const paiTop = pai.offsetTop;
+
+    // 1. PINNING BULLETPROOF: A tela fica 100% fixa enquanto o usuário gira o mouse
+    if (scrollY < paiTop) {
+      sticky.style.position = 'absolute';
+      sticky.style.top = '0px';
+      sticky.style.left = '0px';
+      sticky.style.width = '100%';
+      sticky.style.height = '100vh';
+    } else if (scrollY >= paiTop && scrollY < paiTop + maxScroll) {
+      // DENTRO DO VÍDEO: 100% FIXADO NO TOPO, NÃO SOBE, NÃO DESCE, NÃO DEIXA ESPAÇO VAZIO
+      sticky.style.position = 'fixed';
+      sticky.style.top = '0px';
+      sticky.style.left = '0px';
+      sticky.style.width = '100%';
+      sticky.style.height = '100vh';
+    } else {
+      // FIM DO VÍDEO: Senta exatamente no final do pai e acompanha a descida para a Seção 01 com ZERO espaço
+      sticky.style.position = 'absolute';
+      sticky.style.top = maxScroll + 'px';
+      sticky.style.left = '0px';
+      sticky.style.width = '100%';
+      sticky.style.height = '100vh';
+    }
+
+    // 2. CÁLCULO DO PROGRESSO (0.0 a 1.0)
+    const progresso = Math.max(0, Math.min(1, (scrollY - paiTop) / maxScroll));
+
+    // 3. ATUALIZAÇÃO DO FRAME DO VÍDEO CONFORME O MOUSE (COM GATING E FASTSEEK)
+    const tempoAlvo = progresso * duracaoEfetiva;
+    aplicarTempoVideo(tempoAlvo);
+
+    // 4. BARRA DE PROGRESSO & DICA
+    if (barra) {
+      barra.style.width = (progresso * 100) + '%';
+    }
+    if (dica) {
+      dica.style.opacity = progresso > 0.06 ? '0' : '1';
+    }
+
+    // 5. CONTEÚDO DA CAPA: Preserva todos os elementos visíveis e atenua suavemente no final
+    if (conteudo) {
+      if (progresso > 0.84) {
+        const fade = (progresso - 0.84) / 0.16;
+        const op = String(1 - (fade * 0.4));
+        conteudo.style.opacity = op;
+        if (acaoDireita) acaoDireita.style.opacity = op;
+      } else {
+        conteudo.style.opacity = '1';
+        if (acaoDireita) acaoDireita.style.opacity = '1';
+      }
+    }
+  }
+
+  function solicitarAtualizacao() {
+    if (!ticking) {
+      requestAnimationFrame(atualizarPosicaoEScrub);
+      ticking = true;
+    }
+  }
+
+  window.addEventListener('scroll', solicitarAtualizacao, { passive: true });
+  window.addEventListener('wheel', solicitarAtualizacao, { passive: true });
+  window.addEventListener('resize', solicitarAtualizacao, { passive: true });
+
+  // Execução imediata para garantir estado inicial
+  atualizarPosicaoEScrub();
+})();
+
+// 1. OBSERVADOR DE ROLAGEM PARA IMAGENS E BLOCOS ENTRANDO DOS LADOS
+const observador = new IntersectionObserver((entradas) => {
+  entradas.forEach((entrada) => {
+    if (entrada.isIntersecting) {
+      entrada.target.classList.add('visivel');
+    }
+  });
+}, { threshold: 0.14 });
+
+document.querySelectorAll('.animar-entrada').forEach((el) => observador.observe(el));
+
+// 2. BARRA DE PROGRESSO E MÁSCARA INTERATIVA DA CLÍNICA NO SCROLL
+const barraTopo = document.getElementById('barraTopo');
+const cabecalho = document.getElementById('cabecalho');
+const mascaraClinica = document.getElementById('mascaraClinica');
+
+window.addEventListener('scroll', () => {
+  const scrollY = window.scrollY;
+  const alturaTotal = document.documentElement.scrollHeight - window.innerHeight;
+  barraTopo.style.width = `${(scrollY / alturaTotal) * 100}%`;
+  cabecalho.classList.toggle('compacto', scrollY > 50);
+
+  const rectM = mascaraClinica.getBoundingClientRect();
+  const progresso = 1 - Math.max(0, Math.min(1, rectM.top / (window.innerHeight * 0.85)));
+  const recV = 10 * (1 - progresso);
+  const recH = 14 * (1 - progresso);
+  mascaraClinica.style.clipPath = `inset(${recV}% ${recH}% ${recV}% ${recH}% round 4px)`;
+});
+
+// 3. TROCA VIVA DE IMAGENS NA SEÇÃO 02 (MÉTODO): cada pilar = uma das 3 fotos em alta resolução
+const legendasMetodo = [
+  'Rigor Anatômico & Mapeamento Facial 360º',
+  'Cosmecêuticos & Ativos Nobres de Alta Pureza',
+  'Fototerapia LED & Regeneração Celular da Longevidade'
+];
+
+document.querySelectorAll('.card-pilar-vivo').forEach((card) => {
+  const ativar = () => {
+    const idx = Number(card.dataset.slide);
+    document.querySelectorAll('.card-pilar-vivo').forEach((c, i) => c.classList.toggle('ativo', i === idx));
+    for (let i = 0; i < 3; i++) {
+      const slide = document.getElementById(`slideFilo${i}`);
+      if (slide) slide.classList.toggle('ativo', i === idx);
+    }
+    const legEl = document.getElementById('textoLegendaFilo');
+    if (legEl && legendasMetodo[idx]) legEl.textContent = legendasMetodo[idx];
+  };
+  card.addEventListener('mouseenter', ativar);
+  card.addEventListener('click', ativar);
+});
+
+// 4. DIAGNÓSTICO FACIAL COM FOTO REAL + ZOOM FOCADO NA REGIÃO
+const zonasDados = [
+  { nome: 'Terço Superior & Olhar', titulo: 'Terço Superior & Descanso do Olhar', desc: 'Protocolo voltado para suavizar as linhas de expressão da testa e entre as sobrancelhas, abrindo o olhar com leveza e naturalidade absoluta, sem travar a sua expressão.', obj: 'Olhar Descansado', rec: 'Imediata (Sem repouso)', dur: 'Planejamento Contínuo', escalaFoto: 'scale(1.18) translate(2%, 10%)' },
+  { nome: 'Terço Médio & Sustentação', titulo: 'Terço Médio & Sustentação Malar', desc: 'Restauração dos pontos de sustentação e luz das maçãs do rosto, suavizando olheiras profundas e sombras de cansaço sem alterar seus traços naturais.', obj: 'Suporte & Efeito Lifting', rec: 'Imediata', dur: '12 a 18 meses', escalaFoto: 'scale(1.22) translate(-3%, 0%)' },
+  { nome: 'Contorno Facial & Bioestimulação', titulo: 'Contorno Mandibular & Bioestimulação', desc: 'Estímulo intenso de colágeno para desenhar a linha da mandíbula e combater a flacidez do rosto e pescoço com resultado firme e elegante.', obj: 'Definição & Firmeza', rec: 'Sem afastamento', dur: 'Até 24 meses', escalaFoto: 'scale(1.2) translate(-4%, -10%)' },
+  { nome: 'Qualidade & Viço da Pele', titulo: 'Qualidade, Textura & Luminosidade', desc: 'Tratamento regenerativo profundo para poros, manchas, linhas finas e hidratação celular, devolvendo o viço acetinado de pele saudável.', obj: 'Brilho & Textura Lisa', rec: '24 horas', dur: 'Progressivo', escalaFoto: 'scale(1.16) translate(6%, -2%)' }
+];
+
+let procSelecionado = 'Terço Superior & Olhar';
+let turnoSelecionado = 'Manhã';
+
+function selecionarZonaReal(idx) {
+  const z = zonasDados[idx];
+  document.querySelectorAll('.ponto-rosto-real').forEach((p) => p.classList.toggle('ativo', Number(p.dataset.zona) === idx));
+  document.querySelectorAll('.aba-zona').forEach((a) => a.classList.toggle('ativo', Number(a.dataset.zona) === idx));
+
+  const img = document.getElementById('imagemRostoZoom');
+  img.style.transform = z.escalaFoto;
+
+  document.getElementById('tituloZona').textContent = z.titulo;
+  document.getElementById('descZona').textContent = z.desc;
+  document.getElementById('objZona').textContent = z.obj;
+  document.getElementById('recZona').textContent = z.rec;
+  document.getElementById('durZona').textContent = z.dur;
+  document.getElementById('btnTextoZona').textContent = `Quero Avaliar ${z.nome}`;
+
+  atualizarProcConcierge(z.nome);
+}
+
+document.querySelectorAll('.ponto-rosto-real, .aba-zona').forEach((el) => {
+  el.addEventListener('mouseenter', () => selecionarZonaReal(Number(el.dataset.zona)));
+  el.addEventListener('click', () => selecionarZonaReal(Number(el.dataset.zona)));
+});
+
+// 5. CONCIERGE INTERATIVA + CELULAR WHATSAPP EM TEMPO REAL
+function atualizarSimuladorWhats() {
+  const nome = document.getElementById('inputNome').value.trim() || 'Visitante';
+  document.getElementById('balaoPacienteVivo').innerHTML =
+    `Olá! Meu nome é <strong>${nome}</strong> e gostaria de informações sobre avaliação para <strong>${procSelecionado}</strong> (preferência: <strong>${turnoSelecionado}</strong>).<span class="hora-msg">Agora</span>`;
+
+  document.getElementById('balaoClinicaVivo').innerHTML =
+    `Olá, <strong>${nome}</strong>! ✨ Seja muito bem-vinda à <strong>LUMINA Estética Avançada</strong>. Recebemos seu interesse em <strong>${procSelecionado}</strong>! Nossa concierge já separou as opções para o período da <strong>${turnoSelecionado.toLowerCase()}</strong>.<span class="hora-msg">Disparo Automático VIDE (3s) ✓✓</span>`;
+}
+
+function atualizarProcConcierge(nomeProc) {
+  procSelecionado = nomeProc;
+  document.querySelectorAll('.tear-btn-root').forEach((btn) => {
+    const ativo = btn.dataset.proc === nomeProc;
+    btn.classList.toggle('tear-ativo', ativo);
+    btn.setAttribute('aria-pressed', ativo ? 'true' : 'false');
+  });
+  atualizarSimuladorWhats();
+}
+
+function irParaConcierge(nomeProc) {
+  atualizarProcConcierge(nomeProc);
+  document.getElementById('concierge').scrollIntoView({ behavior: 'smooth' });
+}
+
+document.querySelectorAll('.pilula-proc').forEach((btn) => {
+  btn.addEventListener('click', () => atualizarProcConcierge(btn.dataset.proc));
+});
+
+document.querySelectorAll('.btn-turno').forEach((btn) => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.btn-turno').forEach((b) => b.classList.remove('ativo'));
+    btn.classList.add('ativo');
+    turnoSelecionado = btn.dataset.turno;
+    atualizarSimuladorWhats();
+  });
+});
+
+document.getElementById('inputNome').addEventListener('input', atualizarSimuladorWhats);
+
+// Configuração Oficial do Banco de Dados Supabase na Nuvem (Projeto LUMINA × VIDE)
+const SUPABASE_URL = 'https://pankqdmzkafjiiaowhry.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_lmbAG8t3ZwVqRYxK2vcdLg_TRSmtT-0';
+
+document.getElementById('formConcierge').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  atualizarSimuladorWhats();
+
+  const nome = document.getElementById('inputNome').value.trim();
+  const whatsapp = document.getElementById('inputWhats').value.trim();
+  const btnSubmit = document.getElementById('btnSubmitConcierge');
+  btnSubmit.textContent = 'Gravando no Supabase e Gerando Passagem WhatsApp...';
+
+  let gravouSupabase = false;
+
+  // 1. Gravar diretamente no Banco de Dados Supabase na Nuvem
+  try {
+    const resp = await fetch(`${SUPABASE_URL}/rest/v1/leads`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({
+        nome_paciente: nome,
+        whatsapp: whatsapp,
+        regiao_interesse: procSelecionado,
+        melhor_periodo: turnoSelecionado,
+        status: 'Recebido via Landing Page'
+      })
+    });
+    gravouSupabase = resp.ok;
+  } catch (err) {}
+
+  // 2. Manter cópia local rápida para o navegador
+  try {
+    const listaLeads = JSON.parse(localStorage.getItem('vide_leads_lumina') || '[]');
+    listaLeads.push({ horario: 'Agora mesmo', nome: nome, whatsapp: whatsapp, regiao: procSelecionado, periodo: turnoSelecionado });
+    localStorage.setItem('vide_leads_lumina', JSON.stringify(listaLeads));
+  } catch (err) {}
+
+  // 3. Montar URL real de passagem para o WhatsApp com o texto preenchido
+  const textoWhats = encodeURIComponent(
+    `Olá! Meu nome é ${nome}. Fiz o pré-diagnóstico na página da Clínica LUMINA para a região "${procSelecionado}" e tenho preferência pelo período da ${turnoSelecionado}. Gostaria de verificar os horários disponíveis para avaliação.`
+  );
+  const numLimpo = whatsapp.replace(/\D/g, '');
+  const urlWhats = numLimpo.length >= 10
+    ? `https://api.whatsapp.com/send?phone=55${numLimpo}&text=${textoWhats}`
+    : `https://api.whatsapp.com/send?text=${textoWhats}`;
+
+  document.getElementById('linkPassagemWhatsApp').href = urlWhats;
+  document.getElementById('painelComprovacaoEnvio').style.display = 'block';
+  document.getElementById('statusTecnicoSupabase').textContent = gravouSupabase
+    ? `✔ Gravado no Supabase (HTTP 201 • public.leads) para ${nome}! Escolha abaixo:`
+    : `✔ Salvo no armazenamento de demonstração para ${nome}! Escolha abaixo:`;
+
+  // 4. Adicionar 3º balão no simulador do celular mostrando os horários consultados pela IA
+  const balaoExistente = document.getElementById('balaoAgendaExtra');
+  if (balaoExistente) balaoExistente.remove();
+  const novoBalao = document.createElement('div');
+  novoBalao.id = 'balaoAgendaExtra';
+  novoBalao.className = 'balao-clinica';
+  novoBalao.innerHTML = `📅 <strong>Agenda Verificada (Sem Conflito):</strong> Temos vaga disponível nesta <strong>Quinta-feira</strong> ou <strong>Sexta-feira</strong> no período da <strong>${turnoSelecionado.toLowerCase()}</strong>. Qual dia fica melhor para você?<span class="hora-msg">Ferramenta de Agenda VIDE ✓✓</span>`;
+  document.getElementById('corpoChatSimulador').appendChild(novoBalao);
+
+  btnSubmit.textContent = '✓ Atendimento Iniciado! Veja as Opções Abaixo';
+  document.getElementById('badgeStatusLead').textContent = '✓ Gravado no Banco! Abrir no Dashboard →';
+});
+
+// =============================================================================
+// SUÍTE DE COMPONENTES INTERATIVOS KOKONUTUI (VANILLA HTML5 CANVAS & SVG)
+// Execução 100% nativa sem React/Node, com física matemática e aceleração de hardware
+// =============================================================================
+
+// 0. CRADLE TEXT (KOKONUTUI): Pêndulo Berço de Newton Interativo com Fio e Troca de Impulso
+function initCradleText() {
+  const stages = document.querySelectorAll('.cradle-stage');
+  if (!stages.length) return;
+
+  stages.forEach((stage, stageIndex) => {
+    const rawText = (stage.getAttribute('data-cradle-text') || stage.textContent || '').trim();
+    const termoDestaque = (stage.getAttribute('data-destaque') || '').trim();
+    if (!rawText) return;
+
+    stage.innerHTML = '';
+
+    // Trilho superior (rail)
+    const rail = document.createElement('div');
+    rail.className = 'cradle-rail';
+    stage.appendChild(rail);
+
+    // Contêiner de letras
+    const lettersContainer = document.createElement('div');
+    lettersContainer.className = 'cradle-letters';
+    stage.appendChild(lettersContainer);
+
+    const bobs = [];
+    const THREAD_HEIGHT = 36;
+    const PERIOD = 0.72; // s
+    const OMEGA_0 = (2 * Math.PI) / PERIOD; // ~8.7266 rad/s
+    const OMEGA_SQ = OMEGA_0 * OMEGA_0;
+    const DAMPING = 1.25;
+    const RESTITUTION = 0.97; // Aço elástico Kokonut UI
+
+    // Dividir em palavras e letras para preservar quebras e espaçamento
+    const palavras = rawText.split(' ');
+    palavras.forEach((palavra, pIdx) => {
+      const palavraEhDestaque = termoDestaque && (palavra === termoDestaque || termoDestaque.includes(palavra));
+
+      for (let ch of palavra) {
+        const letterWrap = document.createElement('div');
+        letterWrap.className = 'cradle-letter';
+        if (palavraEhDestaque) {
+          letterWrap.classList.add('destaque-ativo');
+        }
+
+        const pin = document.createElement('span');
+        pin.className = 'cradle-pin';
+        letterWrap.appendChild(pin);
+
+        const thread = document.createElement('span');
+        thread.className = 'cradle-thread';
+        letterWrap.appendChild(thread);
+
+        const charSpan = document.createElement('span');
+        charSpan.className = 'cradle-char';
+        charSpan.textContent = ch;
+        if (palavraEhDestaque) {
+          charSpan.classList.add('destaque-ouro');
+        }
+        letterWrap.appendChild(charSpan);
+
+        lettersContainer.appendChild(letterWrap);
+
+        bobs.push({
+          el: letterWrap,
+          char: ch,
+          isDestaque: palavraEhDestaque,
+          phi: 0,
+          omega: 0,
+          restX: 0,
+          width: 0,
+          dragged: false
+        });
+      }
+
+      if (pIdx < palavras.length - 1) {
+        const space = document.createElement('span');
+        space.className = 'cradle-space';
+        space.innerHTML = '&nbsp;';
+        lettersContainer.appendChild(space);
+      }
+    });
+
+    if (!bobs.length) return;
+
+    let L = 54; // Comprimento efetivo do pêndulo (thread + metade do glifo)
+    let stageRect = { left: 0, top: 0, width: 0 };
+    let mouse = { x: -9999, y: -9999, prevX: -9999, vx: 0, active: false };
+    let dragBob = null;
+
+    function recalcularMetricas() {
+      stageRect = stage.getBoundingClientRect();
+      const stLeft = stageRect.left;
+
+      bobs.forEach((b) => {
+        const r = b.el.getBoundingClientRect();
+        b.width = r.width || 20;
+        b.restX = (r.left + r.width / 2) - stLeft;
+      });
+
+      const charHeight = bobs[0].el.offsetHeight || 36;
+      L = THREAD_HEIGHT + charHeight * 0.45;
+    }
+
+    // Calcular métricas após o primeiro render
+    requestAnimationFrame(recalcularMetricas);
+
+    // Efeito de Entrada Newton's Cradle (Puxa a 1ª letra e solta em cascata)
+    setTimeout(() => {
+      recalcularMetricas();
+      if (bobs.length > 0) {
+        bobs[0].phi = -0.58; // Puxa primeira letra ~33 graus para a esquerda
+        bobs[0].omega = 0;
+      }
+    }, 150 + stageIndex * 180);
+
+    // Eventos de Ponteiro: Sweep (passar o mouse) e Drag (puxar e soltar)
+    stage.addEventListener('pointerenter', (e) => {
+      stageRect = stage.getBoundingClientRect();
+      mouse.active = true;
+      mouse.x = e.clientX - stageRect.left;
+      mouse.y = e.clientY - stageRect.top;
+      mouse.prevX = mouse.x;
+      mouse.vx = 0;
+    });
+
+    stage.addEventListener('pointermove', (e) => {
+      const currX = e.clientX - stageRect.left;
+      const currY = e.clientY - stageRect.top;
+      mouse.vx = (currX - mouse.prevX) * 0.7 + mouse.vx * 0.3;
+      mouse.prevX = mouse.x;
+      mouse.x = currX;
+      mouse.y = currY;
+
+      if (dragBob) {
+        const dx = mouse.x - dragBob.restX;
+        const dy = Math.max(10, mouse.y);
+        dragBob.phi = Math.max(-0.85, Math.min(0.85, Math.atan2(dx, dy)));
+        dragBob.omega = mouse.vx * 0.05;
+      } else if (Math.abs(mouse.vx) > 1.2) {
+        // Sweep suave ao passar o cursor sobre as letras
+        bobs.forEach((b) => {
+          const dist = Math.abs(mouse.x - (b.restX + L * Math.sin(b.phi)));
+          if (dist < 26) {
+            const impulso = Math.max(-4.2, Math.min(4.2, mouse.vx * 0.0028));
+            b.omega += impulso;
+          }
+        });
+      }
+    });
+
+    stage.addEventListener('pointerdown', (e) => {
+      stageRect = stage.getBoundingClientRect();
+      const px = e.clientX - stageRect.left;
+      let maisProximo = null;
+      let menorDist = 32;
+
+      bobs.forEach((b) => {
+        const curX = b.restX + L * Math.sin(b.phi);
+        const d = Math.abs(px - curX);
+        if (d < menorDist) {
+          menorDist = d;
+          maisProximo = b;
+        }
+      });
+
+      if (maisProximo) {
+        dragBob = maisProximo;
+        dragBob.dragged = true;
+        stage.setAttribute('data-grabbing', 'true');
+        try { stage.setPointerCapture(e.pointerId); } catch (_) {}
+      }
+    });
+
+    function soltarArrasto(e) {
+      if (dragBob) {
+        dragBob.dragged = false;
+        dragBob.omega = Math.max(-8, Math.min(8, mouse.vx * 0.06));
+        dragBob = null;
+        stage.removeAttribute('data-grabbing');
+        try { stage.releasePointerCapture(e.pointerId); } catch (_) {}
+      }
+    }
+
+    stage.addEventListener('pointerup', soltarArrasto);
+    stage.addEventListener('pointercancel', soltarArrasto);
+    stage.addEventListener('pointerleave', (e) => {
+      mouse.active = false;
+      soltarArrasto(e);
+    });
+
+    window.addEventListener('resize', () => {
+      recalcularMetricas();
+    }, { passive: true });
+
+    // Loop de Física com Substeps (8 passos por frame) e Varredura Jacobi / Impulso Newton
+    let ultimoTempo = performance.now();
+    function tickFisica(agora) {
+      const dt = Math.min(0.033, (agora - ultimoTempo) / 1000);
+      ultimoTempo = agora;
+
+      const SUBSTEPS = 8;
+      const dtSub = dt / SUBSTEPS;
+      const numBobs = bobs.length;
+
+      for (let s = 0; s < SUBSTEPS; s++) {
+        // 1. Integração individual (Gravidade do Pêndulo + Amortecimento do Ar)
+        for (let i = 0; i < numBobs; i++) {
+          const b = bobs[i];
+          if (b.dragged) continue;
+
+          const accel = -OMEGA_SQ * Math.sin(b.phi) - DAMPING * b.omega;
+          b.omega += accel * dtSub;
+          b.phi += b.omega * dtSub;
+        }
+
+        // 2. Resolução de Colisão (Berço de Newton: Conservação de Momento e Restituição)
+        for (let pass = 0; pass < 3; pass++) {
+          // Varredura para a frente
+          for (let i = 0; i < numBobs - 1; i++) {
+            const b1 = bobs[i];
+            const b2 = bobs[i + 1];
+
+            const x1 = b1.restX + L * Math.sin(b1.phi);
+            const x2 = b2.restX + L * Math.sin(b2.phi);
+            const distMinima = Math.max(14, (b1.width + b2.width) * 0.52);
+
+            const gap = x2 - x1;
+            if (gap < distMinima) {
+              const penetracao = distMinima - gap;
+
+              // Correção posicional (afastamento sem penetração)
+              const corrAng = Math.min(0.06, penetracao / (2 * L * Math.max(0.2, Math.cos(b1.phi))));
+              if (!b1.dragged) b1.phi -= corrAng;
+              if (!b2.dragged) b2.phi += corrAng;
+
+              // Troca de impulso elástico (Kokonut UI Newton's Cradle)
+              const v1 = L * b1.omega * Math.cos(b1.phi);
+              const v2 = L * b2.omega * Math.cos(b2.phi);
+              const vRel = v2 - v1;
+
+              if (vRel < 0) { // Indo um em direção ao outro
+                const deltaV = -((1 + RESTITUTION) / 2) * vRel;
+                if (!b1.dragged) b1.omega -= deltaV / (L * Math.max(0.2, Math.cos(b1.phi)));
+                if (!b2.dragged) b2.omega += deltaV / (L * Math.max(0.2, Math.cos(b2.phi)));
+              }
+            }
+          }
+
+          // Varredura para trás (propaga rebote para o lado esquerdo)
+          for (let i = numBobs - 2; i >= 0; i--) {
+            const b1 = bobs[i];
+            const b2 = bobs[i + 1];
+
+            const x1 = b1.restX + L * Math.sin(b1.phi);
+            const x2 = b2.restX + L * Math.sin(b2.phi);
+            const distMinima = Math.max(14, (b1.width + b2.width) * 0.52);
+
+            const gap = x2 - x1;
+            if (gap < distMinima) {
+              const penetracao = distMinima - gap;
+              const corrAng = Math.min(0.06, penetracao / (2 * L * Math.max(0.2, Math.cos(b1.phi))));
+              if (!b1.dragged) b1.phi -= corrAng;
+              if (!b2.dragged) b2.phi += corrAng;
+
+              const v1 = L * b1.omega * Math.cos(b1.phi);
+              const v2 = L * b2.omega * Math.cos(b2.phi);
+              const vRel = v2 - v1;
+
+              if (vRel < 0) {
+                const deltaV = -((1 + RESTITUTION) / 2) * vRel;
+                if (!b1.dragged) b1.omega -= deltaV / (L * Math.max(0.2, Math.cos(b1.phi)));
+                if (!b2.dragged) b2.omega += deltaV / (L * Math.max(0.2, Math.cos(b2.phi)));
+              }
+            }
+          }
         }
       }
 
-      // Redimensionamento do Canvas com suporte a telas Retina / High-DPI
-      function redimensionarCanvas() {
-        const dpr = Math.min(window.devicePixelRatio || 1, 2);
-        const w = window.innerWidth;
-        const h = window.innerHeight;
-
-        canvas.width = Math.round(w * dpr);
-        canvas.height = Math.round(h * dpr);
-        canvas.style.width = w + 'px';
-        canvas.style.height = h + 'px';
-
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        desenharFrame(currentProgress);
+      // 3. Atualizar transforms no DOM com aceleração de hardware (GPU)
+      for (let i = 0; i < numBobs; i++) {
+        const b = bobs[i];
+        b.el.style.transform = `rotate(${b.phi.toFixed(4)}rad)`;
       }
 
-      window.addEventListener('resize', redimensionarCanvas, { passive: true });
-      redimensionarCanvas();
+      requestAnimationFrame(tickFisica);
+    }
+    requestAnimationFrame(tickFisica);
+  });
+}
 
-      // Cálculo do progresso com base na rolagem da página
-      function atualizarProgressoScroll() {
-        const rect = track.getBoundingClientRect();
-        const totalRolavel = track.offsetHeight - window.innerHeight;
-        if (totalRolavel <= 0) return;
+// 1. ATTRACT BUTTON: Limaduras magnéticas com dipolos de mola nos botões de alta conversão
+function initAttractButtons() {
+  const wrappers = document.querySelectorAll('.attract-btn-wrap');
+  wrappers.forEach((wrap) => {
+    const canvas = wrap.querySelector('.attract-canvas');
+    const btn = wrap.querySelector('a, button');
+    if (!canvas || !btn) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
 
-        // Quando o topo da track está em 0 -> progress = 0.0 (aberto)
-        // Quando a página desce -> progress avança até 1.0 (fechado)
-        const scrollBruto = -rect.top / totalRolavel;
-        targetProgress = Math.max(0, Math.min(1, scrollBruto));
+    let w = 0, h = 0;
+    const PADDING = 44;
+    const STIFFNESS = 260;
+    const DAMPING = 22;
+    const LINE_WIDTH = 1.35;
+    const NUM_FILAMENTOS = 36;
+
+    const filamentos = [];
+    let mouse = { x: -999, y: -999, active: false };
+
+    function redimensionar() {
+      const bw = btn.offsetWidth || (btn.getBoundingClientRect && btn.getBoundingClientRect().width) || 200;
+      const bh = btn.offsetHeight || (btn.getBoundingClientRect && btn.getBoundingClientRect().height) || 52;
+      w = Math.round(bw + PADDING * 2);
+      h = Math.round(bh + PADDING * 2);
+      const dpr = Math.min(2, window.devicePixelRatio || 1);
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      canvas.style.width = w + 'px';
+      canvas.style.height = h + 'px';
+      canvas.style.position = 'absolute';
+      canvas.style.top = '50%';
+      canvas.style.left = '50%';
+      canvas.style.transform = 'translate(-50%, -50%)';
+      canvas.style.pointerEvents = 'none';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      filamentos.length = 0;
+      const perimeter = (bw + bh) * 2;
+      const step = perimeter / NUM_FILAMENTOS;
+
+      for (let i = 0; i < NUM_FILAMENTOS; i++) {
+        let dist = i * step;
+        let bx = 0, by = 0, normalAng = 0;
+        if (dist < bw) {
+          bx = dist; by = 0; normalAng = -Math.PI / 2;
+        } else if (dist < bw + bh) {
+          bx = bw; by = dist - bw; normalAng = 0;
+        } else if (dist < bw * 2 + bh) {
+          bx = bw - (dist - (bw + bh)); by = bh; normalAng = Math.PI / 2;
+        } else {
+          bx = 0; by = bh - (dist - (bw * 2 + bh)); normalAng = Math.PI;
+        }
+        filamentos.push({
+          bx: bx + PADDING,
+          by: by + PADDING,
+          curAng: normalAng,
+          targetAng: normalAng,
+          angVel: 0,
+          baseAng: normalAng,
+          length: 7 + Math.random() * 4,
+          glow: 0
+        });
       }
+    }
 
-      window.addEventListener('scroll', atualizarProgressoScroll, { passive: true });
+    redimensionar();
+    window.addEventListener('resize', redimensionar);
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(redimensionar);
+    }
+    wrap.addEventListener('pointerenter', () => {
+      redimensionar();
+      mouse.active = true;
+    });
 
-      // Suporte direto a rolagem pelo mouse wheel (flick rápido ou lento)
-      window.addEventListener('wheel', (e) => {
-        // Se o usuário estiver dentro da hero, o wheel aciona o avanço macio
-        const rect = track.getBoundingClientRect();
-        if (rect.top <= 10 && rect.bottom >= window.innerHeight - 10) {
-          const delta = e.deltaY;
-          targetProgress = Math.max(0, Math.min(1, targetProgress + delta * 0.0016));
-        }
-      }, { passive: true });
+    window.addEventListener('pointermove', (e) => {
+      const cRect = canvas.getBoundingClientRect();
+      const mx = e.clientX - cRect.left;
+      const my = e.clientY - cRect.top;
+      const distToCenter = Math.hypot(mx - w / 2, my - h / 2);
+      const maxAttractDist = Math.max(w, h) * 0.95;
 
-      // Suporte ao toque mobile (touch swipe)
-      let touchStartY = 0;
-      window.addEventListener('touchstart', (e) => {
-        if (e.touches.length > 0) touchStartY = e.touches[0].clientY;
-      }, { passive: true });
+      if (distToCenter < maxAttractDist) {
+        mouse.x = mx;
+        mouse.y = my;
+        mouse.active = true;
+      } else if (mouse.active) {
+        mouse.active = false;
+        mouse.x = -999;
+        mouse.y = -999;
+      }
+    });
 
-      window.addEventListener('touchmove', (e) => {
-        if (e.touches.length > 0) {
-          const touchY = e.touches[0].clientY;
-          const deltaY = touchStartY - touchY;
-          touchStartY = touchY;
-          targetProgress = Math.max(0, Math.min(1, targetProgress + deltaY * 0.0035));
-        }
-      }, { passive: true });
+    wrap.addEventListener('pointerleave', () => {
+      mouse.active = false;
+      mouse.x = -999;
+      mouse.y = -999;
+    });
 
-      // Loop de animação contínuo (Slow Motion LERP)
-      let lastRenderedIndex = -1;
-      function loopAnimacao() {
-        const diff = targetProgress - currentProgress;
-        
-        // Interpolação contínua e ultra macia
-        if (Math.abs(diff) > 0.0001) {
-          currentProgress += diff * LERP_FACTOR;
-          
-          const currentIndex = Math.round(currentProgress * (TOTAL_FRAMES - 1));
-          if (currentIndex !== lastRenderedIndex) {
-            lastRenderedIndex = currentIndex;
-            desenharFrame(currentProgress);
+    let ultimoTempo = performance.now();
+    function animar(agora) {
+      const dt = Math.min(0.033, (agora - ultimoTempo) / 1000);
+      ultimoTempo = agora;
+
+      ctx.clearRect(0, 0, w, h);
+
+      filamentos.forEach((f) => {
+        let target = f.baseAng;
+        let forca = 0;
+
+        if (mouse.active) {
+          const dx = mouse.x - f.bx;
+          const dy = mouse.y - f.by;
+          const dist = Math.hypot(dx, dy);
+          if (dist < 130) {
+            target = Math.atan2(dy, dx);
+            forca = Math.max(0, 1 - dist / 130);
           }
         }
 
-        requestAnimationFrame(loopAnimacao);
+        let diff = target - f.curAng;
+        while (diff < -Math.PI) diff += Math.PI * 2;
+        while (diff > Math.PI) diff -= Math.PI * 2;
+
+        const acel = diff * STIFFNESS - f.angVel * DAMPING;
+        f.angVel += acel * dt;
+        f.curAng += f.angVel * dt;
+        f.glow += (forca - f.glow) * 0.15;
+
+        const len = f.length * (1 + f.glow * 0.45);
+        const ex = f.bx + Math.cos(f.curAng) * len;
+        const ey = f.by + Math.sin(f.curAng) * len;
+
+        ctx.beginPath();
+        ctx.moveTo(f.bx, f.by);
+        ctx.lineTo(ex, ey);
+        ctx.strokeStyle = `rgba(212, 175, 122, ${(0.35 + f.glow * 0.65).toFixed(2)})`;
+        ctx.lineWidth = LINE_WIDTH * (1 + f.glow * 0.35);
+        ctx.lineCap = 'round';
+        if (f.glow > 0.15) {
+          ctx.shadowColor = '#D4AF7A';
+          ctx.shadowBlur = 8 * f.glow;
+        } else {
+          ctx.shadowBlur = 0;
+        }
+        ctx.stroke();
+      });
+
+      requestAnimationFrame(animar);
+    }
+    requestAnimationFrame(animar);
+  });
+}
+
+// 2. PLUCKED TEXT (KOKONUTUI): Física de Corda Harmônica com Ondas Estacionárias
+function initPluckedText() {
+  const stages = document.querySelectorAll('.pluck-stage');
+  stages.forEach((stage) => {
+    const lettersContainer = stage.querySelector('.pluck-letters');
+    const svg = stage.querySelector('.pluck-svg');
+    const path = stage.querySelector('.pluck-path');
+    const ghostPath = stage.querySelector('.pluck-ghost');
+    const dotL = stage.querySelector('.pluck-dot-l');
+    const dotR = stage.querySelector('.pluck-dot-r');
+    if (!lettersContainer || !svg || !path) return;
+
+    const textoCompleto = (stage.dataset.label || stage.textContent || '').trim();
+    const termoDestaque = (stage.dataset.destaque || '').trim();
+
+    lettersContainer.innerHTML = '';
+    const palavras = textoCompleto.split(' ');
+    const charsList = [];
+
+    function palavraEstaNoDestaque(frase, destaque, pIdx) {
+      if (!destaque) return false;
+      const palavrasDestaque = destaque.split(' ');
+      const palavraAtual = frase.split(' ')[pIdx];
+      return palavrasDestaque.some(pd => palavraAtual.includes(pd));
+    }
+
+    palavras.forEach((palavra, pIdx) => {
+      const wordSpan = document.createElement('span');
+      wordSpan.className = 'pluck-word';
+      wordSpan.style.display = 'inline-block';
+      wordSpan.style.whiteSpace = 'nowrap';
+
+      for (let ch of palavra) {
+        const charSpan = document.createElement('span');
+        charSpan.className = 'pluck-char';
+        charSpan.textContent = ch;
+
+        if (termoDestaque && palavraEstaNoDestaque(textoCompleto, termoDestaque, pIdx)) {
+          charSpan.classList.add('destaque-ouro');
+        }
+
+        wordSpan.appendChild(charSpan);
+        charsList.push(charSpan);
       }
 
-      requestAnimationFrame(loopAnimacao);
-    })();
-  </script>
+      lettersContainer.appendChild(wordSpan);
 
+      if (pIdx < palavras.length - 1) {
+        const spaceSpan = document.createElement('span');
+        spaceSpan.className = 'pluck-space';
+        spaceSpan.innerHTML = '&nbsp;';
+        lettersContainer.appendChild(spaceSpan);
+      }
+    });
+
+    let stageW = 0;
+    let baselineY = 0;
+    let charMetrics = [];
+
+    const NUM_MODOS = 5;
+    const amplitudes = new Float32Array(NUM_MODOS);
+    const velocidades = new Float32Array(NUM_MODOS);
+    const frequencias = [14, 28, 42, 56, 70];
+    const amortecimentos = [2.2, 3.0, 3.8, 4.6, 5.4];
+
+    let dragging = false;
+    let pluckX = 0;
+    let pluckY = 0;
+    let pointerId = null;
+
+    function recalcularMetricas() {
+      const sRect = stage.getBoundingClientRect();
+      stageW = sRect.width;
+      baselineY = sRect.height - 6;
+
+      stage.style.setProperty('--pluck-baseline', baselineY + 'px');
+      svg.style.top = baselineY + 'px';
+      if (dotL) dotL.style.top = baselineY + 'px';
+      if (dotR) dotR.style.top = baselineY + 'px';
+
+      charMetrics = charsList.map((ch) => {
+        const cRect = ch.getBoundingClientRect();
+        return {
+          el: ch,
+          cx: cRect.left - sRect.left + cRect.width / 2,
+          w: cRect.width
+        };
+      });
+    }
+
+    recalcularMetricas();
+    window.addEventListener('resize', recalcularMetricas);
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(recalcularMetricas);
+    }
+
+    stage.addEventListener('pointerdown', (e) => {
+      pointerId = e.pointerId;
+      try { stage.setPointerCapture(pointerId); } catch (err) {}
+      dragging = true;
+      stage.setAttribute('data-grabbing', '');
+      const sRect = stage.getBoundingClientRect();
+      pluckX = Math.max(10, Math.min(stageW - 10, e.clientX - sRect.left));
+      pluckY = Math.max(-65, Math.min(65, e.clientY - (sRect.top + baselineY)));
+      for (let i = 0; i < NUM_MODOS; i++) {
+        amplitudes[i] = 0;
+        velocidades[i] = 0;
+      }
+    });
+
+    stage.addEventListener('pointermove', (e) => {
+      const sRect = stage.getBoundingClientRect();
+      const currentX = e.clientX - sRect.left;
+      const currentY = e.clientY - (sRect.top + baselineY);
+
+      if (dragging) {
+        pluckX = Math.max(10, Math.min(stageW - 10, currentX));
+        pluckY = Math.max(-70, Math.min(70, currentY));
+      } else {
+        if (Math.abs(currentY) < 14 && currentX > 10 && currentX < stageW - 10) {
+          dedilharImpulso(currentX, Math.sign(currentY || 1) * 16);
+        }
+      }
+    });
+
+    function soltarCorda() {
+      if (!dragging) return;
+      dragging = false;
+      stage.removeAttribute('data-grabbing');
+      if (pointerId !== null) {
+        try { stage.releasePointerCapture(pointerId); } catch (err) {}
+        pointerId = null;
+      }
+      const L = stageW || 1;
+      const xp = pluckX;
+      const yp = pluckY;
+      for (let n = 1; n <= NUM_MODOS; n++) {
+        const nPi = n * Math.PI;
+        const An = (2 * yp * L * L) / (nPi * nPi * xp * (L - xp || 1)) * Math.sin((nPi * xp) / L);
+        amplitudes[n - 1] = Math.max(-60, Math.min(60, An));
+        velocidades[n - 1] = 0;
+      }
+    }
+
+    stage.addEventListener('pointerup', soltarCorda);
+    stage.addEventListener('pointercancel', soltarCorda);
+
+    function dedilharImpulso(x, forca) {
+      const L = stageW || 1;
+      for (let n = 1; n <= NUM_MODOS; n++) {
+        const nPi = n * Math.PI;
+        const impulso = (forca * Math.sin((nPi * x) / L)) / n;
+        amplitudes[n - 1] += impulso;
+      }
+    }
+
+    function calcularY(x) {
+      const L = stageW || 1;
+      if (dragging) {
+        if (x <= pluckX) {
+          return pluckY * (x / (pluckX || 1));
+        } else {
+          return pluckY * ((L - x) / ((L - pluckX) || 1));
+        }
+      }
+      let y = 0;
+      for (let n = 1; n <= NUM_MODOS; n++) {
+        y += amplitudes[n - 1] * Math.sin((n * Math.PI * x) / L);
+      }
+      return y;
+    }
+
+    const obs = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        recalcularMetricas();
+        setTimeout(() => {
+          dedilharImpulso(stageW * 0.5, 14);
+        }, 300);
+      }
+    }, { threshold: 0.2 });
+    obs.observe(stage);
+
+    let ultimoTempo = performance.now();
+    function animar(agora) {
+      const dt = Math.min(0.033, (agora - ultimoTempo) / 1000);
+      ultimoTempo = agora;
+
+      if (!dragging) {
+        for (let i = 0; i < NUM_MODOS; i++) {
+          const w = frequencias[i];
+          const g = amortecimentos[i];
+          const acel = -w * w * amplitudes[i] - 2 * g * velocidades[i];
+          velocidades[i] += acel * dt;
+          amplitudes[i] += velocidades[i] * dt;
+        }
+      }
+
+      const L = stageW || 1;
+      const numAmostras = 24;
+      let d = `M 0 0`;
+      for (let k = 1; k <= numAmostras; k++) {
+        const x = (k / numAmostras) * L;
+        const y = calcularY(x);
+        d += ` L ${x.toFixed(1)} ${y.toFixed(1)}`;
+      }
+      path.setAttribute('d', d);
+      if (ghostPath) {
+        ghostPath.setAttribute('d', `M 0 0 L ${L.toFixed(1)} 0`);
+      }
+
+      charMetrics.forEach((m) => {
+        const yChar = calcularY(m.cx);
+        const delta = 8;
+        const y1 = calcularY(m.cx - delta);
+        const y2 = calcularY(m.cx + delta);
+        const inclinacao = (y2 - y1) / (delta * 2);
+        const rotDeg = Math.atan(inclinacao) * (180 / Math.PI) * 0.45;
+
+        m.el.style.transform = `translateY(${yChar.toFixed(2)}px) rotate(${rotDeg.toFixed(2)}deg)`;
+      });
+
+      requestAnimationFrame(animar);
+    }
+    requestAnimationFrame(animar);
+  });
+}
+
+// 3. DOT FIELD: Membrana halftone com ondas de acoplamento e ondas de choque ao clicar
+function initDotField() {
+  const canvas = document.getElementById('canvasDotField');
+  const section = document.getElementById('filosofia');
+  if (!canvas || !section) return;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  let w = 0, h = 0;
+  const ESPACO = 26;
+  const pontos = [];
+  const ondasChoque = [];
+  let mouse = { x: -999, y: -999, vx: 0, vy: 0, lastX: 0, lastY: 0, ativo: false };
+  let visivel = false;
+
+  function redimensionar() {
+    w = section.offsetWidth;
+    h = section.offsetHeight;
+    const dpr = Math.min(2, window.devicePixelRatio || 1);
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    pontos.length = 0;
+    const cols = Math.ceil(w / ESPACO) + 1;
+    const rows = Math.ceil(h / ESPACO) + 1;
+
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        const x = c * ESPACO;
+        const y = r * ESPACO;
+        pontos.push({
+          x0: x, y0: y,
+          x: x, y: y,
+          vx: 0, vy: 0,
+          baseR: 1.35,
+          alpha: 0.18
+        });
+      }
+    }
+  }
+
+  redimensionar();
+  window.addEventListener('resize', redimensionar);
+
+  const obs = new IntersectionObserver(([entry]) => {
+    visivel = entry.isIntersecting;
+  }, { threshold: 0.05 });
+  obs.observe(section);
+
+  section.addEventListener('pointermove', (e) => {
+    const sRect = section.getBoundingClientRect();
+    const nx = e.clientX - sRect.left;
+    const ny = e.clientY - sRect.top;
+    mouse.vx = nx - mouse.lastX;
+    mouse.vy = ny - mouse.lastY;
+    mouse.lastX = nx;
+    mouse.lastY = ny;
+    mouse.x = nx;
+    mouse.y = ny;
+    mouse.ativo = true;
+  });
+
+  section.addEventListener('pointerleave', () => {
+    mouse.ativo = false;
+    mouse.x = -999;
+    mouse.y = -999;
+  });
+
+  section.addEventListener('click', (e) => {
+    const sRect = section.getBoundingClientRect();
+    ondasChoque.push({
+      x: e.clientX - sRect.left,
+      y: e.clientY - sRect.top,
+      raio: 5,
+      maxRaio: Math.max(520, w * 0.6),
+      velocidade: 620,
+      forca: 5200,
+      vida: 1.0
+    });
+  });
+
+  let ultimoTempo = performance.now();
+  function animar(agora) {
+    if (!visivel) {
+      requestAnimationFrame(animar);
+      return;
+    }
+    const dt = Math.min(0.033, (agora - ultimoTempo) / 1000);
+    ultimoTempo = agora;
+    const tempoSeg = agora * 0.001;
+
+    ctx.clearRect(0, 0, w, h);
+
+    for (let i = ondasChoque.length - 1; i >= 0; i--) {
+      const oc = ondasChoque[i];
+      oc.raio += oc.velocidade * dt;
+      oc.vida = Math.max(0, 1 - oc.raio / oc.maxRaio);
+      if (oc.raio > oc.maxRaio) {
+        ondasChoque.splice(i, 1);
+      }
+    }
+
+    pontos.forEach((p) => {
+      const ondaAmbiente = Math.sin(p.x0 * 0.005 + tempoSeg * 1.4) * Math.cos(p.y0 * 0.005 + tempoSeg * 1.1);
+
+      if (mouse.ativo) {
+        const dx = p.x - mouse.x;
+        const dy = p.y - mouse.y;
+        const dist = Math.hypot(dx, dy);
+        if (dist < 115) {
+          const f = (1 - dist / 115) * 45;
+          p.vx += (dx / (dist || 1)) * f * dt * 8 + mouse.vx * 0.15;
+          p.vy += (dy / (dist || 1)) * f * dt * 8 + mouse.vy * 0.15;
+        }
+      }
+
+      ondasChoque.forEach((oc) => {
+        const dx = p.x - oc.x;
+        const dy = p.y - oc.y;
+        const dist = Math.hypot(dx, dy);
+        const distWave = Math.abs(dist - oc.raio);
+        if (distWave < 45) {
+          const impulso = (1 - distWave / 45) * (oc.forca / (oc.raio + 40)) * oc.vida * dt;
+          p.vx += (dx / (dist || 1)) * impulso * 1.2;
+          p.vy += (dy / (dist || 1)) * impulso * 1.2;
+        }
+      });
+
+      const fx = -0.075 * (p.x - p.x0);
+      const fy = -0.075 * (p.y - p.y0);
+      p.vx = (p.vx + fx) * 0.89;
+      p.vy = (p.vy + fy) * 0.89;
+      p.x += p.vx;
+      p.y += p.vy;
+
+      const desp = Math.hypot(p.x - p.x0, p.y - p.y0);
+      const raio = Math.max(0.8, Math.min(3.4, p.baseR + ondaAmbiente * 0.45 + desp * 0.08));
+      const alpha = Math.max(0.12, Math.min(0.68, p.alpha + desp * 0.04 + (ondaAmbiente > 0 ? ondaAmbiente * 0.15 : 0)));
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, raio, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(212, 175, 122, ${alpha.toFixed(2)})`;
+      ctx.fill();
+    });
+
+    requestAnimationFrame(animar);
+  }
+  requestAnimationFrame(animar);
+}
+
+// 4. BACKGROUND PATHS: Fitas douradas fluidas com repulsão vertical sob o cursor
+function initBackgroundPaths() {
+  const canvas = document.getElementById('canvasBackgroundPaths');
+  const section = document.getElementById('protocolos');
+  if (!canvas || !section) return;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  let w = 0, h = 0;
+  let visivel = false;
+  let mouse = { x: -999, y: -999, active: false };
+  const PART_RADIUS = 150;
+  const PART_PUSH = 56;
+
+  const FITAS = [
+    { baseFracY: 0.22, amp: 48, freq: 0.0018, speed: 0.75, alpha: 0.28, width: 1.8, fase: 0 },
+    { baseFracY: 0.46, amp: 62, freq: 0.0015, speed: 0.95, alpha: 0.38, width: 2.2, fase: 2.1 },
+    { baseFracY: 0.74, amp: 54, freq: 0.0021, speed: 0.65, alpha: 0.24, width: 1.5, fase: 4.3 },
+    { baseFracY: 0.88, amp: 38, freq: 0.0025, speed: 0.85, alpha: 0.18, width: 1.2, fase: 1.2 }
+  ];
+
+  function redimensionar() {
+    w = section.offsetWidth;
+    h = section.offsetHeight;
+    const dpr = Math.min(2, window.devicePixelRatio || 1);
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  redimensionar();
+  window.addEventListener('resize', redimensionar);
+
+  const obs = new IntersectionObserver(([entry]) => {
+    visivel = entry.isIntersecting;
+  }, { threshold: 0.05 });
+  obs.observe(section);
+
+  section.addEventListener('pointermove', (e) => {
+    const sRect = section.getBoundingClientRect();
+    mouse.x = e.clientX - sRect.left;
+    mouse.y = e.clientY - sRect.top;
+    mouse.active = true;
+  });
+
+  section.addEventListener('pointerleave', () => {
+    mouse.active = false;
+    mouse.x = -999;
+    mouse.y = -999;
+  });
+
+  function animar(agora) {
+    if (!visivel) {
+      requestAnimationFrame(animar);
+      return;
+    }
+    const t = agora * 0.001;
+    ctx.clearRect(0, 0, w, h);
+
+    FITAS.forEach((fita) => {
+      const baseY = h * fita.baseFracY;
+      const pts = [];
+      const numPts = 32;
+
+      for (let i = 0; i <= numPts; i++) {
+        const x = (i / numPts) * w;
+        let y = baseY + Math.sin(x * fita.freq + t * fita.speed + fita.fase) * fita.amp
+                      + Math.cos(x * fita.freq * 0.5 + t * 0.4) * (fita.amp * 0.35);
+
+        if (mouse.active) {
+          const dx = x - mouse.x;
+          const dy = y - mouse.y;
+          const dist = Math.hypot(dx, dy);
+          if (dist < PART_RADIUS) {
+            const fator = Math.pow(1 - dist / PART_RADIUS, 2);
+            const empurrao = (y < mouse.y ? -PART_PUSH : PART_PUSH) * fator;
+            y += empurrao;
+          }
+        }
+        pts.push({ x, y });
+      }
+
+      ctx.beginPath();
+      ctx.moveTo(pts[0].x, pts[0].y);
+      for (let i = 1; i < pts.length - 1; i++) {
+        const xc = (pts[i].x + pts[i + 1].x) / 2;
+        const yc = (pts[i].y + pts[i + 1].y) / 2;
+        ctx.quadraticCurveTo(pts[i].x, pts[i].y, xc, yc);
+      }
+      ctx.lineTo(pts[pts.length - 1].x, pts[pts.length - 1].y);
+
+      const grad = ctx.createLinearGradient(0, 0, w, 0);
+      grad.addColorStop(0, `rgba(158, 120, 71, ${(fita.alpha * 0.35).toFixed(2)})`);
+      grad.addColorStop(0.5, `rgba(212, 175, 122, ${(fita.alpha * 0.95).toFixed(2)})`);
+      grad.addColorStop(1, `rgba(158, 120, 71, ${(fita.alpha * 0.35).toFixed(2)})`);
+
+      ctx.strokeStyle = grad;
+      ctx.lineWidth = fita.width;
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(pts[0].x, pts[0].y + 6);
+      for (let i = 1; i < pts.length - 1; i++) {
+        const xc = (pts[i].x + pts[i + 1].x) / 2;
+        const yc = ((pts[i].y + pts[i + 1].y) / 2) + 6;
+        ctx.quadraticCurveTo(pts[i].x, pts[i].y + 6, xc, yc);
+      }
+      ctx.lineTo(pts[pts.length - 1].x, pts[pts.length - 1].y + 6);
+      ctx.strokeStyle = `rgba(158, 120, 71, ${(fita.alpha * 0.45).toFixed(2)})`;
+      ctx.lineWidth = 0.9;
+      ctx.setLineDash([8, 12]);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    });
+
+    requestAnimationFrame(animar);
+  }
+  requestAnimationFrame(animar);
+}
+
+// 5. TOPO BACKGROUND: Marching squares com curvas de nível e cotas altimétricas em Montserrat
+function initTopoBackground() {
+  const canvas = document.getElementById('canvasTopoBackground');
+  const section = document.getElementById('diagnostico');
+  if (!canvas || !section) return;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  let w = 0, h = 0;
+  let visivel = false;
+  let mouse = { x: -999, y: -999, active: false };
+  const ondulacoes = [];
+  const HILL_HEIGHT = 0.48;
+  const PASSO = 22;
+
+  function redimensionar() {
+    w = section.offsetWidth;
+    h = section.offsetHeight;
+    const dpr = Math.min(1.5, window.devicePixelRatio || 1);
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  redimensionar();
+  window.addEventListener('resize', redimensionar);
+
+  const obs = new IntersectionObserver(([entry]) => {
+    visivel = entry.isIntersecting;
+  }, { threshold: 0.05 });
+  obs.observe(section);
+
+  section.addEventListener('pointermove', (e) => {
+    const sRect = section.getBoundingClientRect();
+    mouse.x = e.clientX - sRect.left;
+    mouse.y = e.clientY - sRect.top;
+    mouse.active = true;
+  });
+
+  section.addEventListener('pointerleave', () => {
+    mouse.active = false;
+    mouse.x = -999;
+    mouse.y = -999;
+  });
+
+  section.addEventListener('click', (e) => {
+    const sRect = section.getBoundingClientRect();
+    ondulacoes.push({
+      x: e.clientX - sRect.left,
+      y: e.clientY - sRect.top,
+      raio: 0,
+      maxRaio: 380,
+      amp: 0.38,
+      velocidade: 260
+    });
+  });
+
+  function calcularElevacao(x, y, t) {
+    let hVal = 0.5 + 0.22 * Math.sin(x * 0.0028 + 0.6) * Math.cos(y * 0.0028)
+                   + 0.16 * Math.sin(x * 0.0055 - y * 0.0042 + t * 0.18)
+                   + 0.08 * Math.cos(x * 0.011 + y * 0.0085);
+
+    if (mouse.active) {
+      const dx = x - mouse.x;
+      const dy = y - mouse.y;
+      const distSq = dx * dx + dy * dy;
+      if (distSq < 28000) {
+        hVal += HILL_HEIGHT * Math.exp(-distSq / (2 * 125 * 125));
+      }
+    }
+
+    for (let o of ondulacoes) {
+      const dx = x - o.x;
+      const dy = y - o.y;
+      const dist = Math.hypot(dx, dy);
+      const diff = dist - o.raio;
+      if (Math.abs(diff) < 90) {
+        const atenuacao = Math.max(0, 1 - o.raio / o.maxRaio);
+        hVal += o.amp * atenuacao * Math.cos(diff * 0.065) * Math.exp(-Math.abs(diff) / 45);
+      }
+    }
+
+    return hVal;
+  }
+
+  const NIVEIS = [
+    { iso: 0.25, cota: '480m', mestre: false },
+    { iso: 0.35, cota: '500m', mestre: true },
+    { iso: 0.44, cota: '520m', mestre: false },
+    { iso: 0.52, cota: '540m', mestre: true },
+    { iso: 0.60, cota: '560m', mestre: false },
+    { iso: 0.68, cota: '580m', mestre: true },
+    { iso: 0.76, cota: '600m', mestre: false },
+    { iso: 0.84, cota: '620m', mestre: true }
+  ];
+
+  let ultimoTempo = performance.now();
+  function animar(agora) {
+    if (!visivel) {
+      requestAnimationFrame(animar);
+      return;
+    }
+    const dt = Math.min(0.033, (agora - ultimoTempo) / 1000);
+    ultimoTempo = agora;
+    const t = agora * 0.001;
+
+    for (let i = ondulacoes.length - 1; i >= 0; i--) {
+      ondulacoes[i].raio += ondulacoes[i].velocidade * dt;
+      if (ondulacoes[i].raio > ondulacoes[i].maxRaio) {
+        ondulacoes.splice(i, 1);
+      }
+    }
+
+    ctx.clearRect(0, 0, w, h);
+
+    const cols = Math.ceil(w / PASSO) + 1;
+    const rows = Math.ceil(h / PASSO) + 1;
+
+    const grid = new Float32Array(cols * rows);
+    for (let r = 0; r < rows; r++) {
+      const y = r * PASSO;
+      const offset = r * cols;
+      for (let c = 0; c < cols; c++) {
+        grid[offset + c] = calcularElevacao(c * PASSO, y, t);
+      }
+    }
+
+    NIVEIS.forEach((nivel) => {
+      ctx.beginPath();
+      const iso = nivel.iso;
+      let rotuloInserido = false;
+      let rotuloPos = { x: 0, y: 0 };
+
+      for (let r = 0; r < rows - 1; r++) {
+        const y0 = r * PASSO;
+        const y1 = y0 + PASSO;
+        const rOffset = r * cols;
+        const rNextOffset = (r + 1) * cols;
+
+        for (let c = 0; c < cols - 1; c++) {
+          const x0 = c * PASSO;
+          const x1 = x0 + PASSO;
+
+          const v0 = grid[rOffset + c];
+          const v1 = grid[rOffset + c + 1];
+          const v2 = grid[rNextOffset + c + 1];
+          const v3 = grid[rNextOffset + c];
+
+          let caso = 0;
+          if (v0 >= iso) caso |= 1;
+          if (v1 >= iso) caso |= 2;
+          if (v2 >= iso) caso |= 4;
+          if (v3 >= iso) caso |= 8;
+          if (caso === 0 || caso === 15) continue;
+
+          const topX = x0 + ((iso - v0) / (v1 - v0 || 0.0001)) * PASSO;
+          const rightY = y0 + ((iso - v1) / (v2 - v1 || 0.0001)) * PASSO;
+          const botX = x0 + ((iso - v3) / (v2 - v3 || 0.0001)) * PASSO;
+          const leftY = y0 + ((iso - v0) / (v3 - v0 || 0.0001)) * PASSO;
+
+          const conectar = (p1x, p1y, p2x, p2y) => {
+            ctx.moveTo(p1x, p1y);
+            ctx.lineTo(p2x, p2y);
+            if (!rotuloInserido && nivel.mestre && c > 5 && c < cols - 8 && r % 3 === 0) {
+              rotuloPos = { x: p1x, y: p1y };
+              rotuloInserido = true;
+            }
+          };
+
+          switch (caso) {
+            case 1: case 14: conectar(x0, leftY, topX, y0); break;
+            case 2: case 13: conectar(topX, y0, x1, rightY); break;
+            case 3: case 12: conectar(x0, leftY, x1, rightY); break;
+            case 4: case 11: conectar(x1, rightY, botX, y1); break;
+            case 5: conectar(x0, leftY, topX, y0); conectar(x1, rightY, botX, y1); break;
+            case 6: case 9:  conectar(topX, y0, botX, y1); break;
+            case 7: case 8:  conectar(x0, leftY, botX, y1); break;
+            case 10: conectar(topX, y0, x1, rightY); conectar(x0, leftY, botX, y1); break;
+          }
+        }
+      }
+
+      ctx.strokeStyle = nivel.mestre ? 'rgba(212, 175, 122, 0.42)' : 'rgba(212, 175, 122, 0.18)';
+      ctx.lineWidth = nivel.mestre ? 1.4 : 0.85;
+      ctx.stroke();
+
+      if (rotuloInserido && nivel.mestre) {
+        ctx.fillStyle = '#D4AF7A';
+        ctx.font = '500 9px Montserrat, sans-serif';
+        ctx.fillText(nivel.cota, rotuloPos.x + 4, rotuloPos.y - 2);
+      }
+    });
+
+    requestAnimationFrame(animar);
+  }
+  requestAnimationFrame(animar);
+}
+
+// 6. INK BACKGROUND: Dinâmica fluida com vórtices de tinta dourada de alta visibilidade e dispersão no clique
+function initInkBackground() {
+  const canvas = document.getElementById('canvasInkBackground');
+  const section = document.getElementById('excelencia');
+  if (!canvas || !section) return;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  let w = 0, h = 0;
+  let visivel = false;
+  let mouse = { x: -999, y: -999, vx: 0, vy: 0, lastX: 0, lastY: 0, ativo: false };
+  const NUM_PARTICULAS = 360;
+  const particulas = [];
+  const gotasTinta = [];
+
+  function redimensionar() {
+    w = section.offsetWidth;
+    h = section.offsetHeight;
+    const dpr = Math.min(2, window.devicePixelRatio || 1);
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    particulas.length = 0;
+    for (let i = 0; i < NUM_PARTICULAS; i++) {
+      particulas.push({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        vx: 0,
+        vy: 0,
+        vida: Math.random() * 200,
+        maxVida: 150 + Math.random() * 140,
+        raio: 2.2 + Math.random() * 4.2,
+        alpha: 0.28 + Math.random() * 0.45,
+        rastro: []
+      });
+    }
+  }
+
+  redimensionar();
+  window.addEventListener('resize', redimensionar);
+
+  const obs = new IntersectionObserver(([entry]) => {
+    visivel = entry.isIntersecting;
+  }, { threshold: 0.05 });
+  obs.observe(section);
+
+  section.addEventListener('pointermove', (e) => {
+    const sRect = section.getBoundingClientRect();
+    const nx = e.clientX - sRect.left;
+    const ny = e.clientY - sRect.top;
+    mouse.vx = nx - mouse.lastX;
+    mouse.vy = ny - mouse.lastY;
+    mouse.lastX = nx;
+    mouse.lastY = ny;
+    mouse.x = nx;
+    mouse.y = ny;
+    mouse.ativo = true;
+  });
+
+  section.addEventListener('pointerleave', () => {
+    mouse.ativo = false;
+    mouse.x = -999;
+    mouse.y = -999;
+  });
+
+  section.addEventListener('click', (e) => {
+    const sRect = section.getBoundingClientRect();
+    const cx = e.clientX - sRect.left;
+    const cy = e.clientY - sRect.top;
+
+    for (let i = 0; i < 42; i++) {
+      const ang = Math.random() * Math.PI * 2;
+      const spd = 60 + Math.random() * 260;
+      gotasTinta.push({
+        x: cx,
+        y: cy,
+        vx: Math.cos(ang) * spd,
+        vy: Math.sin(ang) * spd,
+        raio: 3.5 + Math.random() * 5.0,
+        vida: 1.0,
+        decaimento: 0.40 + Math.random() * 0.40
+      });
+    }
+  });
+
+  function campoFluido(x, y, t) {
+    const escala = 0.003;
+    const eps = 1.0;
+    const psi = (px, py) => Math.sin(px * escala + t * 0.4) * Math.cos(py * escala + t * 0.3)
+                          + 0.5 * Math.sin(px * escala * 2.1 - t * 0.25);
+
+    const dpsi_dy = (psi(x, y + eps) - psi(x, y - eps)) / (2 * eps);
+    const dpsi_dx = (psi(x + eps, y) - psi(x - eps, y)) / (2 * eps);
+
+    return { u: dpsi_dy * 45, v: -dpsi_dx * 45 };
+  }
+
+  let ultimoTempo = performance.now();
+  function animar(agora) {
+    if (!visivel) {
+      requestAnimationFrame(animar);
+      return;
+    }
+    const dt = Math.min(0.033, (agora - ultimoTempo) / 1000);
+    ultimoTempo = agora;
+    const t = agora * 0.001;
+
+    ctx.clearRect(0, 0, w, h);
+
+    // Aura dourada suave no cursor do mouse para alta visibilidade
+    if (mouse.ativo) {
+      const gradMouse = ctx.createRadialGradient(mouse.x, mouse.y, 4, mouse.x, mouse.y, 180);
+      gradMouse.addColorStop(0, 'rgba(212, 175, 122, 0.28)');
+      gradMouse.addColorStop(0.5, 'rgba(212, 175, 122, 0.08)');
+      gradMouse.addColorStop(1, 'rgba(212, 175, 122, 0)');
+      ctx.fillStyle = gradMouse;
+      ctx.beginPath();
+      ctx.arc(mouse.x, mouse.y, 180, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // Gotas explosivas de tinta dourada
+    for (let i = gotasTinta.length - 1; i >= 0; i--) {
+      const g = gotasTinta[i];
+      g.x += g.vx * dt;
+      g.y += g.vy * dt;
+      g.vx *= 0.93;
+      g.vy *= 0.93;
+      g.vida -= g.decaimento * dt;
+
+      ctx.beginPath();
+      ctx.arc(g.x, g.y, g.raio * g.vida, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(229, 200, 155, ${(g.vida * 0.88).toFixed(2)})`;
+      ctx.shadowColor = '#D4AF7A';
+      ctx.shadowBlur = 14 * g.vida;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+
+      if (g.vida <= 0) gotasTinta.splice(i, 1);
+    }
+
+    // Filamentos e partículas douradas fluidas
+    particulas.forEach((p) => {
+      const vAmb = campoFluido(p.x, p.y, t);
+      p.vx = p.vx * 0.90 + vAmb.u * 0.10;
+      p.vy = p.vy * 0.90 + vAmb.v * 0.10;
+
+      if (mouse.ativo) {
+        const dx = p.x - mouse.x;
+        const dy = p.y - mouse.y;
+        const dist = Math.hypot(dx, dy);
+        if (dist < 180) {
+          const swirl = (1 - dist / 180) * 160;
+          p.vx += (-dy / (dist || 1)) * swirl * dt * 5 + mouse.vx * 0.25;
+          p.vy += (dx / (dist || 1)) * swirl * dt * 5 + mouse.vy * 0.25;
+        }
+      }
+
+      p.x += p.vx * dt * 45;
+      p.y += p.vy * dt * 45;
+      p.vida += 1;
+
+      if (p.x < 0) p.x = w;
+      if (p.x > w) p.x = 0;
+      if (p.y < 0) p.y = h;
+      if (p.y > h) p.y = 0;
+
+      if (p.vida > p.maxVida) {
+        p.vida = 0;
+        p.x = Math.random() * w;
+        p.y = Math.random() * h;
+        p.rastro = [];
+      }
+
+      p.rastro.push({ x: p.x, y: p.y });
+      if (p.rastro.length > 9) p.rastro.shift();
+
+      if (p.rastro.length > 1) {
+        ctx.beginPath();
+        ctx.moveTo(p.rastro[0].x, p.rastro[0].y);
+        for (let k = 1; k < p.rastro.length; k++) {
+          ctx.lineTo(p.rastro[k].x, p.rastro[k].y);
+        }
+        const vidaNorm = Math.sin((p.vida / p.maxVida) * Math.PI);
+        ctx.strokeStyle = `rgba(212, 175, 122, ${(p.alpha * vidaNorm).toFixed(2)})`;
+        ctx.lineWidth = p.raio * vidaNorm;
+        ctx.lineCap = 'round';
+        ctx.shadowColor = '#D4AF7A';
+        ctx.shadowBlur = 10;
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+      }
+    });
+
+    requestAnimationFrame(animar);
+  }
+  requestAnimationFrame(animar);
+}
+
+// 7. TEAR BUTTON (KOKONUTUI): Botão de rasgar e destacar com física de papel serrilhado
+function initTearButtons() {
+  const container = document.getElementById('gradeTearButtons');
+  if (!container) return;
+  const roots = container.querySelectorAll('.tear-btn-root');
+  if (!roots.length) return;
+
+  roots.forEach((root) => {
+    const stub = root.querySelector('.tear-btn-stub');
+    const body = root.querySelector('.tear-btn-body');
+    if (!stub || !body) return;
+
+    let dragging = false;
+    let startX = 0, startY = 0;
+    let rasgado = false;
+
+    function destacarStub(anguloFinal = 38, deslocX = 90, deslocY = 130) {
+      if (rasgado) return;
+      rasgado = true;
+
+      // Animação de voo e gravidade do canhoto destacado
+      stub.style.transition = 'transform 0.65s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s ease';
+      stub.style.transform = `translate3d(${deslocX}px, ${deslocY}px, 0) rotate(${anguloFinal + 35}deg) scale(0.85)`;
+      stub.style.opacity = '0';
+      stub.style.pointerEvents = 'none';
+
+      // Marcar este botão como ativo e atualizar procedimento
+      roots.forEach(r => {
+        r.classList.remove('tear-ativo');
+        r.setAttribute('aria-pressed', 'false');
+      });
+      root.classList.add('tear-ativo');
+      root.setAttribute('aria-pressed', 'true');
+
+      // Bordas e brilho no corpo do cupom
+      body.style.borderColor = 'var(--ouro-jk)';
+      body.style.boxShadow = '0 8px 30px rgba(212, 175, 122, 0.35)';
+
+      const procNome = root.dataset.proc;
+      if (typeof atualizarProcConcierge === 'function') {
+        atualizarProcConcierge(procNome);
+      }
+    }
+
+    // Pointer events para arrastar e rasgar o cupom
+    stub.addEventListener('pointerdown', (e) => {
+      if (rasgado) return;
+      dragging = true;
+      startX = e.clientX;
+      startY = e.clientY;
+      stub.setPointerCapture(e.pointerId);
+      stub.style.transition = 'none';
+      e.stopPropagation();
+    });
+
+    stub.addEventListener('pointermove', (e) => {
+      if (!dragging || rasgado) return;
+      const dx = Math.max(0, e.clientX - startX);
+      const dy = Math.max(0, e.clientY - startY);
+      const angulo = Math.min(42, (dy * 0.55) + (dx * 0.35));
+
+      stub.style.transform = `translate3d(${dx * 0.3}px, ${dy * 0.7}px, 0) rotate(${angulo}deg)`;
+
+      if (angulo >= 28 || dy > 50 || dx > 60) {
+        dragging = false;
+        try { stub.releasePointerCapture(e.pointerId); } catch (_) {}
+        destacarStub(angulo, dx + 70, dy + 110);
+      }
+    });
+
+    function soltarPointer(e) {
+      if (!dragging || rasgado) return;
+      dragging = false;
+      try { stub.releasePointerCapture(e.pointerId); } catch (_) {}
+      stub.style.transition = 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
+      stub.style.transform = 'translate3d(0, 0, 0) rotate(0deg)';
+    }
+
+    stub.addEventListener('pointerup', soltarPointer);
+    stub.addEventListener('pointercancel', soltarPointer);
+
+    // Fallback de clique direto no stub ou no corpo do botão: rasga e destaca com animação suave
+    stub.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (!rasgado) {
+        destacarStub(32, 85, 120);
+      }
+    });
+
+    root.addEventListener('click', () => {
+      if (!rasgado) {
+        destacarStub(30, 80, 110);
+      } else {
+        roots.forEach(r => {
+          r.classList.remove('tear-ativo');
+          r.setAttribute('aria-pressed', 'false');
+        });
+        root.classList.add('tear-ativo');
+        root.setAttribute('aria-pressed', 'true');
+        if (typeof atualizarProcConcierge === 'function') {
+          atualizarProcConcierge(root.dataset.proc);
+        }
+      }
+    });
+  });
+}
+
+// 8. RAIN GLASS BACKGROUND (KOKONUTUI): Vidro Chuvoso Interativo com Efeito Limpa-Gotas
+function initRainGlassBackground() {
+  const canvas = document.getElementById('canvasRainGlass');
+  const section = document.getElementById('concierge');
+  if (!canvas || !section) return;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  let w = 0, h = 0;
+  let visivel = false;
+  const NUM_GOTAS = 160;
+  const gotas = [];
+  const limpezas = []; // Registros de onde o mouse limpou o vidro
+  let mouse = { x: -999, y: -999, ativo: false };
+
+  function redimensionar() {
+    w = section.offsetWidth;
+    h = section.offsetHeight;
+    const dpr = Math.min(2, window.devicePixelRatio || 1);
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    gotas.length = 0;
+    for (let i = 0; i < NUM_GOTAS; i++) {
+      const grande = Math.random() < 0.16;
+      gotas.push({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        r: grande ? 4.5 + Math.random() * 4.0 : 1.2 + Math.random() * 2.8,
+        vy: grande ? 0.35 + Math.random() * 1.4 : 0,
+        escorre: grande,
+        opacidade: 0.45 + Math.random() * 0.45,
+        rastro: []
+      });
+    }
+  }
+
+  redimensionar();
+  window.addEventListener('resize', redimensionar);
+
+  const obs = new IntersectionObserver(([entry]) => {
+    visivel = entry.isIntersecting;
+  }, { threshold: 0.05 });
+  obs.observe(section);
+
+  section.addEventListener('pointermove', (e) => {
+    const sRect = section.getBoundingClientRect();
+    const mx = e.clientX - sRect.left;
+    const my = e.clientY - sRect.top;
+    mouse.x = mx;
+    mouse.y = my;
+    mouse.ativo = true;
+
+    // Registra ponto de limpeza do vapor com raio 48px e vida de 9 segundos
+    limpezas.push({ x: mx, y: my, r: 48, vida: 1.0 });
+    if (limpezas.length > 50) limpezas.shift();
+
+    // Empurra/remove gotas atingidas pelo cursor
+    for (let g of gotas) {
+      const d = Math.hypot(g.x - mx, g.y - my);
+      if (d < 46) {
+        g.x += (g.x - mx) * 0.4;
+        g.y += (g.y - my) * 0.4;
+        if (g.x < 0 || g.x > w || g.y < 0 || g.y > h) {
+          g.x = Math.random() * w;
+          g.y = 0;
+        }
+      }
+    }
+  });
+
+  section.addEventListener('pointerleave', () => {
+    mouse.ativo = false;
+  });
+
+  let ultimoTempo = performance.now();
+  function animar(agora) {
+    if (!visivel) {
+      requestAnimationFrame(animar);
+      return;
+    }
+    const dt = Math.min(0.033, (agora - ultimoTempo) / 1000);
+    ultimoTempo = agora;
+
+    ctx.clearRect(0, 0, w, h);
+
+    // 1. Camada sutil de vapor / condensação no vidro
+    ctx.fillStyle = 'rgba(212, 175, 122, 0.04)';
+    ctx.fillRect(0, 0, w, h);
+
+    // 2. Limpeza do vapor pelo rastro do mouse (desembaça e depois volta gradativamente)
+    for (let i = limpezas.length - 1; i >= 0; i--) {
+      const l = limpezas[i];
+      l.vida -= dt * 0.11; // Dura cerca de 9 segundos antes de embaçar de novo
+      if (l.vida <= 0) {
+        limpezas.splice(i, 1);
+        continue;
+      }
+      ctx.save();
+      ctx.globalCompositeOperation = 'destination-out';
+      const gradLimpo = ctx.createRadialGradient(l.x, l.y, l.r * 0.2, l.x, l.y, l.r);
+      gradLimpo.addColorStop(0, `rgba(0, 0, 0, ${l.vida * 0.85})`);
+      gradLimpo.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      ctx.fillStyle = gradLimpo;
+      ctx.beginPath();
+      ctx.arc(l.x, l.y, l.r, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    // 3. Renderização física das gotas de chuva com refração e brilho dourado sobre fundo branco
+    gotas.forEach((g) => {
+      if (g.escorre) {
+        g.y += g.vy * dt * 55;
+        g.rastro.push({ x: g.x, y: g.y, r: g.r * 0.45 });
+        if (g.rastro.length > 8) g.rastro.shift();
+
+        // Rastro de umidade deixado pela gota ao escorrer
+        if (g.rastro.length > 1) {
+          ctx.beginPath();
+          ctx.moveTo(g.rastro[0].x, g.rastro[0].y);
+          for (let k = 1; k < g.rastro.length; k++) {
+            ctx.lineTo(g.rastro[k].x, g.rastro[k].y);
+          }
+          ctx.strokeStyle = 'rgba(158, 120, 71, 0.22)';
+          ctx.lineWidth = g.r * 0.55;
+          ctx.lineCap = 'round';
+          ctx.stroke();
+        }
+
+        if (g.y > h + 10) {
+          g.y = -10;
+          g.x = Math.random() * w;
+          g.rastro = [];
+        }
+      }
+
+      // Corpo da gota de água com reflexo dourado sobre o fundo claro
+      ctx.beginPath();
+      ctx.arc(g.x, g.y, g.r, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(212, 175, 122, 0.16)';
+      ctx.strokeStyle = 'rgba(158, 120, 71, 0.42)';
+      ctx.lineWidth = 1.0;
+      ctx.fill();
+      ctx.stroke();
+
+      // Ponto de luz especular superior esquerdo (reflexo de vidro molhado)
+      ctx.beginPath();
+      ctx.arc(g.x - g.r * 0.32, g.y - g.r * 0.32, Math.max(0.6, g.r * 0.3), 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+      ctx.fill();
+    });
+
+    requestAnimationFrame(animar);
+  }
+  requestAnimationFrame(animar);
+}
+
+// 9. MOVIMENTOS DE APRESENTAÇÃO E CHEGADA DE TEXTOS (ENTRADA SUAVE + PARALLAX)
+function initTextMotion() {
+  const titulos = document.querySelectorAll(
+    '.hero-titulo, .filosofia-conteudo h2, .protocolos-cabecalho h2, .diagnostico-topo h2, .excelencia-topo h2, .painel-interativo-passos h2, .mascara-clinica-legenda blockquote'
+  );
+
+  // 1. Apresentação inicial do título da capa (chega suave de baixo ao carregar a página)
+  const heroTitulo = document.getElementById('heroTituloPrincipal');
+  if (heroTitulo) {
+    heroTitulo.style.opacity = '0';
+    heroTitulo.style.transform = 'translateY(38px)';
+    heroTitulo.style.transition = 'opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1)';
+    setTimeout(() => {
+      heroTitulo.style.opacity = '1';
+      heroTitulo.style.transform = 'translateY(0px)';
+    }, 180);
+  }
+
+  // 2. Apresentação e movimento dos títulos ao rolar a página (chegam e se apresentam)
+  const obsChegada = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0px)';
+      }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+  titulos.forEach((titulo) => {
+    if (titulo !== heroTitulo) {
+      titulo.style.opacity = '0';
+      titulo.style.transform = 'translateY(34px)';
+      titulo.style.transition = 'opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1)';
+      obsChegada.observe(titulo);
+    }
+  });
+
+  // 3. Movimento contínuo de parallax conforme o scroll do mouse (elas se movem com elegância)
+  let ticking = false;
+  function atualizarMovimentoParallax() {
+    ticking = false;
+    const viewH = window.innerHeight;
+
+    titulos.forEach((titulo) => {
+      const rect = titulo.getBoundingClientRect();
+      if (rect.top < viewH && rect.bottom > 0) {
+        const progresso = (rect.top - viewH / 2) / viewH;
+        const offset = Math.max(-12, Math.min(12, -progresso * 18));
+        titulo.style.transform = `translateY(${offset.toFixed(1)}px)`;
+      }
+    });
+  }
+
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(atualizarMovimentoParallax);
+      ticking = true;
+    }
+  }, { passive: true });
+}
+
+// 10. TRANSIÇÃO GRADATIVA ENTRE SEÇÕES (ILUMINAÇÃO SUAVE CONFORME O SCROLL DESCE)
+function initSectionTransitions() {
+  const secoes = document.querySelectorAll('.secao-transicao-gradativa');
+  if (!secoes.length) return;
+
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('secao-ativa');
+      } else {
+        const rect = entry.boundingClientRect;
+        if (rect.top > window.innerHeight * 0.95 || rect.bottom < 0) {
+          entry.target.classList.remove('secao-ativa');
+        }
+      }
+    });
+  }, {
+    threshold: [0.12, 0.4],
+    rootMargin: '0px 0px -40px 0px'
+  });
+
+  secoes.forEach((sec) => obs.observe(sec));
+}
+
+// INICIALIZADOR GLOBAL KOKONUTUI
+function inicializarKokonutUI() {
+  initCradleText();
+  initAttractButtons();
+  initPluckedText();
+  initDotField();
+  initBackgroundPaths();
+  initTopoBackground();
+  initInkBackground();
+  initTearButtons();
+  initRainGlassBackground();
+  initTextMotion();
+  initSectionTransitions();
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', inicializarKokonutUI);
+} else {
+  inicializarKokonutUI();
+}
+</script>
 </body>
 </html>

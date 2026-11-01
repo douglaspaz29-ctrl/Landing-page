@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>n8n • Ecossistema Master VIDE × Clínica LUMINA (11 Nós + IA Multimodal)</title>
+  <!-- Fonte Montserrat Oficial Padrão VIDE -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --fundo-canvas: #121216;
+      --fundo-painel: #1B1B22;
+      --fundo-no: #23232D;
+      --borda-no: #3C3C4A;
+      --laranja-n8n: #FF6D5A;
+      --verde-sucesso: #2ECC71;
+      --roxo-ia: #A78BFA;
+      --verde-supabase: #3ECF8E;
+      --verde-whats: #25D366;
+      --azul-agenda: #64B5F6;
+      --ouro-jk: #D4AF7A;
+      --texto-claro: #F5F5F7;
+      --texto-suave: #A0A0B0;
+      --fonte-titulo: 'Montserrat', sans-serif;
+      --fonte-corpo: 'Montserrat', sans-serif;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+    }
+
+    body {
+      background-color: var(--fundo-canvas);
+      color: var(--texto-claro);
+      font-family: var(--fonte-corpo);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    /* =========================================================
+       BARRA SUPERIOR IDÊNTICA AO EDITOR DO N8N
+       ========================================================= */
+    header.barra-topo-n8n {
+      height: 58px;
+      background: var(--fundo-painel);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 100;
+    }
+
+    .topo-esq {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .logo-n8n-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 109, 90, 0.14);
+      border: 1px solid var(--laranja-n8n);
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-family: var(--fonte-titulo);
+      font-weight: 800;
+      font-size: 0.82rem;
+      color: var(--laranja-n8n);
+    }
+
+    .nome-workflow-input {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--texto-claro);
+      font-family: var(--fonte-corpo);
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 6px 10px;
+      border-radius: 4px;
+      width: 480px;
+    }
+
+    .tag-ativo {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 4px;
+      background: rgba(46, 204, 113, 0.14);
+      color: var(--verde-sucesso);
+      font-size: 0.72rem;
+      font-weight: 600;
+      border: 1px solid rgba(46, 204, 113, 0.35);
+    }
+
+    .topo-dir {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-aba-topo {
+      padding: 8px 16px;
+      border-radius: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: var(--fundo-no);
+      color: var(--texto-claro);
+      text-decoration: none;
+      font-size: 0.76rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-aba-topo:hover {
+      border-color: var(--ouro-jk);
+      color: var(--ouro-jk);
+    }
+
+    /* =========================================================
+       ÁREA PRINCIPAL: CANVAS INTERATIVO COM OS 11 NÓS MASTER
+       ========================================================= */
+    .corpo-editor {
+      flex: 1;
+      display: flex;
+      position: relative;
+      overflow: hidden;
+    }
+
+    aside.barra-lateral-n8n {
+      width: 56px;
+      background: var(--fundo-painel);
+      border-right: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 18px 0;
+      gap: 16px;
+      z-index: 50;
+    }
+
+    .icone-lat {
+      width: 36px;
+      height: 36px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--texto-suave);
+      background: rgba(255, 255, 255, 0.04);
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+
+    .icone-lat.ativo {
+      background: var(--laranja-n8n);
+      color: #FFF;
+    }
+
+    .palco-canvas {
+      flex: 1;
+      position: relative;
+      background-color: var(--fundo-canvas);
+      background-image: radial-gradient(rgba(255, 255, 255, 0.13) 1.2px, transparent 1.2px);
+      background-size: 22px 22px;
+      overflow: auto;
+    }
+
+    .aviso-dica-arrastar {
+      position: absolute;
+      top: 14px;
+      left: 18px;
+      background: rgba(27, 27, 34, 0.9);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(212, 175, 122, 0.3);
+      padding: 8px 16px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      color: var(--texto-suave);
+      z-index: 20;
+    }
+
+    .aviso-dica-arrastar strong {
+      color: var(--ouro-jk);
+    }
+
+    svg.camada-cabos {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .cabo-base {
+      fill: none;
+      stroke: #4E4E62;
+      stroke-width: 2.2;
+    }
+
+    .cabo-ativo {
+      fill: none;
+      stroke: var(--verde-sucesso);
+      stroke-width: 2.8;
+      stroke-dasharray: 8 6;
+      animation: correrEnergia 0.8s linear infinite;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .cabo-ativo.ligado {
+      opacity: 1;
+    }
+
+    @keyframes correrEnergia {
+      to { stroke-dashoffset: -28; }
+    }
+
+    /* Nós Arrastáveis */
+    .no-n8n-bloco {
+      position: absolute;
+      width: 185px;
+      background: var(--fundo-no);
+      border: 2px solid var(--borda-no);
+      border-radius: 4px;
+      padding: 12px 13px;
+      cursor: grab;
+      z-index: 10;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
+      transition: border-color 0.25s, box-shadow 0.25s;
+    }
+
+    .no-n8n-bloco:hover {
+      border-color: var(--ouro-jk);
+    }
+
+    .no-n8n-bloco.executando {
+      border-color: var(--laranja-n8n);
+      box-shadow: 0 0 26px rgba(255, 109, 90, 0.5);
+    }
+
+    .no-n8n-bloco.sucesso {
+      border-color: var(--verde-sucesso);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45), 0 0 14px rgba(46, 204, 113, 0.18);
+    }
+
+    .porta-entrada, .porta-saida {
+      position: absolute;
+      top: 50%;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #7A7A90;
+      border: 2px solid var(--fundo-no);
+      transform: translateY(-50%);
+    }
+
+    .porta-entrada { left: -6px; }
+    .porta-saida { right: -6px; background: var(--verde-sucesso); }
+
+    .no-topo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .no-quadrado-icone {
+      width: 34px;
+      height: 34px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.05rem;
+      flex-shrink: 0;
+    }
+
+    .no-titulo {
+      font-family: var(--fonte-titulo);
+      font-size: 0.74rem;
+      font-weight: 700;
+      color: var(--texto-claro);
+      line-height: 1.2;
+    }
+
+    .no-subtipo {
+      font-size: 0.65rem;
+      color: var(--texto-suave);
+      margin-top: 2px;
+    }
+
+    .no-rodape-dados {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 8px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      font-size: 0.66rem;
+      color: var(--verde-sucesso);
+      font-weight: 600;
+    }
+
+    /* Sub-nós Circulares Conectados embaixo da Agente IA (Gemini, Memória, Agenda) */
+    .subno-ia-bolinha {
+      position: absolute;
+      width: 132px;
+      background: #1C1C25;
+      border: 1.5px dashed var(--roxo-ia);
+      border-radius: 4px;
+      padding: 9px 10px;
+      text-align: center;
+      z-index: 9;
+      cursor: grab;
+    }
+
+    .subno-ia-bolinha strong {
+      display: block;
+      font-family: var(--fonte-titulo);
+      font-size: 0.66rem;
+      color: var(--texto-claro);
+      margin-top: 4px;
+    }
+
+    .subno-ia-bolinha span {
+      font-size: 0.6rem;
+      color: var(--ouro-jk);
+    }
+
+    .barra-inferior-acao {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 30;
+    }
+
+    .btn-testar-n8n {
+      padding: 13px 28px;
+      border-radius: 4px;
+      border: none;
+      background: linear-gradient(135deg, var(--laranja-n8n), #E04B38);
+      color: #FFF;
+      font-family: var(--fonte-titulo);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      box-shadow: 0 12px 30px rgba(255, 109, 90, 0.4);
+      transition: transform 0.2s;
+    }
+
+    .btn-testar-n8n:hover {
+      transform: translateY(-3px);
+    }
+
+    /* Painel Direito de Inspeção & Calculadora de ROI */
+    .painel-direito-logs {
+      width: 340px;
+      background: var(--fundo-painel);
+      border-left: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      z-index: 40;
+      overflow-y: auto;
+    }
+
+    .caixa-log-json {
+      background: #101014;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 4px;
+      padding: 12px;
+      font-family: monospace;
+      font-size: 0.72rem;
+      color: #A8F0C6;
+      line-height: 1.5;
+      margin-top: 8px;
+      white-space: pre-wrap;
+    }
+
+    .card-roi-lateral {
+      margin-top: 16px;
+      padding: 16px;
+      border-radius: 4px;
+      background: rgba(212, 175, 122, 0.08);
+      border: 1px solid rgba(212, 175, 122, 0.3);
+    }
+
+    .card-roi-lateral h4 {
+      font-family: var(--fonte-titulo);
+      font-size: 0.78rem;
+      color: var(--ouro-jk);
+      margin-bottom: 10px;
+    }
+
+    .linha-slider {
+      margin-bottom: 10px;
+      font-size: 0.75rem;
+    }
+
+    .linha-slider label {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+
+    .linha-slider input {
+      width: 100%;
+      accent-color: var(--laranja-n8n);
+    }
+  </style>
+</head>
+<body>
+
+  <header class="barra-topo-n8n">
+    <div class="topo-esq">
+      <div class="logo-n8n-box">⚡ n8n Master</div>
+      <input type="text" class="nome-workflow-input" value="VIDE × LUMINA — Ecossistema Completo (Lead Scoring + IA Gemini + Agenda + Pós-Disparo)" />
+      <span class="tag-ativo">● 11 Nós Ativos (24/7)</span>
+    </div>
+
+    <div class="topo-dir">
+      <a href="index.html" class="btn-aba-topo">← 1. Página da Clínica</a>
+      <a href="dashboard.html" class="btn-aba-topo" style="border-color: var(--ouro-jk); color: var(--ouro-jk);">📊 3. Painel C-Level (CMO & BI) →</a>
+    </div>
+  </header>
+
+  <div class="corpo-editor">
+    <aside class="barra-lateral-n8n">
+      <div class="icone-lat ativo" title="Editor de Fluxo">⚡</div>
+      <div class="icone-lat" title="Execuções">▶</div>
+      <div class="icone-lat" title="Credenciais">🔑</div>
+      <div class="icone-lat" title="Supabase CRM">🗄️</div>
+    </aside>
+
+    <main class="palco-canvas" id="palcoCanvas">
+      <div class="aviso-dica-arrastar">
+        💎 <strong>Ecossistema Completo VIDE (4 Fases):</strong> Arraste qualquer nó com o mouse ou clique em <strong>"Executar Jornada Completa"</strong> lá embaixo!
+      </div>
+
+      <!-- Cabos Curvos Conectando todos os Nós -->
+      <svg class="camada-cabos" id="svgCabos">
+        <path id="caboBase1" class="cabo-base" /><path id="caboAtivo1" class="cabo-ativo ligado" />
+        <path id="caboBase2" class="cabo-base" /><path id="caboAtivo2" class="cabo-ativo ligado" />
+        <path id="caboBase3" class="cabo-base" /><path id="caboAtivo3" class="cabo-ativo ligado" />
+        <path id="caboBase4" class="cabo-base" /><path id="caboAtivo4" class="cabo-ativo ligado" />
+        <path id="caboBase5" class="cabo-base" /><path id="caboAtivo5" class="cabo-ativo ligado" />
+        <path id="caboBase6" class="cabo-base" /><path id="caboAtivo6" class="cabo-ativo ligado" />
+        <path id="caboBase7" class="cabo-base" /><path id="caboAtivo7" class="cabo-ativo ligado" />
+        <path id="caboBase8" class="cabo-base" /><path id="caboAtivo8" class="cabo-ativo ligado" />
+      </svg>
+
+      <!-- NÓ 1: Gatilho Site & WhatsApp -->
+      <div class="no-n8n-bloco sucesso" id="no1" style="left: 24px; top: 85px;">
+        <div class="porta-saida"></div>
+        <div class="no-topo">
+          <div class="no-quadrado-icone" style="background: rgba(255, 109, 90, 0.18); color: var(--laranja-n8n);">⚡</div>
+          <div>
+            <div class="no-titulo">1. Gatilho Site & Whats</div>
+            <div class="no-subtipo">Webhook Instantâneo</div>
+          </div>
+        </div>
+        <div class="no-rodape-dados"><span>✔ Captado</span><span>0.1s</span></div>
+      </div>
+
+      <!-- NÓ 2: Avaliador de Qualidade (Lead Scoring 0-100) -->
+      <div class="no-n8n-bloco sucesso" id="no2" style="left: 235px; top: 85px;">
+        <div class="porta-entrada"></div><div class="porta-saida"></div>
+        <div class="no-topo">
+          <div class="no-quadrado-icone" style="background: rgba(212, 175, 122, 0.18); color: var(--ouro-jk);">💎</div>
+          <div>
+            <div class="no-titulo">2. Lead Scoring (0-100)</div>
+            <div class="no-subtipo">Ticket R$ 5.400 • VIP</div>
+          </div>
+        </div>
+        <div class="no-rodape-dados"><span>✔ Score 100/100</span><span>0.3s</span></div>
+      </div>
+
+      <!-- NÓ 3: Salvar no CRM Oficial Supabase -->
+      <div class="no-n8n-bloco sucesso" id="no3" style="left: 446px; top: 85px;">
+        <div class="porta-entrada"></div><div class="porta-saida"></div>
+        <div class="no-topo">
+          <div class="no-quadrado-icone" style="background: rgba(62, 207, 142, 0.18); color: var(--verde-supabase);">🗄️</div>
+          <div>
+            <div class="no-titulo">3. CRM Supabase</div>
+            <div class="no-subtipo">Grava Lead + UTM</div>
+          </div>
+        </div>
+        <div class="no-rodape-dados"><span>✔ Salvo Nuvem</span><span>0.6s</span></div>
+      </div>
+
+      <!-- NÓ 4: Agente IA Concierge Helena (Multimodal + Agenda) -->
+      <div class="no-n8n-bloco sucesso" id="no4" style="left: 658px; top: 85px;">
+        <div class="porta-entrada"></div><div class="porta-saida"></div>
+        <div class="no-topo">
+          <div class="no-quadrado-icone" style="background: rgba(167, 139, 250, 0.18); color: var(--roxo-ia);">🤖</div>
+          <div>
+            <div class="no-titulo">4. Agente IA Helena</div>
+            <div class="no-subtipo">Áudio, Foto, PDF e Texto</div>
+          </div>
+        </div>
+        <div class="no-rodape-dados"><span>✔ Horário Verificado</span><span>1.4s</span></div>
+      </div>
+
+      <!-- Sub-nós Conectados embaixo da Agente IA Helena -->
+      <div class="subno-ia-bolinha" style="left: 530px; top: 225px;">
+        <div>🧠</div>
+        <strong>Google Gemini Pro</strong>
+        <span>Cérebro Multimodal</span>
+      </div>
+      <div class="subno-ia-bolinha" style="left: 675px; top: 225px;">
+        <div>🗂️</div>
+        <strong>Memória Contínua</strong>
+        <span>Histórico Paciente</span>
+      </div>
+      <div class="subno-ia-bolinha" style="left: 820px; top: 225px; border-color: var(--azul-agenda);">
+        <div>📅</div>
+        <strong>Ferramenta Agenda</strong>
+        <span>Zero Conflito Horário</span>
+      </div>
+
+      <!-- NÓ 5: Disparo WhatsApp Humanizado + Alerta VIP -->
+      <div class="no-n8n-bloco sucesso" id="no5" style="left: 870px; top: 85px;">
+        <div class="porta-entrada"></div><div class="porta-saida"></div>
+        <div class="no-topo">
+          <div class="no-quadrado-icone" style="background: rgba(37, 211, 102, 0.18); color: var(--verde-whats);">💬</div>
+          <div>
+            <div class="no-titulo">5. Disparo WhatsApp</div>
+            <div class="no-subtipo">+ Alerta Equipe VIP</div>
+          </div>
+        </div>
+        <div class="no-rodape-dados"><span>✔ Entregue (2.4s)</span><span>2.4s</span></div>
+      </div>
+
+      <!-- CAMADA PÓS-DISPARO WHATSAPP (ONDE VOCÊ GANHA O JOGO) -->
+      <!-- NÓ 6: Motor de Follow-up Anti-Vácuo (2h / 24h) -->
+      <div class="no-n8n-bloco sucesso" id="no6" style="left: 235px; top: 355px;">
+        <div class="porta-entrada"></div><div class="porta-saida"></div>
+        <div class="no-topo">
+          <div class="no-quadrado-icone" style="background: rgba(100, 181, 246, 0.18); color: var(--azul-agenda);">🔄</div>
+          <div>
+            <div class="no-titulo">6. Follow-up Anti-Vácuo</div>
+            <div class="no-subtipo">Recuperação 2h / 24h</div>
+          </div>
+        </div>
+        <div class="no-rodape-dados"><span>✔ +45% Conversão</span><span>Pós-Whats</span></div>
+      </div>
+
+      <!-- NÓ 7: Automação Anti-Falta (Confirmação 24h Antes + Waze) -->
+      <div class="no-n8n-bloco sucesso" id="no7" style="left: 545px; top: 355px;">
+        <div class="porta-entrada"></div><div class="porta-saida"></div>
+        <div class="no-topo">
+          <div class="no-quadrado-icone" style="background: rgba(212, 175, 122, 0.18); color: var(--ouro-jk);">📍</div>
+          <div>
+            <div class="no-titulo">7. Anti-Falta 24h + Waze</div>
+            <div class="no-subtipo">Reduz No-Show em 80%</div>
+          </div>
+        </div>
+        <div class="no-rodape-dados"><span>✔ Presença 95,3%</span><span>24h Antes</span></div>
+      </div>
+
+      <!-- NÓ 8: Fechamento de Ciclo de Dados (Dashboard + NPS Google 5★) -->
+      <div class="no-n8n-bloco sucesso" id="no8" style="left: 855px; top: 355px;">
+        <div class="porta-entrada"></div>
+        <div class="no-topo">
+          <div class="no-quadrado-icone" style="background: rgba(46, 204, 113, 0.18); color: var(--verde-sucesso);">📊</div>
+          <div>
+            <div class="no-titulo">8. Fechamento BI & NPS</div>
+            <div class="no-subtipo">Dashboard + Google 5★</div>
+          </div>
+        </div>
+        <div class="no-rodape-dados"><span>✔ Ciclo Completo</span><span>ROAS 10,1x</span></div>
+      </div>
+
+      <!-- Botão Inferior de Execução -->
+      <div class="barra-inferior-acao">
+        <button type="button" class="btn-testar-n8n" id="btnTestarFluxo">
+          <span>▶ Executar Jornada Completa Agora (Captação → IA → Pós-Disparo)</span>
+        </button>
+      </div>
+    </main>
+
+    <!-- Painel Direito de Inspeção & Calculadora de Lucro -->
+    <aside class="painel-direito-logs">
+      <div>
+        <h3 style="font-family: var(--fonte-titulo); font-size: 0.88rem; color: var(--ouro-jk);">
+          Telemetria em Tempo Real (JSON)
+        </h3>
+        <p style="font-size: 0.73rem; color: var(--texto-suave); margin-top: 4px;">
+          Acompanhe cada etapa até o pós-disparo:
+        </p>
+        <div class="caixa-log-json" id="caixaLogJson">{
+  "jornada": "ECOSSISTEMA_COMPLETO_VIDE",
+  "paciente": "Fernanda Albuquerque",
+  "lead_score": "100/100 (Diamante VIP)",
+  "ticket_estimado": "R$ 5.400",
+  "midia_lida": "Áudio Transcrito + Foto Pele",
+  "agenda_verificada": "Quinta 16h00 (Sem Conflito)",
+  "followup_antivacuo": "Ativo (2h/24h)",
+  "antifalta_waze_24h": "Confirmado (Comparecimento 95,3%)",
+  "fechamento_dashboard": "ROAS Pago 10,1x Auditado"
+}</div>
+      </div>
+
+      <div class="card-roi-lateral">
+        <h4>💰 Simulador de Caixa Recuperado (Clínica)</h4>
+        <div class="linha-slider">
+          <label>
+            <span>Leads no mês:</span>
+            <strong id="txtContatos">140</strong>
+          </label>
+          <input type="range" id="slContatos" min="30" max="400" step="10" value="140" />
+        </div>
+        <div class="linha-slider">
+          <label>
+            <span>Ticket Médio:</span>
+            <strong id="txtTicket">R$ 4.600</strong>
+          </label>
+          <input type="range" id="slTicket" min="1500" max="10000" step="100" value="4600" />
+        </div>
+        <div style="padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center;">
+          <span style="font-size: 0.72rem; color: var(--texto-suave);">Receita Adicional Gerada:</span>
+          <strong id="txtResultadoRoi" style="font-family: var(--fonte-titulo); font-size: 1.1rem; color: var(--verde-sucesso);">+ R$ 115.920/mês</strong>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    const conexoes = [
+      { de: 'no1', para: 'no2', base: 'caboBase1', ativo: 'caboAtivo1' },
+      { de: 'no2', para: 'no3', base: 'caboBase2', ativo: 'caboAtivo2' },
+      { de: 'no3', para: 'no4', base: 'caboBase3', ativo: 'caboAtivo3' },
+      { de: 'no4', para: 'no5', base: 'caboBase4', ativo: 'caboAtivo4' },
+      { de: 'no5', para: 'no6', base: 'caboBase5', ativo: 'caboAtivo5' },
+      { de: 'no6', para: 'no7', base: 'caboBase6', ativo: 'caboAtivo6' },
+      { de: 'no7', para: 'no8', base: 'caboBase7', ativo: 'caboAtivo7' }
+    ];
+
+    function atualizarCabos() {
+      conexoes.forEach((c) => {
+        const elDe = document.getElementById(c.de);
+        const elPara = document.getElementById(c.para);
+        if (!elDe || !elPara) return;
+        const x1 = elDe.offsetLeft + elDe.offsetWidth;
+        const y1 = elDe.offsetTop + elDe.offsetHeight / 2;
+        const x2 = elPara.offsetLeft;
+        const y2 = elPara.offsetTop + elPara.offsetHeight / 2;
+        const ctrl = Math.max(Math.abs(x2 - x1) * 0.45, 40);
+        const d = `M ${x1} ${y1} C ${x1 + ctrl} ${y1}, ${x2 - ctrl} ${y2}, ${x2} ${y2}`;
+        document.getElementById(c.base).setAttribute('d', d);
+        document.getElementById(c.ativo).setAttribute('d', d);
+      });
+    }
+
+    document.querySelectorAll('.no-n8n-bloco').forEach((bloco) => {
+      let arrastando = false;
+      let offsetX = 0;
+      let offsetY = 0;
+
+      bloco.addEventListener('mousedown', (e) => {
+        arrastando = true;
+        offsetX = e.clientX - bloco.offsetLeft;
+        offsetY = e.clientY - bloco.offsetTop;
+        bloco.style.zIndex = 25;
+      });
+
+      window.addEventListener('mousemove', (e) => {
+        if (!arrastando) return;
+        bloco.style.left = `${e.clientX - offsetX}px`;
+        bloco.style.top = `${e.clientY - offsetY}px`;
+        atualizarCabos();
+      });
+
+      window.addEventListener('mouseup', () => {
+        if (arrastando) {
+          arrastando = false;
+          bloco.style.zIndex = 10;
+        }
+      });
+    });
+
+    window.addEventListener('resize', atualizarCabos);
+    atualizarCabos();
+
+    const idsNos = ['no1', 'no2', 'no3', 'no4', 'no5', 'no6', 'no7', 'no8'];
+    const logsNos = [
+      `{\n  "etapa": "1. Gatilho Site & WhatsApp",\n  "paciente": "Fernanda Albuquerque",\n  "regiao": "Contorno Facial & Bioestimulação",\n  "utm_source": "Instagram Reels Ads"\n}`,
+      `{\n  "etapa": "2. Lead Scoring & Ticket",\n  "score_qualidade": "100/100 (Diamante VIP)",\n  "ticket_estimado": "R$ 5.400"\n}`,
+      `{\n  "etapa": "3. CRM Oficial Supabase",\n  "tabela": "public.leads",\n  "status": "GRAVADO NA NUVEM ✓"\n}`,
+      `{\n  "etapa": "4. Agente IA Helena + Gemini + Agenda",\n  "midia": "Áudio ouvido e foto anexada",\n  "agenda": "Quinta 16h00 livre (Sem conflitos)"\n}`,
+      `{\n  "etapa": "5. Disparo WhatsApp (2.4s)",\n  "entregue": true,\n  "alerta_recepcao": "Equipe avisada no celular"\n}`,
+      `{\n  "etapa": "6. Motor Follow-up Anti-Vácuo",\n  "acao": "Monitoramento 2h/24h ativado",\n  "impacto": "+45% pacientes recuperados"\n}`,
+      `{\n  "etapa": "7. Automação Anti-Falta 24h",\n  "acao": "Confirmação + Link Waze enviado",\n  "show_rate": "96,2% comparecimento"\n}`,
+      `{\n  "etapa": "8. Fechamento de Dados (Dashboard + NPS)",\n  "roas_atualizado": "11,4x",\n  "pesquisa_nps": "Avaliação 5★ Google enviada"\n}`
+    ];
+
+    document.getElementById('btnTestarFluxo').addEventListener('click', () => {
+      idsNos.forEach((id) => {
+        document.getElementById(id).classList.remove('sucesso', 'executando');
+      });
+      document.querySelectorAll('.cabo-ativo').forEach((c) => c.classList.remove('ligado'));
+
+      idsNos.forEach((id, i) => {
+        setTimeout(() => {
+          const el = document.getElementById(id);
+          el.classList.add('executando');
+          document.getElementById('caixaLogJson').textContent = logsNos[i];
+          setTimeout(() => {
+            el.classList.remove('executando');
+            el.classList.add('sucesso');
+            if (i < 7) {
+              document.getElementById(`caboAtivo${i + 1}`).classList.add('ligado');
+            }
+          }, 300);
+        }, i * 380);
+      });
+    });
+
+    const slContatos = document.getElementById('slContatos');
+    const slTicket = document.getElementById('slTicket');
+    function atualizarCalc() {
+      const c = Number(slContatos.value);
+      const t = Number(slTicket.value);
+      document.getElementById('txtContatos').textContent = c;
+      document.getElementById('txtTicket').textContent = `R$ ${t.toLocaleString('pt-BR')}`;
+      document.getElementById('txtResultadoRoi').textContent = `+ R$ ${Math.round(c * 0.18 * t).toLocaleString('pt-BR')}/mês`;
+    }
+    slContatos.addEventListener('input', atualizarCalc);
+    slTicket.addEventListener('input', atualizarCalc);
+  </script>
+</body>
+</html>
