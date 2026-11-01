@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BURGER — Hambúrguer Artesanal</title>
+  
+  <!-- Fontes Google: Syne (Display Editorial) e Plus Jakarta Sans (Texto & Interface) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    /* =========================================================
+       VARIÁVEIS DE DESIGN — PALETA PREMIUM BURGER EDITORIAL
+       ========================================================= */
+    :root {
+      /* Fundo off-white calibrado com a cor exata das fotografias (#F2F3ED) */
+      --fundo-principal: #F2F3ED;
+      --texto-principal: #211F1C;    /* Preto carvão */
+      --cor-destaque: #E9A52E;       /* Amarelo cheddar */
+      --cor-secundaria: #514033;     /* Marrom escuro */
+      --texto-auxiliar: #777168;     /* Cinza quente */
+      --divisor-suave: rgba(81, 64, 51, 0.12);
+      
+      --fonte-display: 'Syne', -apple-system, BlinkMacSystemFont, sans-serif;
+      --fonte-corpo: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      
+      --container-max: 1440px;
+      --transicao-suave: 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Reset e Configurações Base */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      background-color: var(--fundo-principal);
+      color: var(--texto-principal);
+      font-family: var(--fonte-corpo);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+      width: 100%;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      background: none;
+    }
+
+    /* =========================================================
+       SCROLL TRACK PARA ANIMAÇÃO FLUIDA AO ROLAR
+       Permite rolar a página em slow motion mantendo a Hero fixa
+       ========================================================= */
+    .hero-scroll-track {
+      position: relative;
+      width: 100%;
+      height: 250vh; /* Altura generosa para rolagem em slow motion fluida */
+      background-color: var(--fundo-principal);
+    }
+
+    /* =========================================================
+       HERO SECTION STICKY (100VH FIXO DURANTE O SCROLL)
+       ========================================================= */
+    .hero-secao {
+      position: sticky;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background-color: var(--fundo-principal);
+    }
+
+    /* =========================================================
+       CANVAS DE BACKGROUND: ANIMAÇÃO DO HAMBÚRGUER (SLOW SCROLL)
+       Fica sob todos os textos e menus (z-index: 1)
+       ========================================================= */
+    .hero-burger-bg-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
+      display: block;
+      background-color: var(--fundo-principal);
+    }
+
+    /* =========================================================
+       CAMADA DE CONTEÚDO SOBREPOSTA (Z-INDEX: 10)
+       Preserva rigorosamente a posição dos textos e da navbar
+       ========================================================= */
+    .hero-conteudo-sobreposto {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      pointer-events: auto;
+    }
+
+    /* Container Centralizado */
+    .hero-container {
+      width: 100%;
+      max-width: var(--container-max);
+      margin: 0 auto;
+      padding-left: clamp(24px, 5vw, 64px);
+      padding-right: clamp(24px, 5vw, 64px);
+    }
+
+    /* =========================================================
+       4. NAVBAR / MENU INTEGRADO AO TOPO
+       ========================================================= */
+    .hero-navbar {
+      width: 100%;
+      padding-top: clamp(20px, 3.2vh, 36px);
+      padding-bottom: clamp(16px, 2.4vh, 24px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      z-index: 20;
+    }
+
+    /* Logotipo Tipográfico */
+    .navbar-logo {
+      display: inline-flex;
+      align-items: baseline;
+      font-family: var(--fonte-display);
+      font-size: clamp(1.4rem, 2vw, 1.75rem);
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      color: var(--texto-principal);
+      user-select: none;
+      transition: transform var(--transicao-suave);
+    }
+
+    .navbar-logo:hover {
+      transform: translateY(-1px);
+    }
+
+    .logo-ponto-cheddar {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      margin-left: 3px;
+      border-radius: 50%;
+      background-color: var(--cor-destaque);
+      box-shadow: 0 0 10px rgba(233, 165, 46, 0.5);
+    }
+
+    /* Links de Navegação */
+    .navbar-menu {
+      display: flex;
+      align-items: center;
+      gap: clamp(24px, 3vw, 44px);
+      list-style: none;
+    }
+
+    .nav-link {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--cor-secundaria);
+      position: relative;
+      padding: 6px 0;
+      transition: color var(--transicao-suave);
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background-color: var(--cor-destaque);
+      transition: width var(--transicao-suave);
+      border-radius: 2px;
+    }
+
+    .nav-link:hover {
+      color: var(--texto-principal);
+    }
+
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    /* Botão Navbar: Peça Agora */
+    .navbar-btn-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 22px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      color: var(--texto-principal);
+      background-color: transparent;
+      border: 1.5px solid var(--texto-principal);
+      border-radius: 8px;
+      transition: all var(--transicao-suave);
+    }
+
+    .navbar-btn-cta svg {
+      width: 12px;
+      height: 12px;
+      stroke: currentColor;
+      stroke-width: 2.2;
+      transition: transform var(--transicao-suave);
+    }
+
+    .navbar-btn-cta:hover {
+      background-color: var(--texto-principal);
+      color: var(--fundo-principal);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(33, 31, 28, 0.14);
+    }
+
+    .navbar-btn-cta:hover svg {
+      transform: translate(2px, -2px);
+      stroke: var(--cor-destaque);
+    }
+
+    /* =========================================================
+       CORPO DA HERO — GRID ASSIMÉTRICO (46% / 54%)
+       ========================================================= */
+    .hero-corpo {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      position: relative;
+      padding-top: clamp(12px, 2vh, 24px);
+      padding-bottom: clamp(24px, 4vh, 48px);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 46% 54%;
+      align-items: center;
+      width: 100%;
+      column-gap: clamp(24px, 3.5vw, 48px);
+    }
+
+    /* =========================================================
+       5. COLUNA ESQUERDA — CONTEÚDO EDITORIAL
+       ========================================================= */
+    .hero-col-esquerda {
+      max-width: 580px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      z-index: 10;
+    }
+
+    /* Elemento de Identificação / Etiqueta Superior */
+    .hero-etiqueta {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--cor-secundaria);
+      margin-bottom: clamp(16px, 2.2vh, 24px);
+      user-select: none;
+    }
+
+    .etiqueta-detalhe-cheddar {
+      width: 7px;
+      height: 7px;
+      border-radius: 1px;
+      background-color: var(--cor-destaque);
+      transform: rotate(45deg);
+      display: inline-block;
+      box-shadow: 0 0 8px rgba(233, 165, 46, 0.45);
+    }
+
+    .etiqueta-divisor {
+      color: var(--cor-destaque);
+      font-weight: 800;
+      font-size: 0.9em;
+    }
+
+    /* Headline Principal */
+    .hero-headline {
+      font-family: var(--fonte-display);
+      font-weight: 800;
+      font-size: clamp(2.75rem, 5vw, 4.85rem);
+      line-height: 0.98;
+      letter-spacing: -0.035em;
+      color: var(--texto-principal);
+      text-transform: uppercase;
+      margin-bottom: clamp(16px, 2.4vh, 24px);
+    }
+
+    .hero-headline .destaque-cheddar {
+      color: var(--cor-destaque);
+      display: inline;
+      position: relative;
+    }
+
+    /* Subheadline */
+    .hero-subheadline {
+      font-size: clamp(1rem, 1.25vw, 1.125rem);
+      line-height: 1.62;
+      color: var(--texto-auxiliar);
+      max-width: 480px;
+      margin-bottom: clamp(24px, 3.6vh, 38px);
+      font-weight: 400;
+    }
+
+    /* Três Destaques Horizontais */
+    .hero-destaques {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: clamp(12px, 1.8vw, 24px);
+      padding: clamp(14px, 2.2vh, 20px) 0;
+      margin-bottom: clamp(24px, 3.8vh, 40px);
+      border-top: 1px solid var(--divisor-suave);
+      border-bottom: 1px solid var(--divisor-suave);
+    }
+
+    .destaque-item {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      position: relative;
+    }
+
+    /* Divisores discretos entre os itens */
+    .destaque-item:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      right: calc(clamp(12px, 1.8vw, 24px) / -2);
+      top: 15%;
+      height: 70%;
+      width: 1px;
+      background-color: var(--divisor-suave);
+    }
+
+    .destaque-icone {
+      width: 22px;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 2px;
+    }
+
+    .destaque-icone svg {
+      width: 100%;
+      height: 100%;
+      stroke: var(--cor-destaque);
+      stroke-width: 1.8;
+      fill: none;
+    }
+
+    .destaque-titulo {
+      font-family: var(--fonte-display);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--texto-principal);
+    }
+
+    .destaque-desc {
+      font-size: 0.8rem;
+      line-height: 1.4;
+      color: var(--texto-auxiliar);
+    }
+
+    /* Grupo CTA Principal */
+    .hero-cta-grupo {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .hero-btn-principal {
+      align-self: flex-start;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      background-color: var(--cor-destaque);
+      color: var(--texto-principal);
+      font-family: var(--fonte-corpo);
+      font-size: clamp(0.95rem, 1.1vw, 1.05rem);
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: clamp(15px, 2vh, 18px) clamp(28px, 2.5vw, 38px);
+      border-radius: 10px;
+      transition: all var(--transicao-suave);
+      box-shadow: 0 4px 16px rgba(233, 165, 46, 0.28);
+    }
+
+    .hero-btn-principal svg {
+      width: 16px;
+      height: 16px;
+      stroke: var(--texto-principal);
+      stroke-width: 2.4;
+      fill: none;
+      transition: transform var(--transicao-suave);
+    }
+
+    .hero-btn-principal:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 28px rgba(233, 165, 46, 0.42);
+      background-color: #f0ac35;
+    }
+
+    .hero-btn-principal:hover svg {
+      transform: translateX(4px);
+    }
+
+    .hero-cta-subtexto {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.84rem;
+      color: var(--texto-auxiliar);
+      font-weight: 500;
+      letter-spacing: 0.01em;
+    }
+
+    .cta-subtexto-ponto {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background-color: var(--cor-destaque);
+      display: inline-block;
+    }
+
+    /* =========================================================
+       6. COLUNA DIREITA — ESPAÇAMENTO PRESERVADO
+       Área mantida para deixar o hambúrguer do background visível
+       ========================================================= */
+    .hero-col-direita {
+      width: 100%;
+      height: 100%;
+      min-height: clamp(380px, 68vh, 660px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      pointer-events: none; /* Permite interações livres */
+    }
+
+    /* Indicador discreto de scroll no canto inferior direito */
+    .indicador-scroll-slow {
+      position: absolute;
+      bottom: clamp(16px, 3vh, 28px);
+      right: clamp(24px, 5vw, 64px);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.76rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--texto-auxiliar);
+      opacity: 0.75;
+      transition: opacity var(--transicao-suave);
+      z-index: 20;
+      pointer-events: none;
+    }
+
+    .indicador-scroll-slow svg {
+      width: 14px;
+      height: 14px;
+      stroke: var(--cor-destaque);
+      stroke-width: 2.2;
+      animation: flutuarSeta 1.8s ease-in-out infinite;
+    }
+
+    @keyframes flutuarSeta {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(4px); }
+    }
+
+    /* =========================================================
+       8. RESPONSIVIDADE
+       ========================================================= */
+    @media (max-width: 1200px) {
+      .hero-grid {
+        grid-template-columns: 50% 50%;
+        column-gap: 32px;
+      }
+      .hero-headline {
+        font-size: clamp(2.4rem, 4.4vw, 3.8rem);
+      }
+    }
+
+    @media (max-width: 992px) {
+      .navbar-menu {
+        gap: 20px;
+      }
+      .hero-grid {
+        grid-template-columns: 52% 48%;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .hero-scroll-track {
+        height: 220vh;
+      }
+
+      .navbar-menu {
+        display: none;
+      }
+      .navbar-btn-cta {
+        padding: 9px 16px;
+        font-size: 0.82rem;
+      }
+
+      .hero-grid {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+      }
+
+      .hero-col-esquerda {
+        max-width: 100%;
+        display: contents;
+      }
+
+      .hero-etiqueta {
+        order: 1;
+        margin-top: 12px;
+      }
+
+      .hero-headline {
+        order: 2;
+        font-size: clamp(2.3rem, 9.5vw, 3.4rem);
+        line-height: 1.02;
+      }
+
+      .hero-subheadline {
+        order: 3;
+        font-size: 1rem;
+        margin-bottom: 24px;
+      }
+
+      .hero-col-direita {
+        order: 4;
+        min-height: 260px;
+        margin: 8px 0 24px 0;
+      }
+
+      .hero-destaques {
+        order: 5;
+        grid-template-columns: 1fr;
+        gap: 16px;
+        padding: 20px 0;
+        margin-bottom: 28px;
+      }
+
+      .destaque-item:not(:last-child)::after {
+        display: none;
+      }
+
+      .destaque-item {
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 14px;
+      }
+
+      .destaque-icone {
+        margin-top: 2px;
+        flex-shrink: 0;
+      }
+
+      .hero-cta-grupo {
+        order: 6;
+        width: 100%;
+      }
+
+      .hero-btn-principal {
+        align-self: stretch;
+        text-align: center;
+        padding: 18px 24px;
+      }
+
+      .hero-cta-subtexto {
+        justify-content: center;
+        text-align: center;
+      }
+
+      .indicador-scroll-slow {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TRILHA DE SCROLL PARA ANIMAÇÃO FLUIDA EM SLOW MOTION -->
+  <div class="hero-scroll-track" id="heroScrollTrack">
+
+    <!-- HERO SECTION STICKY COM BACKGROUND ANIMADO -->
+    <header class="hero-secao" id="hero">
+
+      <!-- =========================================================
+           ÁREA RESERVADA PARA ANIMAÇÃO DO HAMBÚRGUER EM TODO O BACKGROUND
+           Renderizada em Canvas via sequência fluida de 40 frames
+           Acompanha o scroll: descer fecha o lanche, subir abre
+           ========================================================= -->
+      <canvas id="canvasBurgerBg" class="hero-burger-bg-canvas" aria-hidden="true"></canvas>
+
+      <!-- CAMADA DE CONTEÚDO SOBREPOSTA (TEXTOS E MENU POR CIMA) -->
+      <div class="hero-conteudo-sobreposto">
+        
+        <!-- 4. MENU / NAVBAR INTEGRADO AO TOPO -->
+        <div class="hero-container">
+          <nav class="hero-navbar" aria-label="Navegação Principal">
+            
+            <!-- Logotipo Tipográfico Minimalista -->
+            <a href="#hero" class="navbar-logo" aria-label="BURGER Início">
+              BURGER<span class="logo-ponto-cheddar" aria-hidden="true"></span>
+            </a>
+
+            <!-- Links Centrais -->
+            <ul class="navbar-menu">
+              <li><a href="#inicio" class="nav-link">Início</a></li>
+              <li><a href="#cardapio" class="nav-link">Cardápio</a></li>
+              <li><a href="#sobre" class="nav-link">Sobre nós</a></li>
+              <li><a href="#contato" class="nav-link">Contato</a></li>
+            </ul>
+
+            <!-- Botão Destacado com Seta Diagonal -->
+            <a href="#cardapio" class="navbar-btn-cta">
+              <span>Peça agora</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                <line x1="7" y1="17" x2="17" y2="7"></line>
+                <polyline points="7 7 17 7 17 17"></polyline>
+              </svg>
+            </a>
+
+          </nav>
+        </div>
+
+        <!-- CORPO DA HERO SECTION -->
+        <main class="hero-corpo">
+          <div class="hero-container">
+            <div class="hero-grid">
+              
+              <!-- 5. CONTEÚDO DA HERO — COLUNA ESQUERDA (46%) -->
+              <div class="hero-col-esquerda">
+                
+                <!-- Elemento de Identificação -->
+                <div class="hero-etiqueta">
+                  <span class="etiqueta-detalhe-cheddar" aria-hidden="true"></span>
+                  <span>HAMBÚRGUER ARTESANAL</span>
+                  <span class="etiqueta-divisor" aria-hidden="true">•</span>
+                  <span>FEITO COM PERSONALIDADE</span>
+                </div>
+
+                <!-- Headline Principal -->
+                <h1 class="hero-headline">
+                  O <span class="destaque-cheddar">SABOR</span> QUE MERECE CADA MORDIDA.
+                </h1>
+
+                <!-- Subheadline -->
+                <p class="hero-subheadline">
+                  Carne suculenta, pão brioche macio e ingredientes selecionados. Uma combinação feita para transformar cada mordida em uma experiência inesquecível.
+                </p>
+
+                <!-- Três Destaques Lineares -->
+                <div class="hero-destaques">
+                  
+                  <!-- 1. Carne Suculenta -->
+                  <div class="destaque-item">
+                    <div class="destaque-icone" aria-hidden="true">
+                      <svg viewBox="0 0 24 24">
+                        <path d="M4 15h16M7 11h10M9 7h6M6 19h12" stroke-linecap="round"></path>
+                      </svg>
+                    </div>
+                    <h2 class="destaque-titulo">CARNE SUCULENTA</h2>
+                    <p class="destaque-desc">Grelhada no ponto certo.</p>
+                  </div>
+
+                  <!-- 2. Pão Brioche -->
+                  <div class="destaque-item">
+                    <div class="destaque-icone" aria-hidden="true">
+                      <svg viewBox="0 0 24 24">
+                        <path d="M4 14c0-4.4 3.6-8 8-8s8 3.6 8 8v1H4v-1z" stroke-linecap="round" stroke-linejoin="round"></path>
+                        <path d="M4 18h16" stroke-linecap="round"></path>
+                      </svg>
+                    </div>
+                    <h2 class="destaque-titulo">PÃO BRIOCHE</h2>
+                    <p class="destaque-desc">Maciez em cada mordida.</p>
+                  </div>
+
+                  <!-- 3. Cheddar Cremoso -->
+                  <div class="destaque-item">
+                    <div class="destaque-icone" aria-hidden="true">
+                      <svg viewBox="0 0 24 24">
+                        <path d="M12 3c-3 4-6 7.5-6 11a6 6 0 0 0 12 0c0-3.5-3-7-6-11z" stroke-linecap="round" stroke-linejoin="round"></path>
+                        <path d="M10 14a2 2 0 0 0 2 2" stroke-linecap="round"></path>
+                      </svg>
+                    </div>
+                    <h2 class="destaque-titulo">CHEDDAR CREMOSO</h2>
+                    <p class="destaque-desc">Sabor que surpreende.</p>
+                  </div>
+
+                </div>
+
+                <!-- CTA Principal & Indicação Secundária -->
+                <div class="hero-cta-grupo">
+                  <a href="#cardapio" class="hero-btn-principal">
+                    <span>QUERO EXPERIMENTAR</span>
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                      <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                  </a>
+
+                  <span class="hero-cta-subtexto">
+                    <span class="cta-subtexto-ponto" aria-hidden="true"></span>
+                    Prepare-se para sua próxima mordida favorita.
+                  </span>
+                </div>
+
+              </div>
+
+              <!-- 6. COLUNA DIREITA (54%) — ESPAÇO PRESERVADO PARA VISIBILIDADE DO HAMBÚRGUER -->
+              <div class="hero-col-direita" aria-hidden="true">
+                <!-- O hambúrguer em animação de background aparece com escala generosa nesta área -->
+              </div>
+
+            </div>
+          </div>
+        </main>
+
+        <!-- Indicador Discreto de Scroll -->
+        <div class="indicador-scroll-slow">
+          <span>Role para montar</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <polyline points="19 12 12 19 5 12"></polyline>
+          </svg>
+        </div>
+
+      </div>
+
+    </header>
+
+  </div>
+
+  <!-- =========================================================
+       MOTOR DA ANIMAÇÃO DO BACKGROUND (CANVAS + SLOW LERP SCROLL)
+       ========================================================= -->
+  <script>
+    (function initBurgerScrollAnimation() {
+      const TOTAL_FRAMES = 40;
+      const canvas = document.getElementById('canvasBurgerBg');
+      const track = document.getElementById('heroScrollTrack');
+      if (!canvas || !track) return;
+
+      const ctx = canvas.getContext('2d', { alpha: false });
+      if (!ctx) return;
+
+      // Array de preloading para todas as imagens
+      const frames = [];
+      let loadedFramesCount = 0;
+      let isInitialRendered = false;
+
+      // Variáveis de controle de interpolação lenta (Slow LERP)
+      // 0.0 = Lanche aberto (Frame 001)
+      // 1.0 = Lanche fechado (Frame 040)
+      let targetProgress = 0;
+      let currentProgress = 0;
+      const LERP_FACTOR = 0.065; // Transição cinematográfica macia em slow motion
+
+      // Gerar caminho relativo dos frames (001 a 040)
+      function getFrameSrc(index) {
+        const num = String(index).padStart(3, '0');
+        return `Hamburgue/ezgif-frame-${num}.jpg`;
+      }
+
+      // Pré-carregamento imediato de todas as 40 imagens
+      for (let i = 1; i <= TOTAL_FRAMES; i++) {
+        const img = new Image();
+        img.src = getFrameSrc(i);
+        img.onload = () => {
+          loadedFramesCount++;
+          if (i === 1 && !isInitialRendered) {
+            isInitialRendered = true;
+            desenharFrame(currentProgress);
+          }
+        };
+        frames.push(img);
+      }
+
+      // Função de desenho no Canvas com posicionamento responsivo e preservação de proporção
+      function desenharFrame(progress) {
+        // Mapear progress (0.0 a 1.0) para índice do frame (0 a 39)
+        // 0.0 -> Frame 001 (aberto)
+        // 1.0 -> Frame 040 (fechado)
+        const frameIndex = Math.round(progress * (TOTAL_FRAMES - 1));
+        const clampedIndex = Math.max(0, Math.min(TOTAL_FRAMES - 1, frameIndex));
+        const img = frames[clampedIndex];
+
+        if (!img || !img.complete || img.naturalWidth === 0) return;
+
+        const cw = window.innerWidth;
+        const ch = window.innerHeight;
+        const iw = img.naturalWidth || 1920;
+        const ih = img.naturalHeight || 1080;
+
+        // Fundo sólido calibrado com a fotografia para fusão imperceptível
+        ctx.fillStyle = '#F2F3ED';
+        ctx.fillRect(0, 0, cw, ch);
+
+        const isMobile = cw <= 768;
+        const isTablet = cw > 768 && cw <= 1024;
+
+        if (isMobile) {
+          // Mobile: Centraliza o hambúrguer (que está na metade direita da foto original)
+          const scale = Math.max(cw / 980, ch / 1100);
+          const dw = iw * scale;
+          const dh = ih * scale;
+          const burgerCenterX = 1420 * scale;
+          const dx = (cw / 2) - burgerCenterX;
+          const dy = (ch - dh) * 0.42;
+          ctx.drawImage(img, dx, dy, dw, dh);
+        } else if (isTablet) {
+          // Tablet: Ajusta escala e alinha hambúrguer na área direita
+          const scale = Math.max(cw / iw, ch / ih);
+          const dw = iw * scale;
+          const dh = ih * scale;
+          const dx = cw - dw + (dw * 0.06);
+          const dy = (ch - dh) / 2;
+          ctx.drawImage(img, dx, dy, dw, dh);
+        } else {
+          // Desktop: Posicionamento perfeito onde o lanche fica na coluna direita (54%)
+          // e o lado esquerdo livre para a leitura impecável dos textos
+          const scale = Math.max(cw / iw, ch / ih);
+          const dw = iw * scale;
+          const dh = ih * scale;
+
+          // Em monitores ultra-wide (>1440px), aproxima suavemente do contêiner central
+          const offsetUltraWide = (cw > 1440) ? (cw - 1440) * 0.32 : 0;
+          const dx = cw - dw - offsetUltraWide;
+          const dy = (ch - dh) / 2;
+
+          ctx.drawImage(img, dx, dy, dw, dh);
+        }
+      }
+
+      // Redimensionamento do Canvas com suporte a telas Retina / High-DPI
+      function redimensionarCanvas() {
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        const w = window.innerWidth;
+        const h = window.innerHeight;
+
+        canvas.width = Math.round(w * dpr);
+        canvas.height = Math.round(h * dpr);
+        canvas.style.width = w + 'px';
+        canvas.style.height = h + 'px';
+
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        desenharFrame(currentProgress);
+      }
+
+      window.addEventListener('resize', redimensionarCanvas, { passive: true });
+      redimensionarCanvas();
+
+      // Cálculo do progresso com base na rolagem da página
+      function atualizarProgressoScroll() {
+        const rect = track.getBoundingClientRect();
+        const totalRolavel = track.offsetHeight - window.innerHeight;
+        if (totalRolavel <= 0) return;
+
+        // Quando o topo da track está em 0 -> progress = 0.0 (aberto)
+        // Quando a página desce -> progress avança até 1.0 (fechado)
+        const scrollBruto = -rect.top / totalRolavel;
+        targetProgress = Math.max(0, Math.min(1, scrollBruto));
+      }
+
+      window.addEventListener('scroll', atualizarProgressoScroll, { passive: true });
+
+      // Suporte direto a rolagem pelo mouse wheel (flick rápido ou lento)
+      window.addEventListener('wheel', (e) => {
+        // Se o usuário estiver dentro da hero, o wheel aciona o avanço macio
+        const rect = track.getBoundingClientRect();
+        if (rect.top <= 10 && rect.bottom >= window.innerHeight - 10) {
+          const delta = e.deltaY;
+          targetProgress = Math.max(0, Math.min(1, targetProgress + delta * 0.0016));
+        }
+      }, { passive: true });
+
+      // Suporte ao toque mobile (touch swipe)
+      let touchStartY = 0;
+      window.addEventListener('touchstart', (e) => {
+        if (e.touches.length > 0) touchStartY = e.touches[0].clientY;
+      }, { passive: true });
+
+      window.addEventListener('touchmove', (e) => {
+        if (e.touches.length > 0) {
+          const touchY = e.touches[0].clientY;
+          const deltaY = touchStartY - touchY;
+          touchStartY = touchY;
+          targetProgress = Math.max(0, Math.min(1, targetProgress + deltaY * 0.0035));
+        }
+      }, { passive: true });
+
+      // Loop de animação contínuo (Slow Motion LERP)
+      let lastRenderedIndex = -1;
+      function loopAnimacao() {
+        const diff = targetProgress - currentProgress;
+        
+        // Interpolação contínua e ultra macia
+        if (Math.abs(diff) > 0.0001) {
+          currentProgress += diff * LERP_FACTOR;
+          
+          const currentIndex = Math.round(currentProgress * (TOTAL_FRAMES - 1));
+          if (currentIndex !== lastRenderedIndex) {
+            lastRenderedIndex = currentIndex;
+            desenharFrame(currentProgress);
+          }
+        }
+
+        requestAnimationFrame(loopAnimacao);
+      }
+
+      requestAnimationFrame(loopAnimacao);
+    })();
+  </script>
+
+</body>
+</html>
